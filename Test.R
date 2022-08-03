@@ -2,7 +2,7 @@ library(gstat)
 library(sp)
 library(fda)
 library(reshape)
-library(geoR)
+#library(geoR)
 library(ggplot2)
 
 # Cargar Datos
@@ -15,14 +15,14 @@ SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 91, 
 # Modelar los semivariogramas para cada comp. principal
 puntaj = data.frame(scores(SFD_PM10)[[1]])
 
-puntaj1_s = as.geodata(puntaj, coords.col = 1:2, data.col = 3)
-puntaj2_s = as.geodata(puntaj, coords.col = 1:2, data.col = 4)
-
-f1var=variog(puntaj1_s, pairs.min = 4)
-f2var=variog(puntaj2_s, pairs.min = 4)
-
-plot(f1var,main="variog f1")
-plot(f2var,main="variog f2")
+# puntaj1_s = as.geodata(puntaj, coords.col = 1:2, data.col = 3)
+# puntaj2_s = as.geodata(puntaj, coords.col = 1:2, data.col = 4)
+#
+# f1var=variog(puntaj1_s, pairs.min = 4)
+# f2var=variog(puntaj2_s, pairs.min = 4)
+#
+# plot(f1var,main="variog f1")
+# plot(f2var,main="variog f2")
 
 #ini1 = eyefit(f1var)
 #in12 = eyefit(f2var)
@@ -65,9 +65,8 @@ curves_PM10_l <- recons_fd(KS_SFD_PM10_l)
 
 #method = "scores"
 curves_PM10_sc <- recons_fd(KS_SFD_PM10_sc)
-
 #method = "both"
-curves_PM10_both <- recons_fd(KS_SFD_PM10_PRUEBA)
+curves_PM10_both <- recons_fd(KS_SFD_PM10_both)
 plot(curves_PM10_both$fd_scores)
 
 # Plot resultados
@@ -91,7 +90,6 @@ ggplot_KS(KS_SFD_PM10_both,
 
 # MAPAS
 library(rgdal)
-library(ggplot2)
 library(sf)
 library(plotly)
 library(sp)

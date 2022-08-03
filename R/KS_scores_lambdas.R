@@ -180,7 +180,8 @@ KS_scores_lambdas = function(SFD, newcoords, model, method = "lambda", name=NULL
     #kriging
     K=list()
     for (i in 1:ncol(puntajes)){
-      K[[i]] <- krige(puntajes[[i]]~1,puntajes,newcoords, model = model[[i]])
+      K[[i]] <- gstat::krige(puntajes[[i]]~1,puntajes,newcoords, model = model[[i]],
+                             beta = 0)
     }
 
     #prediction

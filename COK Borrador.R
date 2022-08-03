@@ -1,5 +1,9 @@
 library(readr)
 library(fda)
+library(gstat)
+library(sp)
+library(gdata)
+library(lmf)
 
 # Cargar Datos
 PM10 <- read.csv("EjemploLMCMexico/PM10.txt", sep="")
@@ -27,25 +31,25 @@ SFD_PM10_NO2 <- SpatFD(MNO2, coords = CoordenadasNO2[, 1:2], basis = "Fourier", 
 puntaj_PM10 = data.frame(scores(SFD_PM10_NO2)[[1]])
 puntaj_NO2 = data.frame(scores(SFD_PM10_NO2)[[2]])
 
-puntaj_PM10_1 = as.geodata(puntaj_PM10, coords.col = 1:2, data.col = 3)
-puntaj_PM10_2 = as.geodata(puntaj_PM10, coords.col = 1:2, data.col = 4)
-
-puntaj_NO2_1 = as.geodata(puntaj_NO2, coords.col = 1:2, data.col = 3)
-puntaj_NO2_2 = as.geodata(puntaj_NO2, coords.col = 1:2, data.col = 4)
-
-
-PM10_f1var=variog(puntaj_PM10_1)
-PM10_f2var=variog(puntaj_PM10_2)
-
-NO2_f1var=variog(puntaj_NO2_1)
-NO2_f2var=variog(puntaj_NO2_2)
-
-par(mfrow = c(2,2))
-
-plot(PM10_f1var,main="variog PM10_f1")
-plot(PM10_f2var,main="variog PM10_f2")
-plot(NO2_f1var,main="variog NO2_f1")
-plot(NO2_f2var,main="variog NO2_f2")
+# puntaj_PM10_1 = as.geodata(puntaj_PM10, coords.col = 1:2, data.col = 3)
+# puntaj_PM10_2 = as.geodata(puntaj_PM10, coords.col = 1:2, data.col = 4)
+#
+# puntaj_NO2_1 = as.geodata(puntaj_NO2, coords.col = 1:2, data.col = 3)
+# puntaj_NO2_2 = as.geodata(puntaj_NO2, coords.col = 1:2, data.col = 4)
+#
+#
+# PM10_f1var=variog(puntaj_PM10_1)
+# PM10_f2var=variog(puntaj_PM10_2)
+#
+# NO2_f1var=variog(puntaj_NO2_1)
+# NO2_f2var=variog(puntaj_NO2_2)
+#
+# par(mfrow = c(2,2))
+#
+# plot(PM10_f1var,main="variog PM10_f1")
+# plot(PM10_f2var,main="variog PM10_f2")
+# plot(NO2_f1var,main="variog NO2_f1")
+# plot(NO2_f2var,main="variog NO2_f2")
 
 # 2 Componentes por cada variable
 coordinates(puntaj_PM10) <- ~ X + Y
@@ -109,7 +113,7 @@ B1 <- matrix(c(gfit$model$PM10_1[1,2], gfit$model$PM10_1.PM10_2[1,2], gfit$model
   0, gfit$model$PM10_2[1,2], gfit$model$PM10_2.NO2_1[1,2], gfit$model$PM10_2.NO2_2[1,2],
   0, 0, gfit$model$NO2_1[1,2], gfit$model$NO2_1.NO2_2[1,2],
   0, 0, 0,gfit$model$NO2_2[1,2]), nrow = 4)
-library(gdata)
+
 upperTriangle(B1) <- lowerTriangle(B1)
 B1
 
@@ -141,31 +145,31 @@ B1=matrix(c(0.61,0.3,0.4,0.3,
             0.3,0.001,0.1,0,
             0.4,0.1,0.05,0.1,
             0.3,0,0.1,0.006),byrow=T,nrow=4)
-B1=nearPD(B1)$mat
+B1=nearPD(B1)
 
 B2=matrix(c(0.003,-0.1,-0.16,-0.62,
             -0.1,0.24,0.12,0.4,
             -0.16,0.12,0,0,
             -0.62,0.4,0,0.002),byrow=T,nrow=4)
-B2=nearPD(B2)$mat
+B2=nearPD(B2)
 
 B3=matrix(c(0.001,0,-0.17,0.35,
             0,0.002,-0.2,0,
             -0.17,-0.2,0.19,0.10,
             0.35,0,0.10,0.001),byrow=T,nrow=4)
 
-B3=nearPD(B3)$mat
+B3=nearPD(B3)
 B4=matrix(c(0.05,0,0.22,0.7,
             0,0,0.07,0,
             0.22,0.07,0,0.23,
             0.7,0,0.23,0.57),byrow=T,nrow=4)
-B4=nearPD(B4)$mat
+B4=nearPD(B4)
 
 B4=matrix(c(0.0,0,0.0,0.0,
             0,0,0.0,0,
             0,0,0.57,0.23,
             0,0,0.23,0.57),byrow=T,nrow=4)
-B4=nearPD(B4)$mat
+B4=nearPD(B4)
 
 pa = matrix(c(1,2,3,1,2,3), nrow = 3, ncol = 3)
 pb = matrix(c(1,2,2,1,2,2), nrow = 3, ncol = 3)
