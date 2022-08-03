@@ -71,7 +71,7 @@ KS_scores_lambdas = function(SFD, newcoords, model, method = "lambda", name=NULL
   #model
   if(!(inherits(model,"variogramModel") || inherits(model,"list"))){
     stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm of gstat package) ")
-  }else if(inherits(model,"list") && !all(lapply(model,inherits,"variogramModel"))){
+  }else if(inherits(model,"list") && !all(sapply(model,inherits,"variogramModel"))){
     stop("Wrong class of model, each element of list should be of class variogramModel (use vgm of gstat package)")
   }else if(inherits(model,"list") && (length(model)!=ncol(as.data.frame(SFD[[name]]$fpca$scores)))){
     stop("length of list of models must be equal to number of harmonics of the choosen variable ")

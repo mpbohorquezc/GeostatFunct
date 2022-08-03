@@ -117,4 +117,4 @@ COK_scores=function(SFD,newcoords,model,vari=NULL,fill.all=T){
   return(ret)
 }
 
-COK_scores(SFD_PM10_NO2, as.data.frame(newcoords[1,]), vgm(psill = 381766.8, "Gau", range = 7125.97, nugget =  0))
+#COK_scores(SFD_PM10_NO2, as.data.frame(newcoords[1,]), vgm(psill = 381766.8, "Gau", range = 7125.97, nugget =  0))
