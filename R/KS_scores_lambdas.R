@@ -1,4 +1,5 @@
-KS_scores_lambdas = function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
+KS_scores_lambdas <-
+function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
   # Validation --------------------------------------------------------------
 
@@ -228,4 +229,3 @@ KS_scores_lambdas = function(SFD, newcoords, model, method = "lambda", name=NULL
 
   return(out)
 }
-

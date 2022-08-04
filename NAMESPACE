@@ -1,0 +1,2 @@
+export("COK_scores", "FCOK", "ggmap_KS", "ggplot_KS",
+       "KS_scores_lambdas", "recons_fd", "scores", "SpatFD")

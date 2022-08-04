@@ -1,6 +1,5 @@
-
-# Extrae los scores
-scores=function(X){
+scores <-
+function(X){
 
      if (inherits(X,"SpatFD") ) {
 

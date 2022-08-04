@@ -1,4 +1,5 @@
-FCOK=function(SFD,newcoords,model,vari=NULL,fill.all=T){
+FCOK <-
+function(SFD,newcoords,model,vari=NULL,fill.all=T){
 
   #----------------------------------------------------------------------------
   #           VALIDANDO ARGUMENTOS *

@@ -1,4 +1,5 @@
-ggmap_KS <- function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
+ggmap_KS <-
+function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
 
   map <- readOGR(map_path)
   newcoords <- sp::spsample(map, map_n, type = "regular")
@@ -62,4 +63,3 @@ ggmap_KS <- function(KS, map_path, window_time = NULL, method = "lambda", map_n 
   return(graf)
 
 }
-

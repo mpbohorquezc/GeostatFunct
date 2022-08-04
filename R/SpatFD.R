@@ -1,4 +1,5 @@
-SpatFD=function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,name=NULL,add=NULL,...){
+SpatFD <-
+function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,name=NULL,add=NULL,...){
      #----------------------------------------------------------------------------
      #           VALIDANDO ARGUMENTOS *
      #----------------------------------------------------------------------------

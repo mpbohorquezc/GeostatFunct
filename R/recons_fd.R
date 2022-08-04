@@ -1,6 +1,5 @@
-
-# Reconstruir objetos funcionales a partir de los scores y lambdas
-recons_fd = function(X){
+recons_fd <-
+function(X){
 
   if (inherits(X,"KS_pred")) {
     vari = X$name
