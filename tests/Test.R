@@ -6,8 +6,8 @@ library(reshape)
 library(ggplot2)
 
 # Cargar Datos
-PM10 = read.table("PartMat10.txt",head=T,dec=",")
-coord = read.table("Coordenadas_planas_Estaciones_Dama_2014.txt",dec=",",sep="\t",header=T)
+PM10 = read.table("tests/PartMat10.txt",head=T,dec=",")
+coord = read.table("tests/Coordenadas_planas_Estaciones_Dama_2014.txt",dec=",",sep="\t",header=T)
 
 # Recibir los datos, suavizarlos y ACP
 SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 91, lambda = 0.00002, nharm = 2)
@@ -95,21 +95,21 @@ library(plotly)
 library(sp)
 
 ggmap_KS(KS_SFD_PM10_l,
-         map_path = "BOGOTA/Bogota.shp",
+         map_path = "tests/BOGOTA/Bogota.shp",
          window_time = c(1, 5, 9, 13, 17, 21),
          zmin = 25,
          zmax = 100)
 
 
 ggmap_KS(KS_SFD_PM10_l,
-         map_path = "BOGOTA/Bogota.shp",
+         map_path = "tests/BOGOTA/Bogota.shp",
          window_time = c(7108),
          method = "lambda",
          zmin = 50,
          zmax = 120)
 
 ggmap_KS(KS_SFD_PM10_l,
-         map_path = "BOGOTA/Bogota.shp",
+         map_path = "tests/BOGOTA/Bogota.shp",
          window_time = c(7108),
          method = "scores",
          zmin = 50,
@@ -124,11 +124,11 @@ ggmap_KS(KS_SFD_PM10_l,
 # COKRIGING
 
 # Cargar Datos Covariable
-PM10_co = read.table("PartMat10.txt",head=T,dec=",")
+PM10_co = read.table("tests/PartMat10.txt",head=T,dec=",")
 
 PM10_co = PM10_co + rnorm(10, 7, 2)
 
-coord_co = read.table("Coordenadas_planas_Estaciones_Dama_2014.txt",dec=",",sep="\t",header=T)
+coord_co = read.table("tests/Coordenadas_planas_Estaciones_Dama_2014.txt",dec=",",sep="\t",header=T)
 
 # Recibir los datos, suavizarlos, ACP de PM10_co y agregarlo al objeto SFD_PM10
 SFD_PM10_co <- SpatFD(PM10_co, coords = coord_co[, -1], basis = "Bsplines", nbasis = 91, lambda = 0.00002, nharm = 2,
