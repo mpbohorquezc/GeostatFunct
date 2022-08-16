@@ -1,10 +1,10 @@
 ggmap_KS <-
 function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
 
-  map <- readOGR(map_path)
+  map <- rgdal::readOGR(map_path)
   newcoords <- sp::spsample(map, map_n, type = "regular")
   newcoords <- as.data.frame(newcoords)
-  colnames(newcoords) <- c("X", "Y")
+  colnames(newcoords) <- colnames(KS$SFD[[1]]$coords)
 
   KS_SFD <- KS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
 
@@ -25,10 +25,10 @@ function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin
   melt_s$X2 <- as.factor(melt_s$X2)
 
   melt_s$X <- as.factor(melt_s$X2)
-  levels(melt_s$X) <- newcoords$X
+  levels(melt_s$X) <- newcoords[,1]
 
   melt_s$Y <- as.factor(melt_s$X2)
-  levels(melt_s$Y) <- newcoords$Y
+  levels(melt_s$Y) <- newcoords[,2]
 
   names(melt_s) = c("Time","Prediction","Value", "X", "Y")
 
