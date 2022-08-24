@@ -87,7 +87,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
   puntaje=SFD[[name]]$fpca$scores
   rownames(puntaje)=SFD[[name]]$coordsnames
   puntajes=as.data.frame(puntaje)
-  coordinates(puntajes)=SFD[[name]]$coords
+  sp::coordinates(puntajes)=SFD[[name]]$coords
 
   #fitting variogram
   if(fill.all==T){
@@ -95,16 +95,16 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     fv=list()
     for (i in 1:ncol(puntajes)){
 
-      v[[i]]=variogram(puntajes[[i]]~1,puntajes)
-      fv[[i]]=fit.variogram(v[[i]],model[[i]], fit.method = 6)
+      v[[i]]=gstat::variogram(puntajes[[i]]~1,puntajes,cutoff = max(SFD[[name]]$coords))
+      fv[[i]]=gstat::fit.variogram(v[[i]],model[[i]], fit.method = 6)
     }
   }else{
     v=list()
     fv=list()
     for (i in 1:ncol(puntajes)){
 
-      v[[i]]=variogram(puntajes[[i]]~1,puntajes)
-      fv[[i]]=fit.variogram(v[[i]],model[[i]], fit.method = 6)
+      v[[i]]=gstat::variogram(puntajes[[i]]~1,puntajes,cutoff = max(SFD[[name]]$coords))
+      fv[[i]]=gstat::fit.variogram(v[[i]],model[[i]], fit.method = 6)
     }
   }
 
@@ -122,10 +122,10 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
     # Omega
     omegas <- list()
-    omega = omega <- matrix(0, nrow = nrow(matdis), ncol = ncol(matdis))
+    omega <- matrix(0, nrow = nrow(matdis), ncol = ncol(matdis))
     for(i in 1:ncol(puntajes)){
 
-      omegas[[i]] = variogramLine( model[[i]], dist_vector = matdis, covariance = T)
+      omegas[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis, covariance = T)
       omega = omega + omegas[[i]]
     }
 
@@ -135,7 +135,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
     for(i in 1:ncol(puntajes)){
 
-      vectores_c[[i]] = variogramLine( model[[i]], dist_vector = matdis_pred, covariance = T)
+      vectores_c[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis_pred, covariance = T)
       vector_c = vector_c + vectores_c[[i]]
     }
 
@@ -176,7 +176,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
     #newcoords
     colnames(newcoords)=c('x','y')
-    coordinates(newcoords)=~x+y
+    sp::coordinates(newcoords)=~x+y
 
     #kriging
     K=list()

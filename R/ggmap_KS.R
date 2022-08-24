@@ -1,7 +1,18 @@
 ggmap_KS <-
 function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
+  if (!is.null(map_path)){
+    map <- rgdal::readOGR(map_path)
+  }else{
+    mx <- min(KS$SFD[[1]]$coords[,1])
+    Mx <- max(KS$SFD[[1]]$coords[,1])
+    my <- min(KS$SFD[[1]]$coords[,2])
+    My <- max(KS$SFD[[1]]$coords[,2])
+    map <- sp::SpatialPolygons(list(
+    sp::Polygons(list(
+    sp::Polygon(matrix(c(mx,my,Mx,my,Mx,My,mx,My),byrow = T,ncol = 2))),1)
+    ))
+  }
 
-  map <- rgdal::readOGR(map_path)
   newcoords <- sp::spsample(map, map_n, type = "regular")
   newcoords <- as.data.frame(newcoords)
   colnames(newcoords) <- colnames(KS$SFD[[1]]$coords)
@@ -42,7 +53,7 @@ function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin
 
     melt_s_2 <- melt_s[melt_s$Time == i,]
 
-    graf[[i]] <- plot_ly(
+    graf[[i]] <- plotly::plot_ly(
       x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
       y = as.numeric(as.character(melt_s_2$Y)), #melt_s_2$Y,
       z = melt_s_2$Value,
@@ -52,7 +63,7 @@ function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin
       zmin = zmin,
       zmax = zmax
     ) %>%
-      layout(
+      plotly::layout(
         title = paste("Prediction - Time = ", times[i]),
         xaxis = list(showticklabels = FALSE), yaxis = list(showticklabels = FALSE),
         scene = list(aspectration = list(x = 1, y = 1))
