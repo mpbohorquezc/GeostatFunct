@@ -105,8 +105,8 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
   if(is.null(grid) && is.null(map))
     stop("Missing grid and map, please give at leat one.")
   
-  if(!is.null(fixed_stations) && (length(intersect(class(fixed_stations),c("matrix","array","data.frame","SpatialPoints"))) == 0))
-    stop("fixed_stations must be of class matrix, array, data.frame or SpatialPoints.")
+  if(!is.null(fixed_stations) && (length(intersect(class(fixed_stations),c("matrix","array","data.frame","SpatialPoints","SpatFD"))) == 0))
+    stop("fixed_stations must be of class matrix, array, data.frame, SpatialPoints or SpatFD.")
   
   if(class(k) != "numeric" || length(k)==1){
     stop("k must be a positive integer.")
@@ -164,6 +164,10 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
       tmp_list[[i]] <- model
     model <- tmp_list
   }
+  
+  
+  if(class(fixed_stations) == "SpatFD")
+    fixed_stations <- fixed_stations$coords
   
   # Call optim
   stats::optim(par = c(stati0), fn = .vgm_model.fn,
