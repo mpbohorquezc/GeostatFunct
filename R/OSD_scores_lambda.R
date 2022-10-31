@@ -30,19 +30,22 @@
   
   # ------------------ method lambda
   
-  if (method == "lambda")){
+  if (method == "lambda"){
     
     # Omega
     omegas <- list()
     omega <- matrix(0, k, k)
     for(j in 1:L){
-      omegas[[j]] <- gstat::variogramLine(model[[j]], dist_vector = dist_matrix,coveriance = T)
+      omegas[[j]] <- gstat::variogramLine(model[[j]], dist_vector = dist_matrix,covariance = T)
       omega = omega + omegas[[j]]
       
       # C
       c_vecs <- NULL
-      for(l in 1:N)
-        c_vecs <- cbind(c_vecs, gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],coveriance = T))
+      c_vecs <- matrix(NA,k,N)
+      for(l in 1:N){
+        #c_vecs <- cbind(c_vecs, gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],covariance = T))[,2]
+        c_vecs[,l] <- cbind(c_vecs, gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],covariance = T))[,2] 
+      }
       
     }
     
@@ -51,8 +54,8 @@
       #c_vec <- rep(0,k)
       for(j in 1:L){
         #c_vec <- c_vec + gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],coveriance = T)
-        c_vec <- gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],coveriance = T)
-        accuracy <- c_vec%*%omegas[[j]]%*%t(c_vec)
+        c_vec <- gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],covariance = T)[,2]
+        accuracy <- t(as.numeric(c_vec))%*%omegas[[j]]%*%as.numeric(c_vec)
         # Sugerencia: Ponderar por proporcion de varianza explicada.
       }
     }
@@ -62,7 +65,7 @@
   
   # ------------------ method scores
   
-  if (method == "scores")){
+  if (method == "scores"){
     
     # fit variogram
     tot_variance <- 0
@@ -88,9 +91,9 @@
   
 }
 
-FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
+FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
                               method = "lambda", grid = NULL,
-                              map = NULL,nharm = NULL,plt = F){
+                              map = NULL, nharm = NULL, plt = F){
   # validation ----------------------------------------------
   
   if (missing(k))
@@ -105,10 +108,11 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
   if(is.null(grid) && is.null(map))
     stop("Missing grid and map, please give at leat one.")
   
-  if(!is.null(fixed_stations) && (length(intersect(class(fixed_stations),c("matrix","array","data.frame","SpatialPoints","SpatFD"))) == 0))
+  if(!is.null(fixed_stations) && (length(base::intersect(class(fixed_stations),c("matrix","array","data.frame","SpatialPoints","SpatFD"))) == 0))
     stop("fixed_stations must be of class matrix, array, data.frame, SpatialPoints or SpatFD.")
   
-  if(class(k) != "numeric" || length(k)==1){
+  
+  if(class(k) != "numeric" || length(k)!=1){
     stop("k must be a positive integer.")
   }else if(round(k) != k){
     stop("k must be a positive integer.")
@@ -118,13 +122,15 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
     stop("s0 must be of class matrix, array, data.frame or SpatialPoints.")
   }
   
+  s0 <- as.matrix(as.data.frame(s0))
+  
   if(ncol(s0)!=2)
     stop("s0 must have two columns.")
   
-  if(length(intersect(class(model),c("variogramModel","list"))) == 0)
+  if(length(base::intersect(class(model),c("variogramModel","list"))) == 0)
     stop("model must be a object of class variogramModel from gstat package or a lists of models of class variogramModel.")
   
-  if(class(model)=="list"){
+  if("list" %in% class(model)){
     if(!all(sapply(model,function(v)"variogramModel" %in% class(v))))
       stop("Every element in model must be of class variogramModel.")
   }
@@ -133,10 +139,13 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
     stop("method must be one of 'lambda' or 'scores'.")
   
   if(!is.null(grid) && 
-     length(intersect(c("matrix","array","data.frame"), class(grid))) == 0)
+     length(base::intersect(c("matrix","array","data.frame","SpatialPoints"), class(grid))) == 0)
     stop("grid must be of class SpatialPoints, matrix, array or data.frame.")
   
-  if(ncol(grid)!=2)
+  if(!is.null(grid))
+    grid <- as.matrix(as.data.frame(grid))
+  
+  if( (!is.null(grid)) && (ncol(grid)!=2))
     stop("grid must have two columns.")
   
   if(is.null(grid) && !(inherits(map,"Spatial")))
@@ -149,9 +158,12 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
   
   
   # Basic objects
-  if(is.null(grid))
-    grid <- as.data.frame(sp::sample(map, n = 3e3,
+  if(is.null(grid)){
+    suppressWarnings(
+      grid <- as.data.frame(sp::spsample(map, n = 3e3,
                                      type = "regular"))
+    )
+  }
   
   G <- nrow(grid)
   
@@ -166,8 +178,11 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
   }
   
   
-  if(class(fixed_stations) == "SpatFD")
-    fixed_stations <- fixed_stations$coords
+  if("SpatFD" %in% class(fixed_stations)){
+    fixed_stations <- as.matrix(fixed_stations$coords)
+  }else if(!is.null(fixed_stations)){
+    fixed_stations <- as.matrix(as.data.frame(fixed_stations))
+  }
   
   # Call optim
   stats::optim(par = c(stati0), fn = .vgm_model.fn,
@@ -177,48 +192,48 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
                control = list(
                  trace = 1L, 
                  factr = 1e-6,
-                 REPORT = 4L),
-               maxit = 100) -> result
+                 REPORT = 4L,
+                 maxit = 150)
+               ) -> result
   
   # Put into the grid the final result
   new_stati <- matrix(result$par,ncol=2)
   
   dist_tmp <- proxy::dist(new_stati,as.matrix(grid),diag = T)
   ids_tmp <- apply(as.matrix(dist_tmp),1,which.min)
-  new_stati <- as.matrix(grid)[ids.tmp,]
+  new_stati <- as.matrix(grid)[ids_tmp,]
   
   
-  value <- list(new_stations = new_stati)
+  value <- list(new_stations = new_stati,
+                fixed_stations = fixed_stations)
   
   # Plot -----------------------------------------
   if (plt){
     s0 <- as.data.frame(s0)
     
     if(is.null(map)){
-      ggplot2::ggplot() +
+      final_plot <- ggplot2::ggplot() +
         ggplot2::geom_point(ggplot2::aes(x = grid[,1],y = grid[,2]), colour = "gray90") + # grid
         ggplot2::geom_point(ggplot2::aes(x = s0[,1],y = s0[,2], col = "Target Points")) + # Target points
         ggplot2::geom_point(ggplot2::aes(x = new_stati[,1], y = new_stati[,2], col = " New Stations")) + # New stations
-        if(!is.null(fixed_stations))
-          ggplot2::geom_point(ggplot2::aes(x = fixed_stations[,1], y = fixed_stations[,2], col = "Fixed Stations")) + # Fixed stations
+        {if(!is.null(fixed_stations))ggplot2::geom_point(ggplot2::aes(x = fixed_stations[,1], y = fixed_stations[,2], col = "Fixed Stations"))} + # Fixed stations
         ggplot2::theme_light() +
         ggplot2::labs(title = "Optimal Spatial Design",
-                      subtitle = paste(k,"new stations")
+                      subtitle = paste(k,"new stations"),
                       x = "x", y = "y") + 
-        ggplot2::theme(legend.position = ggplot2::element_blank()) -> final_plot
+        ggplot2::theme(legend.title = ggplot2::element_blank())
     } else {
-      ggplot2::ggplot() +
+      final_plot <- ggplot2::ggplot() +
         ggplot2::geom_point(ggplot2::aes(x = grid[,1],y = grid[,2]), colour = "gray90") + # grid
-        ggplot2::geom_sf(data = sf::st_as_sf(map), fill = "ffffff00", colour = "gray40") + # map
+        ggplot2::geom_sf(data = sf::st_as_sf(map), fill = "#ffffff00", colour = "gray40") + # map
         ggplot2::geom_point(ggplot2::aes(x = s0[,1],y = s0[,2], col = "Target Points")) + # Target points
         ggplot2::geom_point(ggplot2::aes(x = new_stati[,1], y = new_stati[,2], col = "New Stations")) + # New stations
-        if(!is.null(fixed_stations))
-          ggplot2::geom_point(ggplot2::aes(x = fixed_stations[,1], y = fixed_stations[,2], col = "Fixed Stations")) + # Fixed stations
+        {if(!is.null(fixed_stations))ggplot2::geom_point(ggplot2::aes(x = fixed_stations[,1], y = fixed_stations[,2], col = "Fixed Stations"))} + # Fixed stations
         ggplot2::theme_light() +
         ggplot2::labs(title = "Optimal Spatial Design",
-                      subtitle = paste(k,"new stations")
+                      subtitle = paste(k,"new stations"),
                       x = "Longitude", y = "Latitude") + 
-        ggplot2::theme(legend.position = ggplot2::element_blank()) -> final_plot
+        ggplot2::theme(legend.title = ggplot2::element_blank()) -> final_plot
     }
     
     value[["plot"]] <- final_plot
@@ -229,6 +244,32 @@ FD_optimal_design <- function(k,s0,model,fixed_stations = NULL,
   
   class(value) <- "OptimalSpatialDesign"
   return(value)
+}
+
+plot.OptimalSpatialDesign <- function(OSD){
+  if(class(OSD)!="OptimalSpatialDesign")
+    stop("Argument must be of class 'OptimalSpatialDesign'.")
+  return(OSD[['plot']])
+}
+
+print.OptimalSpatialDesign <- function(OSD){
+  if(class(OSD)!="OptimalSpatialDesign")
+    stop("Argument must be of class 'OptimalSpatialDesign'.")
+  if( is.null(OSD$fixed_stations) ){
+    n_fix <- 0
+  }else{
+    n_fix <- nrow(OSD$fixed_stations)
+  }
+  n_new <- nrow(OSD$new_stations)
+  cat("Optimal Spatial Design\n----------------------\n  Fixed Stations:",n_fix,
+      "\n  New Stations:",n_new,
+      "\n  New Coordinates:\n")
+  if(n_new>6){
+    print(head(OSD$new_stations,6))
+    cat("⋮\n" )
+    }else{
+    print(OSD$new_stations)
+  }
 }
 
 
