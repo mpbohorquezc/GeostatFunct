@@ -16,32 +16,30 @@ FD_optimal_design(k, s0, model, fixed_stations = NULL,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{k}{The number of new stations that are going to be located.}
-  \item{s0}{matrix, array, data.frame, or SpatialPoints object that contains the coordinates of the points in which we want to optimally predict using functional kriging. Each row corresponds to each point.
+  \item{s0}{\code{matrix}, \code{array}, \code{data.frame}, or \code{SpatialPoints} object that contains the coordinates of the points in which we want to optimally predict using functional kriging. Each row corresponds to each point.
   If you want to predict optimally in a certain area, you must create a random sample large enought of points of that area and pass it to this function.}
-  \item{model}{A VariogramModel from gstat package or a list of VariogramModels if a distinct model is going to be used for each harmonic.}
-  \item{fixed_stations}{If there are already some stations on the field that are not goint to be removed, here should be passed their coordinates. The object must be of class matrix, array, data.frame, SpatialPoints,SpatFD, or NULL if there are not fidex stations.}
+  \item{model}{A \code{VariogramModel} from \code{gstat} package or a list of \code{VariogramModels} objects if a distinct model is going to be used for each harmonic.}
+  \item{fixed_stations}{If there are already some stations on the field that are not goint to be removed, here should be passed their coordinates. The object must be of class \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}, \code{SpatFD}, or \code{NULL} if there are no fidex stations.}
   \item{method}{Functional kriging method that will be used. Currently available "lambda" and "scores". See details bellow.}
-  \item{grid}{Coordinates in which the new stations can be located. grid must be of type matrix, array, data.frame, SpatialPoints. If you don't pass grid, you must pass map; if you pass both, map will be used.}
-  \item{map}{Spatial object from sp package such as Line, Lines, Polygon, SpatialPolygons, SpatialGrid or SpatialPixels in which the new stations will be located. This object will also be used for creating the plot.}
+  \item{grid}{Coordinates in which the new stations can be located. \code{grid} must be of type \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}. If you don't pass \code{grid}, you must pass \code{map}; if you pass both, \code{map} will be used.}
+  \item{map}{Spatial object from sp package such as \code{Line}, \code{Lines}, \code{Polygon}, \code{SpatialPolygons}, \code{SpatialGrid} or \code{SpatialPixels} in which the new stations will be located. This object will also be used for creating the plot.}
   \item{nharm}{Number of harmonics of the functional principal components that will be used in the prediction.}
-  \item{plt}{TRUE or FALSE. If TRUE, a nice ggplot2 plot with the result will be generated. Se example bellow.}
+  \item{plt}{\code{TRUE} or \code{FALSE}. If \code{TRUE}, a nice \code{ggplot2} plot with the result will be generated. Se example bellow.}
 }
 \details{
 
-"scores" method consists of...
+Bohorquez, M., Giraldo, R., Mateu, J. (2016) present several methods for finding the best combination predictor-design according to the kriging prediction error variance for functional data. They show different functional kriging methods and two of them are implemented on this function.
 
-On the other hand "lambda" method...
-
-See Bohorquez, M., Giraldo, R., & Mateu, J. (2016).
+If method=="lambda", optimal spatial sampling using FPCA and simple kriging will be used (see section 3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)). If method=="scores", optimal spatial sampling using FPCA and simple cokrigin will be used (see section 3.3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)).
 
 }
 \value{
 
-The function returns an OptimalSpatialDesign object that is a list with the following elements:
+The function returns an \code{OptimalSpatialDesign} object that is a list with the following elements:
 
-  \item{new_stations}{matrix array object with the coordinates of the new stations.}
-  \item{fixed_stations}{matrix array object with the coordinates of the fixed stations.}
-  \item{plot}{ggplot2 plot.}
+  \item{new_stations}{\code{matrix} \code{array} object with the coordinates of the new stations.}
+  \item{fixed_stations}{\code{matrix} \code{array} object with the coordinates of the fixed stations.}
+  \item{plot}{\code{ggplot2} plot.}
   
 }
 \references{
@@ -49,6 +47,7 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial pre
 }
 \author{
 Nathaly Vergel Serrano and Samuel Sánchez Gutiérrez.
+
 National University of Colombia, Statistics Department.
 }
 \note{
@@ -83,5 +82,33 @@ FD_optimal_design(k = 10, s0 = s0, model = model,
 OSD
 class(OSD)
 plot(OSD)
+
+#### Real Data Example ####
+
+data(Bogota)
+
+vgm_model  <- gstat::vgm(psill = 5.665312,
+                  model = "Exc",
+                  range = 8000,
+                  kappa = 1.62,
+                  add.to = vgm(psill = 0.893,
+                               model = "Nug",
+                               range = 0,
+                               kappa = 0))
+
+my.CRS <- sp::CRS("+init=epsg:21899") # https://epsg.io/21899
+
+bogota_shp <- sp::spTransform(bogota_shp,my.CRS)
+target <- sp::spsample(bogota_shp,n = 100, type = "random") # The set of points in which we want to predict optimally.
+old_stations <- sp::spsample(bogota_shp,n = 3, type = "random") # The set of stations that are already fixed.
+
+
+FD_optimal_design(k = 10, s0 = target,model = vgm_model,
+               map = bogota_shp,plt = T,#method = "scores",
+               fixed_stations = old_stations) -> res
+res
+class(res)
+plot(res)
+
 }
 
