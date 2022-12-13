@@ -73,8 +73,9 @@
 }
 
 FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
+                              scalar = FALSE, nharm = NULL,
                               method = "lambda", grid = NULL,
-                              map = NULL, nharm = NULL, plt = F){
+                              map = NULL, plt = F){
   # validation ----------------------------------------------
   
   if (missing(k))
@@ -113,11 +114,20 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   if(length(base::intersect(class(model),c("variogramModel","list"))) == 0)
     stop("model must be a object of class variogramModel from gstat package or a lists of models of class variogramModel.")
   
+  if(scalar){
+    nharm <- 1
+    method <- "scores"
+    if("list" %in% class(model) && length(model)>1){
+      message("For scalar data only one model must be passed. The first one will be used.")
+      model <- model[[1]]
+    }
+  }
+  
   if("variogramModel" %in% class(model)){
     if(is.null(nharm)){
       message("As 'model' is a single variogramModel and 'nharm' is not specified, 'nharm' is set to 1.")
       nharm <- 1
-    }else{
+    }else if(nharm>1){
       message("As 'model' is a single variogramModel it will be used for all the harmonics.")
     }
   }
