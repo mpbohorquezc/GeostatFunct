@@ -6,24 +6,26 @@
 Optimal Spatial Design For Functional Data
 }
 \description{
-Given a variogram model and a set of points in which we want to predict certain variable optimally, this function finds where must be placed the stations in which the information will be collected.
+Given a variogram model and a set of points in which we want to predict certain variable optimally, this function finds where must be placed the stations in which the information will be collected for functional or scalar data.
 }
 \usage{
-FD_optimal_design(k, s0, model, fixed_stations = NULL,
-                  method = "lambda", grid = NULL,
-                  map = NULL, nharm = NULL, plt = F)
+FD_optimal_designn(k, s0, model, fixed_stations = NULL,
+                   scalar = FALSE, nharm = NULL,
+                   method = "lambda", grid = NULL,
+                   map = NULL, plt = F)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{k}{The number of new stations that are going to be located.}
   \item{s0}{\code{matrix}, \code{array}, \code{data.frame}, or \code{SpatialPoints} object that contains the coordinates of the points in which we want to optimally predict using functional kriging. Each row corresponds to each point.
   If you want to predict optimally in a certain area, you must create a random sample large enought of points of that area and pass it to this function.}
-  \item{model}{A \code{VariogramModel} from \code{gstat} package or a list of \code{VariogramModels} objects if a distinct model is going to be used for each harmonic.}
+  \item{model}{A \code{VariogramModel} from \code{gstat} package or a list of \code{VariogramModels} objects if a distinct model is going to be used for each harmonic. For scalar data only one model is needed.}
   \item{fixed_stations}{If there are already some stations on the field that are not goint to be removed, here should be passed their coordinates. The object must be of class \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}, \code{SpatFD}, or \code{NULL} if there are no fidex stations.}
+  \item{scalar}{Boolean that indicates if the optimization is for functional data (FALSE) or scalar data (TRUE). If TRUE, nharm is set to 1.}
+  \item{nharm}{Number of harmonics of the functional principal components that will be used in the prediction. If it is not specified it will be set to the number of models passed, then this parameter shouldn't be specified for scalar data.}
   \item{method}{Functional kriging method that will be used. Currently available "lambda" and "scores". See details bellow.}
   \item{grid}{Coordinates in which the new stations can be located. \code{grid} must be of type \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}. If you don't pass \code{grid}, you must pass \code{map}; if you pass both, \code{map} will be used.}
   \item{map}{Spatial object from sp package such as \code{Line}, \code{Lines}, \code{Polygon}, \code{SpatialPolygons}, \code{SpatialGrid} or \code{SpatialPixels} in which the new stations will be located. This object will also be used for creating the plot.}
-  \item{nharm}{Number of harmonics of the functional principal components that will be used in the prediction.}
   \item{plt}{\code{TRUE} or \code{FALSE}. If \code{TRUE}, a nice \code{ggplot2} plot with the result will be generated. Se example bellow.}
 }
 \details{
