@@ -1,28 +1,25 @@
 .vgm_model.fn <- function(points, s0, model, method_i = "lambda", grid, fixed_stations){
   
-  # validation ---------------------------------
-  
-  # This is an internal function, thus its arguments will be validated in the
-  # main function FD_optimal_design.
-  
   # Basic objects
   method <- method_i
-  N <- nrow(s0)
+  N <- nrow(s0) # Number of target points
   points <- matrix(points,ncol=2)
+  
+  # Replace points by their nearest in the given grid
+  #D_toGrid <- proxy::dist(points,as.matrix(grid),diag = T)
+  #closests <- apply(as.matrix(D_toGrid),1,which.min)
+  #points <- as.matrix(grid)[closests,]
+  
+  # Join all the stations
   points <- rbind(fixed_stations,points)
   colnames(points) <- c("x","y")
   # k <- length(points)/2
-  k <- nrow(points)
+  k <- nrow(points) # Number of stations
   z <- rep.int(1,k)
-  L <- length(model)
+  L <- length(model) # Number of harmonics
   df <- sp::SpatialPointsDataFrame(coords = points,
                                    data = as.data.frame(z))
   targetPoints <- sp::SpatialPoints(s0)
-  
-  # Replace points by their nearest in the given grid
-  D_toGrid <- proxy::dist(points,as.matrix(grid),diag = T)
-  closests <- apply(as.matrix(D_toGrid),1,which.min)
-  points <- as.matrix(grid)[closests,]
   
   # distance matrix
   dist_matrix <- as.matrix(proxy::dist(points,diag = T))
@@ -33,34 +30,19 @@
   if (method == "lambda"){
     
     # Omega
-    omegas <- list()
     omega <- matrix(0, k, k)
+    c_vecs <- matrix(0,k,N)
     for(j in 1:L){
-      omegas[[j]] <- gstat::variogramLine(model[[j]], dist_vector = dist_matrix,covariance = T)
-      omega = omega + omegas[[j]]
+      omega <- omega + gstat::variogramLine(model[[j]], dist_vector = dist_matrix,covariance = T)
       
       # C
-      c_vecs <- NULL
-      c_vecs <- matrix(NA,k,N)
-      for(l in 1:N){
-        #c_vecs <- cbind(c_vecs, gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],covariance = T))[,2]
-        c_vecs[,l] <- cbind(c_vecs, gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],covariance = T))[,2] 
-      }
+      c_vecs <- c_vecs + gstat::variogramLine(model[[j]], dist_vector = dist_s0,covariance = T)
       
     }
     
-    accuracy <- 0
-    for(l in 1:N){
-      #c_vec <- rep(0,k)
-      for(j in 1:L){
-        #c_vec <- c_vec + gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],coveriance = T)
-        c_vec <- gstat::variogramLine(model[[j]], dist_vector = dist_s0[,l],covariance = T)[,2]
-        accuracy <- t(as.numeric(c_vec))%*%omegas[[j]]%*%as.numeric(c_vec)
-        # Sugerencia: Ponderar por proporcion de varianza explicada.
-      }
-    }
+    accuracy <- sum(diag(t(c_vecs)%*%solve(omega)%*%c_vecs))
     
-    return(1/accuracy)
+    return(-accuracy)
   }
   
   # ------------------ method scores
@@ -71,19 +53,18 @@
     tot_variance <- 0
     for(j in 1:L){
       
-      gstat_obj <- gstat::gstat(
-        id = "z",
-        formula = z~1,
-        model = model[[j]],
-        beta = 0,
-        data = df)
+      invisible(capture.output(
+        gstat::krige(
+          formula = z~1,
+          locations = df,
+          newdata = targetPoints,
+          beta = 0,
+          model = model[[j]]
+        ) -> kr
+      ))
       
-      predictions <- gstat::predict(
-        object = gstat_obj,
-        newdata = targetPoints
-      )
+      tot_variance <- tot_variance + (1/j)*sum(kr$var1.var)
       
-      tot_variance <- tot_variance + sum(as.data.frame(predictions)$z.var)
     }
     
     return(tot_variance)
@@ -111,10 +92,12 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   if(!is.null(fixed_stations) && (length(base::intersect(class(fixed_stations),c("matrix","array","data.frame","SpatialPoints","SpatFD"))) == 0))
     stop("fixed_stations must be of class matrix, array, data.frame, SpatialPoints or SpatFD.")
   
+  if(!is.null(fixed_stations))
+    fixed_stations <- as.matrix(as.data.frame(fixed_stations))
   
   if(class(k) != "numeric" || length(k)!=1){
     stop("k must be a positive integer.")
-  }else if(round(k) != k){
+  }else if(round(k) != k || k < 1){
     stop("k must be a positive integer.")
   }
   
@@ -130,9 +113,26 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   if(length(base::intersect(class(model),c("variogramModel","list"))) == 0)
     stop("model must be a object of class variogramModel from gstat package or a lists of models of class variogramModel.")
   
+  if("variogramModel" %in% class(model)){
+    if(is.null(nharm)){
+      message("As 'model' is a single variogramModel and 'nharm' is not specified, 'nharm' is set to 1.")
+      nharm <- 1
+    }else{
+      message("As 'model' is a single variogramModel it will be used for all the harmonics.")
+    }
+  }
+  
   if("list" %in% class(model)){
     if(!all(sapply(model,function(v)"variogramModel" %in% class(v))))
       stop("Every element in model must be of class variogramModel.")
+    if(is.null(nharm)){
+      message("As 'nharm' is not specified, it will be set to the number of variogramModel objects in 'model'.")
+      nharm <- length(model)
+    }
+    if(nharm != length(model)){
+      message("As the number of variogramModel in 'model' object and 'nharm' are not the same, the first variogramModel will be used for all the harmonics.")
+      model <- model[[1]]
+    }
   }
   
   if(!(method %in% c("lambda","scores")))
@@ -151,23 +151,19 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   if(is.null(grid) && !(inherits(map,"Spatial")))
     stop("map must be an Spatial object from sp package such as Line, Lines, Polygon, SpatialPolygons, SpatialGrid or SpatialPixels.")
   
-  if("variogramModel" %in% class(model) && is.null(nharm)){
-    message("As model is a single variogramModel and nharm is not specified, nharm is set to 1.")
-    nharm = 1
-  }
   
   
   # Basic objects
   if(is.null(grid)){
     suppressWarnings(
-      grid <- as.data.frame(sp::spsample(map, n = 3e3,
+      grid <- as.data.frame(sp::spsample(map, n = 5e3,
                                      type = "regular"))
     )
   }
   
   G <- nrow(grid)
   
-  stati0 <- grid[sample(1:G,k),]
+  stati0 <- grid[sample(x = 1:G,size = k),]
   stati0 <- as.matrix(stati0)
   
   if("variogramModel" %in% class(model)){
@@ -188,20 +184,22 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   stats::optim(par = c(stati0), fn = .vgm_model.fn,
                s0 = s0, model = model, method_i = method,
                grid = grid, fixed_stations = fixed_stations,
-               method = "L-BFGS-B",
+               method = "BFGS",
                control = list(
                  trace = 1L, 
-                 factr = 1e-6,
-                 REPORT = 4L,
-                 maxit = 150)
+                 REPORT = 20L,
+                 reltol = 1e-8,
+                 maxit = 1000)
                ) -> result
   
-  # Put into the grid the final result
   new_stati <- matrix(result$par,ncol=2)
   
+  # Put the final result into the grid
   dist_tmp <- proxy::dist(new_stati,as.matrix(grid),diag = T)
   ids_tmp <- apply(as.matrix(dist_tmp),1,which.min)
-  new_stati <- as.matrix(grid)[ids_tmp,]
+  new_stati <- matrix(c(as.matrix(grid)[ids_tmp,]),ncol = 2)
+  colnames(new_stati) <- c("x","y")
+  rownames(new_stati) <- rep("",nrow(new_stati))
   
   
   value <- list(new_stations = new_stati,
@@ -221,7 +219,8 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
         ggplot2::labs(title = "Optimal Spatial Design",
                       subtitle = paste(k,"new stations"),
                       x = "x", y = "y") + 
-        ggplot2::theme(legend.title = ggplot2::element_blank())
+        ggplot2::theme(legend.title = ggplot2::element_blank()) +
+        ggplot2::scale_color_discrete()
     } else {
       final_plot <- ggplot2::ggplot() +
         ggplot2::geom_point(ggplot2::aes(x = grid[,1],y = grid[,2]), colour = "gray90") + # grid
@@ -233,7 +232,7 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
         ggplot2::labs(title = "Optimal Spatial Design",
                       subtitle = paste(k,"new stations"),
                       x = "Longitude", y = "Latitude") + 
-        ggplot2::theme(legend.title = ggplot2::element_blank()) -> final_plot
+        ggplot2::theme(legend.title = ggplot2::element_blank())
     }
     
     value[["plot"]] <- final_plot
