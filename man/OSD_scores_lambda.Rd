@@ -30,7 +30,11 @@ FD_optimal_design(k, s0, model, fixed_stations = NULL,
 
 Bohorquez, M., Giraldo, R., Mateu, J. (2016) present several methods for finding the best combination predictor-design according to the kriging prediction error variance for functional data. They show different functional kriging methods and two of them are implemented on this function.
 
-If method=="lambda", optimal spatial sampling using FPCA and simple kriging will be used (see section 3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)). If method=="scores", optimal spatial sampling using FPCA and simple cokrigin will be used (see section 3.3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)).
+If method=="lambda", optimal spatial sampling using FPCA and simple kriging will be used (see section 3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)). If method=="scores", simple kriging will be applied on each harmonic and the total variance will be minimized. This total variance is computed as follows:
+
+\deqn{TotVar = \sum_{j=1}^{nharm}\frac{1}{j}V_j}
+
+where \eqn{V_j} is the variance of the simple kriging prediction of j-th score.
 
 }
 \value{
@@ -51,9 +55,14 @@ Nathaly Vergel Serrano and Samuel Sánchez Gutiérrez.
 National University of Colombia, Statistics Department.
 }
 \note{
-%%  ~~further notes~~
+'lambda' method tends to be faster than 'scores' method.
 }
 
+\section{Warning}{
+When method == 'lambda', the minimized value is not the variance, but the negative of expression (12) in Bohorquez, M., Giraldo, R., & Mateu, J. (2016), that is
+
+\deqn{-\sum_{l = 1}^L \varsigma_l'\Omega^{-1}\varsigma_l}
+}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
