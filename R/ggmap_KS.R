@@ -1,5 +1,5 @@
 ggmap_KS <-
-function(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
+function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
   if (!is.null(map_path)){
     map <- rgdal::readOGR(map_path)
   }else{
