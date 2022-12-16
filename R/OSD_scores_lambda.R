@@ -30,17 +30,19 @@
   if (method == "lambda"){
     
     # Omega
-    omega <- matrix(0, k, k)
-    c_vecs <- matrix(0,k,N)
-    for(j in 1:L){
-      omega <- omega + gstat::variogramLine(model[[j]], dist_vector = dist_matrix,covariance = T)
-      
-      # C
-      c_vecs <- c_vecs + gstat::variogramLine(model[[j]], dist_vector = dist_s0,covariance = T)
-      
-    }
+    OMEGA <- lapply(model,function(m){
+      gstat::variogramLine(object = m, dist_vector = dist_matrix, covariance = T)
+    })
+    omega <- Reduce('+',OMEGA)
     
-    accuracy <- sum(diag(t(c_vecs)%*%solve(omega)%*%c_vecs))
+    # Vector c (\varsigma)
+    C_VEC <- lapply(model,function(m){
+      gstat::variogramLine(object = m, dist_vector = dist_s0, covariance = T)
+    })
+    c_vec <- Reduce('+',C_VEC)
+    
+    # Expresión a maximizar
+    accuracy <- sum(diag(t(c_vec)%*%solve(omega)%*%c_vec))
     
     return(-accuracy)
   }
@@ -49,26 +51,26 @@
   
   if (method == "scores"){
     
-    # fit variogram
-    tot_variance <- 0
-    for(j in 1:L){
-      
+    VARIANCES <- lapply(model,function(m){
       invisible(capture.output(
+        # kriging
         gstat::krige(
           formula = z~1,
           locations = df,
           newdata = targetPoints,
           beta = 0,
-          model = model[[j]]
+          model = m
         ) -> kr
       ))
       
-      tot_variance <- tot_variance + (1/j)*sum(kr$var1.var)
+      return(sum(kr$var1.var)) # return sum of variances
       
-    }
+    })
+    
+    tot_variance <- Reduce('+',VARIANCES)
     
     return(tot_variance)
-    }
+  }
   
 }
 
