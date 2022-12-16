@@ -34,7 +34,7 @@ Bohorquez, M., Giraldo, R., Mateu, J. (2016) present several methods for finding
 
 If method=="lambda", optimal spatial sampling using FPCA and simple kriging will be used (see section 3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)). If method=="scores", simple kriging will be applied on each harmonic and the total variance will be minimized. This total variance is computed as follows:
 
-\deqn{TotVar = \sum_{j=1}^{nharm}\frac{1}{j}V_j}
+\deqn{TotVar = \sum_{j=1}^{nharm}V_j}
 
 where \eqn{V_j} is the variance of the simple kriging prediction of j-th score.
 
