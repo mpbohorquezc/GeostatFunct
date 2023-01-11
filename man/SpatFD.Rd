@@ -2,65 +2,58 @@
 \alias{SpatFD}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+Creates a SpatFD object.
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Creates an object of the class SpatFD from spatial coordinates, and time-series* observed at each spatial location. 
 }
 \usage{
 SpatFD(data, coords, basis = "Bsplines", nbasis = 4, lambda = 0, nharm = NULL, vp = NULL, name = NULL, add = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{data}{
-%%     ~~Describe \code{data} here~~
+  \item{data}{Data must be provided in a data-frame or a matrix where each column correspond to a location and the rows are a sequence of data points indexed in order. Data can also be a fd-object from the fda package.
 }
-  \item{coords}{
-%%     ~~Describe \code{coords} here~~
+  \item{coords}{A data-frame or a matrix with spatial coordinates (x,y) in the same order as the columns in data.
 }
-  \item{basis}{
-%%     ~~Describe \code{basis} here~~
+  \item{basis}{Basis functions. "Fourier" or "Bsplines". By default, "Bsplines".
 }
-  \item{nbasis}{
-%%     ~~Describe \code{nbasis} here~~
+  \item{nbasis}{The number of basis functions. 
 }
-  \item{lambda}{
-%%     ~~Describe \code{lambda} here~~
+  \item{lambda}{Value for the smoothing parameter.
 }
-  \item{nharm}{
-%%     ~~Describe \code{nharm} here~~
+  \item{nharm}{The number of harmonics or eigenfunctions to be reported in the Functional Principal Components results if vp is not given.
 }
-  \item{vp}{
-%%     ~~Describe \code{vp} here~~
+  \item{vp}{Threshold for the cumulative proportion of explained variance to select the number of components if nharm is not given.
 }
-  \item{name}{
-%%     ~~Describe \code{name} here~~
+\item{name}{A new name for data can be assigned.
 }
   \item{add}{
-%%     ~~Describe \code{add} here~~
+New variables can be added for spatial multivariate functional prediction, that is, for functional cokriging. Each variable can be observed in different spatial locations. There is no limit for the number of variables to be used. 
 }
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
+\details{The SpatFD-objects storage the functional data curves, Functional principal component analysis results and spatial coordinates for one or more variables. Each variable has its own data-frame or matrix and its spatial coordinates file.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+Results of the construction of functional data and functional principal components for each variable linked with spatial coordinates. 
 }
 \references{
-%% ~put references to the literature/web site here ~
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial prediction of functional data. Statistical Methods & Applications, 25(1), 39-54.
+
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
 }
-\author{
-%%  ~~who you are~~
+
+\author{Diego Sandoval and Angie Villamil 
+National University of Colombia, Statistics Department.
 }
+
 \note{
-%%  ~~further notes~~
+1. *A time series can be replaced by a frequency-series such as brain signals or a third-spatial dimension such as depth, among others.
+2. SpatFd object can be used to storage spatial univariate or spatial multivariate functional data. 
+3. Although there is the possibility to involve many variables for functional cokriging, the real limitation is found on the constraints required to find a valid multivariate covariance model. So, it is highly recommended to apply the parsimony principle.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -69,6 +62,13 @@ SpatFD(data, coords, basis = "Bsplines", nbasis = 4, lambda = 0, nharm = NULL, v
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+# Load data 
+PM10 = read.table("PartMat10.txt",head=T,dec=",")
+coord = read.table("Coordenadas_planas_Estaciones_Dama_2014.txt",dec=",",sep="\t",header=T)
+
+# Create the object using nharm instead vp
+SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 91, lambda = 0.00002, nharm = 2)
+
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
