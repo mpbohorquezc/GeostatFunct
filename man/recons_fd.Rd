@@ -2,10 +2,9 @@
 \alias{recons_fd}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+This is an internal function for functional kriging and cokriging. To perform the linear combinations to obtain functional kriging and cokriging.
 }
-\description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Once optimization process is finished and scores or lambda are obtained, this function builds the prediction, performing the linear combination between coefficients and basis functions.
 }
 \usage{
 recons_fd(X)
@@ -13,24 +12,29 @@ recons_fd(X)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{
-%%     ~~Describe \code{X} here~~
+%%~~A KS_pred object obtained with function KS_scores_lambdas~~
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
+%%  ~Spatial functional predictions. The fd object based on the two functional kriging methods described in Bohorquez, M., Giraldo, R., & Mateu, J. (2016).
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
 \references{
-%% ~put references to the literature/web site here ~
+%% ~
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial prediction of functional data. Statistical Methods & Applications, 25(1), 39-54.
+
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
+
+Bohorquez M.; Giraldo R. and Mateu J. Spatial prediction and optimal sampling of functional data in Geostatistical Functional Data Analysis: Theory and Methods (2021).  John Wiley  Sons, Chichester, UK. ISBN: 978-1-119-38784-8. https://www.wiley.com/en-us/Geostatistical+Functional+Data+Analysis-p-9781119387848. ~
 }
 \author{
-%%  ~~who you are~~
+Diego Sandoval
 }
 \note{
 %%  ~~further notes~~
@@ -42,12 +46,17 @@ recons_fd(X)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+curves_PM10_l <- recons_fd(KS_SFD_PM10_l)
+plot(curves_PM10_l)
+#method = "scores"
+curves_PM10_sc <- recons_fd(KS_SFD_PM10_sc)
+plot(curves_PM10_sc)
 ##---- Should be DIRECTLY executable !! ----
 ##-- ==>  Define data, use random,
 ##--	or do  help(data=index)  for the standard data sets.
 
 ## The function is currently defined as
-function (X) 
+function (X)
 {
     if (inherits(X, "KS_pred")) {
         vari = X$name
@@ -57,7 +66,7 @@ function (X)
                 mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
                 nr = nrow(a)
                 mean_coef = matrix(rep(mean_coef, nr), ncol = nr)
-                coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef \%*\% 
+                coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef \%*\%
                   t(a)) + mean_coef
                 result_scores = fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
                 result = result_scores
@@ -67,7 +76,7 @@ function (X)
                 mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
                 nr = ncol(b)
                 mean_coef = matrix(rep(mean_coef, nr), ncol = nr)
-                coef_lambda = (X$SFD[[vari]]$data_fd$coefs \%*\% 
+                coef_lambda = (X$SFD[[vari]]$data_fd$coefs \%*\%
                   b) + mean_coef
                 result_lambda = fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
                 result = result_lambda
@@ -78,14 +87,14 @@ function (X)
             mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
             nr = nrow(a)
             mean_coef = matrix(rep(mean_coef, nr), ncol = nr)
-            coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef \%*\% 
+            coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef \%*\%
                 t(a)) + mean_coef
             result_scores = fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
             b = as.matrix(X[[3]]$lambda_pred)
             mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
             nr = nrow(a)
             mean_coef = matrix(rep(mean_coef, nr), ncol = nr)
-            coef_lambda = (X$SFD[[vari]]$data_fd$coefs \%*\% b) + 
+            coef_lambda = (X$SFD[[vari]]$data_fd$coefs \%*\% b) +
                 mean_coef
             result_lambda = fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
             result = list(fd_scores = result_scores, fd_lambda = result_lambda)
@@ -99,10 +108,25 @@ function (X)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
+% \keyword{~Spatial prediction}
+% \keyword{~Eigenfunctions}
 % Use only one keyword per line.
 % For non-standard keywords, use \concept instead of \keyword:
 % \concept{ ~cpt1 }
 % \concept{ ~cpt2 }
 % Use only one concept per line.
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+
