@@ -1,6 +1,7 @@
 KS_scores_lambdas <-
 function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
+
   # Validation --------------------------------------------------------------
 
   #all
@@ -83,11 +84,24 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
   # Kriging -----------------------------------------------------------------
 
+  #jocastroc
+  oldw <- getOption("warn")
+  options(warn = -1)
+
+
   #scores
   puntaje=SFD[[name]]$fpca$scores
   rownames(puntaje)=SFD[[name]]$coordsnames
   puntajes=as.data.frame(puntaje)
   sp::coordinates(puntajes)=SFD[[name]]$coords
+
+  #jocastroc:
+  if ("numeric" %in% class(newcoords)){
+    newcoords= matrix(newcoords, nrow = length(newcoords))}
+  if ("matrix" %in% class(newcoords)){
+    newcoords=as.data.frame(newcoords)}
+  coords_name=colnames(newcoords)
+  newcoords=setNames(newcoords, c("X", "Y"))
 
   #fitting variogram
   if(fill.all==T){
@@ -215,6 +229,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
   #Output
 
+
   if(method == "both"){
     out <- list(SFD=SFD, KS_scores = out_scores, KS_lambda = out_lambda, model = model, name=name)
     class(out)="KS_pred"
@@ -226,6 +241,9 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     class(out)="KS_pred"
   }
 
+
+  #jocastroc:
+  options(warn = oldw)
 
   return(out)
 }

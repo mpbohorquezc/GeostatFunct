@@ -1,8 +1,10 @@
 SpatFD <-
-function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,vp=NULL,name=NULL,add=NULL,...){
+function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add=NULL,...){
      #----------------------------------------------------------------------------
      #           VALIDANDO ARGUMENTOS *
      #----------------------------------------------------------------------------
+     # jocastroc:vp no funciona, se define null por si se quiere volver a implementar en el código.
+     vp=NULL
      #all
      if(missing(data)){
           stop("Missing data")
