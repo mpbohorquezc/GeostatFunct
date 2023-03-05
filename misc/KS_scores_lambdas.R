@@ -102,6 +102,27 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     newcoords=as.data.frame(newcoords)}
   coords_name=colnames(newcoords)
   newcoords=stats::setNames(newcoords, c("X", "Y"))
+
+  #fitting variogram
+  if(fill.all==T){
+    v=list()
+    fv=list()
+    for (i in 1:ncol(puntajes)){
+
+      v[[i]]=gstat::variogram(puntajes[[i]]~1,puntajes,cutoff = max(SFD[[name]]$coords))
+      fv[[i]]=gstat::fit.variogram(v[[i]],model[[i]], fit.method = 6)
+    }
+  }else{
+    v=list()
+    fv=list()
+    for (i in 1:ncol(puntajes)){
+
+      v[[i]]=gstat::variogram(puntajes[[i]]~1,puntajes,cutoff = max(SFD[[name]]$coords))
+      fv[[i]]=gstat::fit.variogram(v[[i]],model[[i]], fit.method = 6)
+    }
+  }
+
+
                                    # Method 1 #
 
   if(method == "lambda" || method == "both"){

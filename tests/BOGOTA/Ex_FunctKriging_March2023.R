@@ -1,28 +1,34 @@
 rm(list=ls())
 
-library(gstat)
-library(sp)
-library(fda)
--library(reshape)
--library(geoR)
-library(ggplot2)
-library(rgdal)
-library(sf)
-library(plotly)
+# export("ggmap_KS", "ggplot_KS","KS_scores_lambdas", "recons_fd", "scores",
+#        ".vgm_model.fn","FD_optimal_design","outputs",
+#        "SpatFD")
 
-source("SpatFD.R")
-source("outputs.R")
-source("scores.R")
-source("recons_fd.R")
-source("KS_scores_lambdas.R")
-source("ggplot_KS.R")
-source("ggmap_KS.R")
-source("OSD_scores_lambda.R")
+# library(gstat)
+# library(sp)
+# library(fda)
+# library(reshape)
+#library(geoR)
+# library(ggplot2)
+# library(rgdal)
+# library(sf)
+# library(plotly)
 
-#data(AirQualityBogota)
+# source("SpatFD.R")
+# source("outputs.R")
+# source("scores.R")
+# source("recons_fd.R")
+# source("KS_scores_lambdas.R")
+# source("ggplot_KS.R")
+# source("ggmap_KS.R")
+# source("FD_optimal_design.R")
+devtools::load_all()
+
+data(AirQualityBogota)
 # load data and coordinates
-PM10 = read.table("PartMat10.txt",head=T,dec=",")
-coord = read.table("Coords_DAMABog.txt",dec=",",sep="\t",header=T)
+# PM10 = read.table("tests/BOGOTA/PartMat10.txt",head=T,dec=",")
+# coord = read.table("tests/BOGOTA/Coords_DAMABog.txt",dec=",",sep="\t",header=T)
+# map <- rgdal::readOGR("tests/BOGOTA/Bogota.shp")
 
 #s_0 nonsampled location. It could be data.frame or matrix and one or more locations of interest
 newcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))
@@ -59,9 +65,9 @@ recons_fd(KS_SFD_PM10_both)
 
 #Curve and variance prediction plots
 ggplot_KS(KS_SFD_PM10_l)
-ggplot_KS(KS_SFD_PM10_l, show.varpred = F) 
+ggplot_KS(KS_SFD_PM10_l, show.varpred = F)
 ggplot_KS(KS_SFD_PM10_sc)
-ggplot_KS(KS_SFD_PM10_sc, show.varpred = F) 
+ggplot_KS(KS_SFD_PM10_sc, show.varpred = F)
 #Curve and variance prediction for both methods
 PlotKS=ggplot_KS(KS_SFD_PM10_both,
           main = "Plot 1 - Using Scores",
@@ -70,22 +76,22 @@ PlotKS=ggplot_KS(KS_SFD_PM10_both,
 PlotKS[[1]]
 PlotKS[[2]]
 
-#Smoothed prediction maps for the given specific times 
+#Smoothed prediction maps for the given specific times
 ggmap_KS(KS_SFD_PM10_l,
-         map_path = "Bogota.shp",
+         map_path = map,
          window_time = c(3500),
          zmin = 25,
          zmax = 100)
 
 ggmap_KS(KS_SFD_PM10_both,
-         map_path = "Bogota.shp",
+         map_path = map,
          window_time = c(2108),
          method = "lambda",
          zmin = 50,
          zmax = 120)
 
 ggmap_KS(KS_SFD_PM10_both,
-         map_path = "Bogota.shp",
+         map_path = map,
          window_time = c(5108,5109,5110),
          method = "scores",
          zmin = 50,

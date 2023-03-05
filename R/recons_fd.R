@@ -15,7 +15,7 @@ function(X){
         mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
 
         coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef %*% t(a)) + mean_coef
-        result_scores = fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
+        result_scores = fda::fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
 
         result = result_scores
 
@@ -28,7 +28,7 @@ function(X){
         mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
 
         coef_lambda = (X$SFD[[vari]]$data_fd$coefs %*% b) + mean_coef
-        result_lambda = fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
+        result_lambda = fda::fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
 
         result = result_lambda
       }
@@ -42,7 +42,7 @@ function(X){
       mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
 
       coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef %*% t(a)) + mean_coef
-      result_scores = fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
+      result_scores = fda::fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
 
       # Lambdas
       b = as.matrix(X[[3]]$lambda_pred)
@@ -53,7 +53,7 @@ function(X){
 
       coef_lambda = (X$SFD[[vari]]$data_fd$coefs %*% b) + mean_coef
 
-      result_lambda = fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
+      result_lambda = fda::fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
 
       result = list(fd_scores = result_scores, fd_lambda = result_lambda)
     }

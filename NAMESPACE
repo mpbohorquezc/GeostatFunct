@@ -1,7 +1,3 @@
-export("ggmap_KS", "ggplot_KS","KS_scores_lambdas", "recons_fd", "scores",
-       ".vgm_model.fn","FD_optimal_design","outputs",
-       "SpatFD")
-
 exportPattern('^[[:alpha:]]+')
 S3method(summary,SpatFD)
 S3method(print,OptimalSpatialDesign)

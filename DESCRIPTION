@@ -2,7 +2,7 @@ Package: SpatFD
 Type: Package
 Title: Functional geostatistics: univariate and multivariate functional spatial prediction
 Version: 0.0.1
-Date: 2023-03-02
+Date: 2023-03-10
 Author: Martha Patricia Bohorquez Castañeda <mpbohorquezc@unal.edu.co>,
 	  Diego Alejandro Sandoval Skinner <diasandovalsk@unal.edu.co>,
 	  Samuel Hernando Sanchez Gutierrez <ssanchezgu@unal.edu.co>,
@@ -14,5 +14,5 @@ Maintainer: Samuel Hernando Sanchez Gutierrez <ssanchezgu@unal.edu.co>,
 Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
 Encoding: UTF-8
-Imports: ggplot2,gstat,sp,fda,sf,rgdal,plotly,stats,proxy
+Imports: ggplot2,plotly,dplyr,stats,proxy,reshape,gstat,sp,fda,sf,rgdal
 LazyData: true

@@ -23,9 +23,9 @@ function(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Dat
 
     times <- SFD$basis$rangeval[1]:SFD$basis$rangeval[2]
 
-    eval <- eval.fd(times, SFD)
+    eval <- fda::eval.fd(times, SFD)
 
-    melt_s <- suppressWarnings(melt(eval))
+    melt_s <- suppressWarnings(reshape::melt(eval))
 
     melt_s$X2 <- as.factor(melt_s$X2)
 
@@ -45,11 +45,11 @@ function(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Dat
 
 
     # Plot
-    graf=ggplot(melt_s,aes(x= Time, y= Value, col= Prediction)) +
-      geom_line() +
-      labs(title = main ) +
-      labs(x = xlab, y = ylab) +
-      theme_minimal()
+    graf=ggplot2::ggplot(melt_s,ggplot2::aes(x= Time, y= Value, col= Prediction)) +
+      ggplot2::geom_line() +
+      ggplot2::labs(title = main ) +
+      ggplot2::labs(x = xlab, y = ylab) +
+      ggplot2::theme_minimal()
 
     return(graf)
 
@@ -67,9 +67,9 @@ function(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Dat
 
       times <- SFD[[i]]$basis$rangeval[1]:SFD[[i]]$basis$rangeval[2]
 
-      eval <- eval.fd(times, SFD[[i]])
+      eval <- fda::eval.fd(times, SFD[[i]])
 
-      melt_s <- suppressWarnings(melt(eval))
+      melt_s <- suppressWarnings(reshape::melt(eval))
 
       melt_s$X2 <- as.factor(melt_s$X2)
 
@@ -88,11 +88,11 @@ function(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Dat
 
 
       # Plot
-      graf[[i]] =ggplot(melt_s,aes(x= Time, y= Value, col= Prediction)) +
-        geom_line() +
-        labs(title = mainl[[i]] ) +
-        labs(x = xlab, y = ylab) +
-        theme_minimal()
+      graf[[i]] =ggplot2::ggplot(melt_s,ggplot2::aes(x= Time, y= Value, col= Prediction)) +
+        ggplot2::geom_line() +
+        ggplot2::labs(title = mainl[[i]] ) +
+        ggplot2::labs(x = xlab, y = ylab) +
+        ggplot2::theme_minimal()
 
     }
 

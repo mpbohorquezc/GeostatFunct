@@ -1,6 +1,4 @@
 print.OptimalSpatialDesign <- function(OSD, ...){
-  if(class(OSD)!="OptimalSpatialDesign")
-    stop("Argument must be of class 'OptimalSpatialDesign'.")
   if( is.null(OSD$fixed_stations) ){
     n_fix <- 0
   }else{

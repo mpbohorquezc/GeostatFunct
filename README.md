@@ -24,7 +24,7 @@ The objects class and usage in the different functions are listed.
 ## Example of use
 ```s
 library(SpatFD)
-library(ggplot2)
+library(gstat)
 
 # load data and coordinates
 data(AirQualityBogota)
@@ -77,20 +77,20 @@ PlotKS[[2]]
 
 #Smoothed prediction maps for the given specific times 
 ggmap_KS(KS_SFD_PM10_l,
-         map_path = "Bogota.shp",
+         map_path = map,
          window_time = c(3500),
          zmin = 25,
          zmax = 100)
 
 ggmap_KS(KS_SFD_PM10_both,
-         map_path = "Bogota.shp",
+         map_path = map,
          window_time = c(2108),
          method = "lambda",
          zmin = 50,
          zmax = 120)
 
 ggmap_KS(KS_SFD_PM10_both,
-         map_path = "Bogota.shp",
+         map_path = map,
          window_time = c(5108,5109,5110),
          method = "scores",
          zmin = 50,

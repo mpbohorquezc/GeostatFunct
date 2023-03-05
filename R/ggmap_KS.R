@@ -1,7 +1,11 @@
 ggmap_KS <-
 function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
   if (!is.null(map_path)){
-    map <- rgdal::readOGR(map_path)
+    if(is.character(map_path)){
+      map <- rgdal::readOGR(map_path)
+    }else{
+      map = map_path
+    }
   }else{
     mx <- min(KS$SFD[[1]]$coords[,1])
     Mx <- max(KS$SFD[[1]]$coords[,1])
@@ -29,9 +33,9 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
     times <- sort(window_time)
   }
 
-  eval <- eval.fd(times, SFD)
+  eval <- fda::eval.fd(times, SFD)
 
-  melt_s <- suppressWarnings(melt(eval))
+  melt_s <- suppressWarnings(reshape::melt(eval))
 
   melt_s$X2 <- as.factor(melt_s$X2)
 
@@ -53,7 +57,7 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
 
     melt_s_2 <- melt_s[melt_s$Time == i,]
 
-    graf[[i]] <- plotly::plot_ly(
+    graf[[i]] <- dplyr::`%>%`(plotly::plot_ly(
       x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
       y = as.numeric(as.character(melt_s_2$Y)), #melt_s_2$Y,
       z = melt_s_2$Value,
@@ -62,12 +66,12 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
       reversescale = T,
       zmin = zmin,
       zmax = zmax
-    ) %>%
+    ),
       plotly::layout(
         title = paste("Prediction - Time = ", times[i]),
         xaxis = list(showticklabels = FALSE), yaxis = list(showticklabels = FALSE),
         scene = list(aspectration = list(x = 1, y = 1))
-      )
+      ))
 
   }
 

@@ -1,8 +1,6 @@
 \name{FD_optimal_design}
 \alias{FD_optimal_design}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
 Optimal Spatial Design For Functional Data
 }
 \description{
@@ -14,7 +12,6 @@ FD_optimal_designn(k, s0, model, fixed_stations = NULL,
                    method = "lambda", grid = NULL,
                    map = NULL, plt = F)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{k}{The number of new stations that are going to be located.}
   \item{s0}{\code{matrix}, \code{array}, \code{data.frame}, or \code{SpatialPoints} object that contains the coordinates of the points in which we want to optimally predict using functional kriging. Each row corresponds to each point.
@@ -32,7 +29,7 @@ FD_optimal_designn(k, s0, model, fixed_stations = NULL,
 
 Bohorquez, M., Giraldo, R., Mateu, J. (2016) present several methods for finding the best combination predictor-design according to the kriging prediction error variance for functional data. They show different functional kriging methods and two of them are implemented on this function.
 
-If method=="lambda", optimal spatial sampling using FPCA and simple kriging will be used (see section 3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)). If method=="scores", simple kriging will be applied on each harmonic and the total variance will be minimized. This total variance is computed as follows:
+If method is "lambda", optimal spatial sampling using FPCA and simple kriging will be used (see section 3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)). If method is "scores", simple kriging will be applied on each harmonic and the total variance will be minimized. This total variance is computed as follows:
 
 \deqn{TotVar = \sum_{j=1}^{nharm}V_j}
 
@@ -59,15 +56,12 @@ Nathaly Vergel Serrano \email{nvergel@unal.edu.co} & Samuel Sánchez Gutiérrez 
 }
 
 \section{Warning}{
-When method == 'lambda', the minimized value is not the variance, but the negative of expression (12) in Bohorquez, M., Giraldo, R., & Mateu, J. (2016), that is
+When method is 'lambda', the minimized value is not the variance, but the negative of expression (12) in Bohorquez, M., Giraldo, R., & Mateu, J. (2016), that is
 
 \deqn{-\sum_{l = 1}^L \varsigma_l'\Omega^{-1}\varsigma_l}
 }
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-
+\seealso{\code{\link{print.OptimalSpatialDesign}}
 }
 \examples{
 s0 <- cbind(2*runif(100),runif(100)) # random coordinates on (0,2)x(0,1)
@@ -94,7 +88,7 @@ plot(OSD)
 
 #### Real Data Example ####
 
-data(Bogota)
+data(AirQualityBogota)
 
 vgm_model  <- gstat::vgm(psill = 5.665312,
                   model = "Exc",

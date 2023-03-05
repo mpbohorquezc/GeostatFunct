@@ -17,7 +17,7 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
      }
 
      #data
-     if(!(is.matrix(data) || is.array(data) || is.data.frame(data) ||is.fdSmooth(data)||is.fd(data))){
+     if(!(is.matrix(data) || is.array(data) || is.data.frame(data) ||fda::is.fdSmooth(data)||fda::is.fd(data))){
           stop("Wrong class of data object")
      }
      if(any(is.na(data))){
@@ -35,9 +35,9 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
      #Coincidan tamaños
      if(is.matrix(data)||is.data.frame(data)|| is.array(data)){
           cx=dim(data)[2]
-     }else if(is.fdSmooth(data)){
+     }else if(fda::is.fdSmooth(data)){
           cx=dim(data$fd$coefs)[2]
-     }else if(is.fd(data)){
+     }else if(fda::is.fd(data)){
           cx=dim(data$coefs)[2]
      }
 
@@ -59,7 +59,7 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
           stop("basis not specified")
      }
      #nbasis
-     if (!(((is.fdSmooth(data)||is.fd(data) )&&is.null(nbasis))  || (is.numeric(nbasis)&& length(nbasis)==1))){
+     if (!(((fda::is.fdSmooth(data)||fda::is.fd(data) )&&is.null(nbasis))  || (is.numeric(nbasis)&& length(nbasis)==1))){
           stop("Wrong class of nbasis object")
      }
      #nharm
@@ -67,7 +67,7 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
           stop("Wrong class of nharm object")
      }
      #lambda
-     if (!(((is.fdSmooth(data)||is.fd(data) )&&is.null(lambda))  || (is.numeric(lambda)&& length(lambda)==1))){
+     if (!(((fda::is.fdSmooth(data)||fda::is.fd(data) )&&is.null(lambda))  || (is.numeric(lambda)&& length(lambda)==1))){
           stop("Wrong class of lambda object")
      }
      #vp
@@ -112,25 +112,25 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
           }
 
           hr <- c(1,nrow(Mdata))
-          oplfd <- vec2Lfd(c(1,ncol(Mdata)), hr)
+          oplfd <- fda::vec2Lfd(c(1,ncol(Mdata)), hr)
 
           #bases funcionales
           if(basis=="Bsplines"){
-               hourbasis <- create.bspline.basis(hr,nbasis,...)
+               hourbasis <- fda::create.bspline.basis(hr,nbasis,...)
           } else if(basis=="Fourier"){
-               hourbasis <- create.fourier.basis(hr,nbasis,...)
+               hourbasis <- fda::create.fourier.basis(hr,nbasis,...)
           }
 
-          data_fdPar<-fdPar(fdobj=hourbasis,Lfdobj=oplfd,lambda)
-          data_fdSm <- smooth.basis(argvals=1:nrow(Mdata),Mdata,data_fdPar)
+          data_fdPar<-fda::fdPar(fdobj=hourbasis,Lfdobj=oplfd,lambda)
+          data_fdSm <- fda::smooth.basis(argvals=1:nrow(Mdata),Mdata,data_fdPar)
           data_fd=data_fdSm$fd
           cn=data_fd$fdnames$reps
 
-     }  else if (is.fdSmooth(data)){
+     }  else if (fda::is.fdSmooth(data)){
           data_fdSm = data
           data_fd=data_fdSm$fd
           cn=data_fd$fdnames$reps
-     }  else if (is.fd(data)){
+     }  else if (fda::is.fd(data)){
           data_fd=data
           cn=data_fd$fdnames$reps
      }
@@ -140,16 +140,16 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
      #----------------------------------------------------------------------------
 
      if (!is.null(nharm)){
-          fpca=pca.fd(data_fd,nharm=nharm)
+          fpca=fda::pca.fd(data_fd,nharm=nharm)
      }  else if(!is.null(vp)){
           nh=1
           repeat{
-               fpca=pca.fd(data_fd,nharm = nh)
+               fpca=fda::pca.fd(data_fd,nharm = nh)
                if(! sum(fpca$varprop)<vp){ break }
                nh=nh+1
           }
      }  else if(is.null(nharm) && is.null(vp)){
-          fpca=pca.fd(data_fd)
+          fpca=fda::pca.fd(data_fd)
      }
 
      if(is.null(add)){
