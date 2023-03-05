@@ -14,5 +14,5 @@ Maintainer: Samuel Hernando Sanchez Gutierrez <ssanchezgu@unal.edu.co>,
 Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
 Encoding: UTF-8
-Imports: ggplot2,...
+Imports: ggplot2,gstat,sp,fda,sf,rgdal,plotly,stats,proxy
 LazyData: true
