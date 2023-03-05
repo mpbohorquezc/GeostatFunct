@@ -71,6 +71,7 @@ modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
 
 #method = "lambda"
 KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", model = modelos)
+class(KS_SFD_PM10_l)
 
 #method = "scores"
 KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores", model = modelos)
