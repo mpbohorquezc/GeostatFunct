@@ -55,7 +55,7 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 Bohorquez M.; Giraldo R. and Mateu J. Spatial prediction and optimal sampling of functional data in Geostatistical Functional Data Analysis: Theory and Methods (2021).  John Wiley  Sons, Chichester, UK. ISBN: 978-1-119-38784-8. https://www.wiley.com/en-us/Geostatistical+Functional+Data+Analysis-p-9781119387848.
 }
 \author{
-Diego Sandoval y Angie Villamil
+Diego Sandoval \email{diasandovalsk@unal.edu.co} & Angie Villamil.
 }
 \note{
 %%  ~~further notes~~

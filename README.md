@@ -19,7 +19,7 @@ The objects class and usage in the different functions are listed.
 
 - `SpatFD` return an object class 'SpatFD' which is used in functional kriging and to obtain the spatial random field of scores.
 - `KS_scores_lambdas` return an object class 'KS_pred' to use in the linear combinations to obtain functional kriging and plots with `ggplot_KS` and `ggmap_KS`.
-- `FD_optimal_design` return an object class 'OptimalSpatialDesign' that can be used with plot.
+- `FD_optimal_design` return an object class 'OptimalSpatialDesign' that can be used with print.
 
 ## Example of use
 ```s

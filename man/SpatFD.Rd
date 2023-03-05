@@ -12,7 +12,7 @@ SpatFD(data, coords, basis = "Bsplines", nbasis = 4, lambda = 0, nharm = NULL, v
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{data}{Data must be provided in a data-frame or a matrix where each column corresponds to a location, and the rows are a sequence of data points, that is, the rows are ordered according to time, frequency, depth, …. Data can also be an fd-object from the fda package. 
+  \item{data}{Data must be provided in a data-frame or a matrix where each column corresponds to a location, and the rows are a sequence of data points, that is, the rows are ordered according to time, frequency, depth, …. Data can also be an fd-object from the fda package.
 }
   \item{coords}{A data-frame or a matrix with spatial coordinates (x,y). The number of columns in data must coincide with the number of rows in coords for each variable.
 }
@@ -29,7 +29,7 @@ SpatFD(data, coords, basis = "Bsplines", nbasis = 4, lambda = 0, nharm = NULL, v
 \item{name}{A new name for data can be assigned.
 }
   \item{add}{
-Other variables can be added for spatial multivariate functional prediction, that is, for functional cokriging. It is not necessary that all variables are observed at the same spatial locations. 
+Other variables can be added for spatial multivariate functional prediction, that is, for functional cokriging. It is not necessary that all variables are observed at the same spatial locations.
 }
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
@@ -46,8 +46,7 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial pre
 Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
 }
 
-\author{Diego Sandoval and Angie Villamil
-National University of Colombia, Statistics Department.
+\author{Diego Sandoval \email{diasandovalsk@unal.edu.co} & Angie Villamil.
 }
 
 \note{

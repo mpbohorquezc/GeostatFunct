@@ -46,15 +46,13 @@ The function returns an \code{OptimalSpatialDesign} object that is a list with t
   \item{new_stations}{\code{matrix} \code{array} object with the coordinates of the new stations.}
   \item{fixed_stations}{\code{matrix} \code{array} object with the coordinates of the fixed stations.}
   \item{plot}{\code{ggplot2} plot.}
-  
+
 }
 \references{
 Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial prediction of functional data. Statistical Methods & Applications, 25(1), 39-54.
 }
 \author{
-Nathaly Vergel Serrano and Samuel Sánchez Gutiérrez.
-
-National University of Colombia, Statistics Department.
+Nathaly Vergel Serrano \email{nvergel@unal.edu.co} & Samuel Sánchez Gutiérrez \email{ssanchezgu@unal.edu.co}.
 }
 \note{
 'lambda' method tends to be faster than 'scores' method.
