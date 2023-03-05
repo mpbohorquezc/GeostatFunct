@@ -18,7 +18,7 @@ scores(X)
 \details{
 For a SpatFD object with P spatial functional variables measured on n_p locations each, and nharm=k_p, p=1,..., P. The scores-function builds a data-frame with n_p rows and k_p+2 columns. The first two columns are the horizontal and vertical spatial coordinates x,y.  The rest of the columns are the score values for each of the first k_p harmonics selected for the p variable, at each of the n_p locations.
 }
-\value{A list with P data-frames, with dimension n_p \times k_p+2, each. p=1,…,P.
+\value{A list with P data-frames, with dimension \eqn{n_p \times k_p+2}, each. p=1,…,P.
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 %%  \item{comp1 }{Description of 'comp1'}
@@ -59,34 +59,7 @@ score_PM10_MNO2=scores(PM10_MNO2_spat)
 score_PM10_MNO2[[1]]
 score_PM10_MNO2[[2]]
 }
-## The function is currently defined as
-function (X)
-{
-    if (inherits(X, "SpatFD")) {
-        puntaje = list()
-        puntajes = list()
-        for (j in 1:length(X)) {
-            puntaje[[j]] = X[[j]]$fpca$scores
-            rownames(puntaje[[j]]) = X[[j]]$coordsnames
-            puntajes[[j]] = data.frame(X[[j]]$coords, puntaje[[j]])
-        }
-    }
-    else if (inherits(X, "scores_pred")) {
-        puntajes = X$scores_pred
-    }
-    else {
-        stop("Wrong class of X object. It must be of class SpatFD or scores_pred")
-    }
-    return(puntajes)
-  }
-}
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{~Functional principal component analysis}
-% \keyword{~Spatial process}
-% \keyword{~Scores}
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+
+\keyword{Functional principal component analysis}
+\keyword{Spatial process}
+\keyword{Scores}

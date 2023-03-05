@@ -17,5 +17,4 @@ StripTrailingWhitespace: Yes
 
 BuildType: Package
 PackageUseDevtools: Yes
-PackagePath: H:/Mi unidad/UNAL/Tesis - material/GeostatFunct
 PackageInstallArgs: --no-multiarch --with-keep.source

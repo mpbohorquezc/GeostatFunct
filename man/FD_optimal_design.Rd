@@ -101,13 +101,13 @@ vgm_model  <- gstat::vgm(psill = 5.665312,
 
 my.CRS <- sp::CRS("+init=epsg:21899") # https://epsg.io/21899
 
-bogota_shp <- sp::spTransform(bogota_shp,my.CRS)
+bogota_shp <- sp::spTransform(map,my.CRS)
 target <- sp::spsample(bogota_shp,n = 100, type = "random") # The set of points in which we want to predict optimally.
-old_stations <- sp::spsample(bogota_shp,n = 3, type = "random") # The set of stations that are already fixed.
+old_stations <- sp::spsample(map,n = 3, type = "random") # The set of stations that are already fixed.
 
 
 FD_optimal_design(k = 10, s0 = target,model = vgm_model,
-               map = bogota_shp,plt = T,#method = "scores",
+               map = map,plt = T,#method = "scores",
                fixed_stations = old_stations) -> res
 res
 class(res)
