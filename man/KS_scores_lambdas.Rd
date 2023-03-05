@@ -10,8 +10,7 @@ Linear Spatial functional prediction. Two predictors are possible: scores or lam
 KS_scores_lambdas(SFD, newcoords, model, method = "lambda", name = NULL, fill.all = NULL)
 }
 \arguments{
-  \item{SFD}{
-SpatFD object.
+  \item{SFD}{object of class 'SpatFD'.
 }
   \item{newcoords}{
 The N × 2 matrix or data.frame with the spatial coordinates corresponding to the N prediction locations.
@@ -33,10 +32,9 @@ gstat function parameter. If there are more than 1 score vector and not all mode
  "lambda" option corresponds to the predictor \eqn{\breve{\chi}_{\bm s_0}(t)}, given by
 \deqn{\breve{\chi}_{\bm s_0}(t)=\sum\limits_{i=1}^{n}\lambda_i\chi_{\bm s_i}(t)}
 and weigths are found such that minimize
-\eqn{\left\|\bm\chi_{\bm s_0}(t)-\breve{\chi}_{\bm s_0}(t)\right\|^2}
+\eqn{\left\|\bm\chi_{\bm s_0}(t)-\breve{\chi}_{\bm s_0}(t)\right\|^2}.
 
 "scores" method performs kriging or cokriging directly on the scores and predictions are used to build the functional prediction
-
 }
 \value{
 Returns a 'KS_pred' object with functional kriging:
