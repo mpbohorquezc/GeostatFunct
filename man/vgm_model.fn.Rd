@@ -1,5 +1,5 @@
-\name{.vgm_model.fn}
-\alias{.vgm_model.fn}
+\name{vgm_model.fn}
+\alias{vgm_model.fn}
 \title{
 Functional kriging Variance
 }
@@ -9,7 +9,7 @@ This is an internal function of the package that is used by \link{OptimalSpatial
 
 \usage{
 
-.vgm_model.fn(points, s0, model,
+vgm_model.fn(points, s0, model,
             method_i = "lambda", grid,
             fixed_stations)
 }

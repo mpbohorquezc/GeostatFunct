@@ -117,7 +117,7 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   }
 
   # Call optim
-  stats::optim(par = c(stati0), fn = .vgm_model.fn,
+  stats::optim(par = c(stati0), fn = vgm_model.fn,
                s0 = s0, model = model, method_i = method,
                grid = grid, fixed_stations = fixed_stations,
                method = "BFGS",
