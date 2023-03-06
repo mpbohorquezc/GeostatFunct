@@ -6,11 +6,11 @@
   This functions shows a summary of the main objects of SpatFD objects.
 }
 \usage{
-  \method{summary}{SpatFD}(SpatFD, ...)
+  \method{summary}{SpatFD}(object, ...)
 }
 
 \arguments{
-  \item{SpatFD}{
+  \item{object}{
     Object of class 'SpatFD'.
   }
   \item{...}{arguments from summary.}

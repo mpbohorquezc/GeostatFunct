@@ -1,4 +1,5 @@
-print.OptimalSpatialDesign <- function(OSD, ...){
+print.OptimalSpatialDesign <- function(x, ...){
+  OSD = x
   if( is.null(OSD$fixed_stations) ){
     n_fix <- 0
   }else{
@@ -15,7 +16,8 @@ print.OptimalSpatialDesign <- function(OSD, ...){
     print(OSD$new_stations)
   }
 }
-summary.SpatFD <- function(SpatFD, ...){
+summary.SpatFD <- function(object, ...){
+  SpatFD = object
   i=1
   for (i in 1:length(SpatFD)){
     var = SpatFD[[i]]$variable_name
@@ -52,62 +54,63 @@ summary.SpatFD <- function(SpatFD, ...){
   i=i+1
   }
 }
-summary.KS_pred <- function(SpatFD, ...){
-    if (is.null(SpatFD$KS_scores)&&!is.null(SpatFD$KS_lambda)){
-      lambda_pred = SpatFD$KS_lambda$lambda_pred
-      lambda_varpred = SpatFD$KS_lambda$lambda_varpred
-      model = SpatFD$model
+summary.KS_pred <- function(object, ...){
+  SpatFD = object
+  if (is.null(SpatFD$KS_scores)&&!is.null(SpatFD$KS_lambda)){
+    lambda_pred = SpatFD$KS_lambda$lambda_pred
+    lambda_varpred = SpatFD$KS_lambda$lambda_varpred
+    model = SpatFD$model
 
-      cat("\n","## Lambda values","\n")
-      print(lambda_pred)
+    cat("\n","## Lambda values","\n")
+    print(lambda_pred)
 
-      cat("\n","## Lambda var_predicted","\n")
-      print(lambda_varpred)
+    cat("\n","## Lambda var_predicted","\n")
+    print(lambda_varpred)
 
-      cat("\n","## Models","\n")
-      for (i in 1:length(model)){
-        cat("The model ",i,"is: \n")
-        print(model[[i]])}
-    }
-    if (!is.null(SpatFD$KS_scores)&&is.null(SpatFD$KS_lambda)){
-      scores_pred = SpatFD$KS_scores$scores_pred
-      scores_varpred = SpatFD$KS_scores$scores_varpred
-      model = SpatFD$model
+    cat("\n","## Models","\n")
+    for (i in 1:length(model)){
+      cat("The model ",i,"is: \n")
+      print(model[[i]])}
+  }
+  if (!is.null(SpatFD$KS_scores)&&is.null(SpatFD$KS_lambda)){
+    scores_pred = SpatFD$KS_scores$scores_pred
+    scores_varpred = SpatFD$KS_scores$scores_varpred
+    model = SpatFD$model
 
-      cat("\n","## Scores","\n")
-      print(scores_pred)
+    cat("\n","## Scores","\n")
+    print(scores_pred)
 
-      cat("\n","## Scores var_predicted","\n")
-      print(scores_varpred)
+    cat("\n","## Scores var_predicted","\n")
+    print(scores_varpred)
 
-      cat("\n","## Models","\n")
-      for (i in 1:length(model)){
-        cat("The model ",i,"is: \n")
-        print(model[[i]])}
+    cat("\n","## Models","\n")
+    for (i in 1:length(model)){
+      cat("The model ",i,"is: \n")
+      print(model[[i]])}
 
-    }
-    if (!is.null(SpatFD$KS_scores)&&!is.null(SpatFD$KS_lambda)){
-      scores_pred = SpatFD$KS_scores$scores_pred
-      scores_varpred = SpatFD$KS_scores$scores_varpred
-      lambda_pred = SpatFD$KS_lambda$lambda_pred
-      lambda_varpred = SpatFD$KS_lambda$lambda_varpred
-      model = SpatFD$model
+  }
+  if (!is.null(SpatFD$KS_scores)&&!is.null(SpatFD$KS_lambda)){
+    scores_pred = SpatFD$KS_scores$scores_pred
+    scores_varpred = SpatFD$KS_scores$scores_varpred
+    lambda_pred = SpatFD$KS_lambda$lambda_pred
+    lambda_varpred = SpatFD$KS_lambda$lambda_varpred
+    model = SpatFD$model
 
-      cat("\n","## Lambda values","\n")
-      print(lambda_pred)
+    cat("\n","## Lambda values","\n")
+    print(lambda_pred)
 
-      cat("\n","## Lambda var_predicted","\n")
-      print(lambda_varpred)
+    cat("\n","## Lambda var_predicted","\n")
+    print(lambda_varpred)
 
-      cat("\n","## Scores","\n")
-      print(scores_pred)
+    cat("\n","## Scores","\n")
+    print(scores_pred)
 
-      cat("\n","## Scores var_predicted","\n")
-      print(scores_varpred)
+    cat("\n","## Scores var_predicted","\n")
+    print(scores_varpred)
 
-      cat("\n","## Models","\n")
-      for (i in 1:length(model)){
-        cat("The model ",i,"is: \n")
-        print(model[[i]])}
-    }
+    cat("\n","## Models","\n")
+    for (i in 1:length(model)){
+      cat("The model ",i,"is: \n")
+      print(model[[i]])}
+  }
 }

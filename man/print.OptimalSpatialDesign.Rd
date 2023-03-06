@@ -6,11 +6,11 @@
 This functions prints a summary of the main objects of OptimalSpatialDesign objects.
 }
 \usage{
-\method{print}{OptimalSpatialDesign}(OSD, ...)
+\method{print}{OptimalSpatialDesign}(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{OSD}{
+  \item{x}{
 Object of class 'OptimalSpatialDesign'.
 }
 \item{...}{arguments from print}

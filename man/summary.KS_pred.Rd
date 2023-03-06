@@ -6,10 +6,10 @@
   This functions shows a summary of the main objects of KS_pred objects.
 }
 \usage{
-  \method{summary}{KS_pred}(SpatFD, ...)
+  \method{summary}{KS_pred}(object, ...)
 }
 \arguments{
-  \item{SpatFD}{
+  \item{object}{
     Object of class 'KS_pred'.
   }
   \item{...}{arguments from summary}
