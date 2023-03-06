@@ -76,7 +76,7 @@ model  <- vgm(psill = 5.665312,
                                range = 0,
                                kappa = 0))
 FD_optimal_design(k = 10, s0 = s0, model = model,
-                  grid = grid, nharm = 2, plt = T,
+                  grid = grid, nharm = 2, plt = TRUE,
                   fixed_stations = fixed_stations) -> OSD
 OSD$new_stations
 OSD$fixed_stations
@@ -104,7 +104,7 @@ old_stations <- sp::spsample(bogota_shp,n = 3, type = "random")
 # The set of stations that are already fixed.
 
 FD_optimal_design(k = 10, s0 = target,model = vgm_model,
-               map = map,plt = T,#method = "scores",
+               map = map,plt = TRUE,
                fixed_stations = old_stations) -> res
 res
 class(res)

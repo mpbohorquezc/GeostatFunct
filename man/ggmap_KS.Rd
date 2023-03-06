@@ -7,7 +7,8 @@ Map plot of a 'KS_pred' object
 A plotly visualization of the predicted kriging in a colormap for a specific window time.
 }
 \usage{
-ggmap_KS(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL)
+ggmap_KS(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000,
+zmin = NULL, zmax = NULL)
 }
 \arguments{
   \item{KS}{

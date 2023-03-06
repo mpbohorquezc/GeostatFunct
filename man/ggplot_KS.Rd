@@ -7,7 +7,8 @@ ggplot of predicted functions
 Plot with or without predicted variance in each spatial location of the functional kriging.
 }
 \usage{
-ggplot_KS(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 3)
+ggplot_KS(KS, show.varpred = T, main = "Functional Data",
+main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 3)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

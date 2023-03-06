@@ -23,15 +23,13 @@ name = NULL, add = NULL, ...)
 }
   \item{nharm}{The number of harmonics or eigenfunctions to be reported in the Functional Principal Components results if vp is not given.
 }
-%  \item{vp}{Threshold for the cumulative proportion of explained variance to select the number of components if nharm is not given.
-}
-\item{name}{A new name for data can be assigned.
-}
+%  \item{vp}{Threshold for the cumulative proportion of explained variance to select the number of components if nharm is not given.}
+\item{name}{A new name for data can be assigned.}
   \item{add}{
-Other variables can be added for spatial multivariate functional prediction, that is, for functional cokriging. It is not necessary that all variables are observed at the same spatial locations.
+Other variables can be added for spatial multivariate functional prediction, that is, for functional cokriging. It is not necessary that all variables areobserved at the same spatial locations.
 }
   \item{\dots}{
-%%     ~~Describe \code{\dots} here~~
+arguments from fda create.bspline.basis or create.fourier.basis.
 }
 }
 \details{The SpatFD-objects storage the functional data, its parameters, the functional principal component analysis results, and the spatial coordinates for each variable. Each variable has its own functional data, data-frame or matrix and its spatial coordinates file.
@@ -53,8 +51,6 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 
 2. Locations must be in the same region of interest to make sense to include all of them in the same prediction model. However, each variable can be observed in different spatial locations and each can have a different number of observations. There is no limit for the number of variables to be included in this object.
 }
-
-
 
 \seealso{
 \code{\link{summary.SpatFD}}

@@ -40,7 +40,7 @@ Nathaly Vergel Serrano \email{nvergel@unal.edu.co} & Samuel Sánchez Gutiérrez 
 }
 
 \seealso{
-\code{\link[SpatFD]{FD_scores_lambda}}
+\code{\link{FD_optimal_design}}
 }
 \examples{
 # See FD_optimal_design examples
