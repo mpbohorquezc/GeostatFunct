@@ -22,7 +22,7 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   if(!is.null(fixed_stations))
     fixed_stations <- as.matrix(as.data.frame(fixed_stations))
 
-  if(class(k) != "numeric" || length(k)!=1){
+  if(!is.numeric(k) || length(k)!=1){
     stop("k must be a positive integer.")
   }else if(round(k) != k || k < 1){
     stop("k must be a positive integer.")

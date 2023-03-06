@@ -6,7 +6,7 @@
 This functions prints a summary of the main objects of OptimalSpatialDesign objects.
 }
 \usage{
-print.OptimalSpatialDesign(OSD, ...)
+\method{print}{OptimalSpatialDesign}(OSD, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -48,7 +48,7 @@ old_stations <- sp::spsample(bogota_shp,n = 3, type = "random")
 # The set of stations that are already fixed.
 
 FD_optimal_design(k = 10, s0 = target,model = vgm_model,
-               map = map,plt = T,#method = "scores",
+               map = map,plt = TRUE,#method = "scores",
                fixed_stations = old_stations) -> res
 print(res)
 }

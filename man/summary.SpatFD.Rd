@@ -6,7 +6,7 @@
   This functions shows a summary of the main objects of SpatFD objects.
 }
 \usage{
-  summary.SpatFD(SpatFD, ...)
+  \method{summary}{SpatFD}(SpatFD, ...)
 }
 
 \arguments{

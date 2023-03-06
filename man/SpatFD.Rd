@@ -57,12 +57,12 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 }
 \examples{
 # Load data
-data(BogotaAirQuality)
+data(AirQualityBogota)
 
 # Create an univariate object using 2 nharm
 SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91,
 lambda = 0.00002, nharm = 2)
-View(SFD_PM10)
+SFD_PM10
 }
 
 \keyword{Functional geostatistics}

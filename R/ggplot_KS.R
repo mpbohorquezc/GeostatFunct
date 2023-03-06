@@ -45,7 +45,7 @@ function(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Dat
 
 
     # Plot
-    graf=ggplot2::ggplot(melt_s,ggplot2::aes(x= Time, y= Value, col= Prediction)) +
+    graf=ggplot2::ggplot(melt_s,ggplot2::aes(x= ~Time, y= ~Value, col= ~Prediction)) +
       ggplot2::geom_line() +
       ggplot2::labs(title = main ) +
       ggplot2::labs(x = xlab, y = ylab) +

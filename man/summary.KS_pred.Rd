@@ -6,7 +6,7 @@
   This functions shows a summary of the main objects of KS_pred objects.
 }
 \usage{
-  summary.KS_pred(SpatFD, ...)
+  \method{summary}{KS_pred}(SpatFD, ...)
 }
 \arguments{
   \item{SpatFD}{

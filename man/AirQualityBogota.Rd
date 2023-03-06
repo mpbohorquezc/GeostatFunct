@@ -8,6 +8,6 @@
 \format{two data.frame of measurements 'PM10' and coordinates 'coord'. Also a map file of class SpatialPolygonDataFrame load from a shape file by \code{rgdal::readOGR}}
 \source{Secretaria de Ambiente de Bogotá}
 \references{
-Monitor network of air quality of Bogota \code{\link[RMCAB]{http://rmcab.ambientebogota.gov.co}}
+Monitor network of air quality of Bogota \code{http://rmcab.ambientebogota.gov.co}
 }
 \keyword{datasets}
