@@ -28,10 +28,10 @@ character. "lambda" or "scores". Default "lambda".
 numeric. Number of points to sample in the map. Default 5000.
 }
   \item{zmin}{
-numeric. Minimum value predicted for the color scale. If NULL is choosen from the data. Default NULL.
+numeric. Minimum value predicted for the color scale. If NULL is chosen from the data. Default NULL.
 }
   \item{zmax}{
-numeric. Maximum value predicted for the color scale. If NULL is choosen from the data. Default NULL.
+numeric. Maximum value predicted for the color scale. If NULL is chosen from the data. Default NULL.
 }
 }
 \value{

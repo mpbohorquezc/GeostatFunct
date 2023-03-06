@@ -19,7 +19,7 @@ vgm_model.fn(points, s0, model,
   \item{model}{A \code{VariogramModel} from \code{gstat} package or a list of \code{VariogramModels} objects if a distinct model is going to be used for each harmonic.}
   \item{method_i}{Functional kriging method that will be used. Currently available "lambda" and "scores". See details bellow.}
   \item{grid}{Coordinates in which the new stations can be located. \code{grid} must be of type \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}.}
-  \item{fixed_stations}{If there are already some stations on the field that are not goint to be removed, here should be passed their coordinates. The object must be of class \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}, \code{SpatFD}, or \code{NULL} if there are no fidex stations.}
+  \item{fixed_stations}{If there are already some stations on the field that are not going to be removed, here should be passed their coordinates. The object must be of class \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}, \code{SpatFD}, or \code{NULL} if there are no fixed stations.}
 
 }
 %\details{

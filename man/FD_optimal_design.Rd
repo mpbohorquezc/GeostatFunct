@@ -15,9 +15,9 @@ FD_optimal_design(k, s0, model, fixed_stations = NULL,
 \arguments{
   \item{k}{The number of new stations that are going to be located.}
   \item{s0}{\code{matrix}, \code{array}, \code{data.frame}, or \code{SpatialPoints} object that contains the coordinates of the points in which we want to optimally predict using functional kriging. Each row corresponds to each point.
-  If you want to predict optimally in a certain area, you must create a random sample large enought of points of that area and pass it to this function.}
+  If you want to predict optimally in a certain area, you must create a random sample large enough of points of that area and pass it to this function.}
   \item{model}{A \code{VariogramModel} from \code{gstat} package or a list of \code{VariogramModels} objects if a distinct model is going to be used for each harmonic. For scalar data only one model is needed.}
-  \item{fixed_stations}{If there are already some stations on the field that are not goint to be removed, here should be passed their coordinates. The object must be of class \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}, \code{SpatFD}, or \code{NULL} if there are no fidex stations.}
+  \item{fixed_stations}{If there are already some stations on the field that are not going to be removed, here should be passed their coordinates. The object must be of class \code{matrix}, \code{array}, \code{data.frame}, \code{SpatialPoints}, \code{SpatFD}, or \code{NULL} if there are no fixed stations.}
   \item{scalar}{Boolean that indicates if the optimization is for functional data (FALSE) or scalar data (TRUE). If TRUE, nharm is set to 1.}
   \item{nharm}{Number of harmonics of the functional principal components that will be used in the prediction. If it is not specified it will be set to the number of models passed, then this parameter shouldn't be specified for scalar data.}
   \item{method}{Functional kriging method that will be used. Currently available "lambda" and "scores". See details bellow.}

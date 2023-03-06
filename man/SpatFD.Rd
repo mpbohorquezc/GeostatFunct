@@ -26,7 +26,7 @@ name = NULL, add = NULL, ...)
 %  \item{vp}{Threshold for the cumulative proportion of explained variance to select the number of components if nharm is not given.}
 \item{name}{A new name for data can be assigned.}
   \item{add}{
-Other variables can be added for spatial multivariate functional prediction, that is, for functional cokriging. It is not necessary that all variables areobserved at the same spatial locations.
+Other variables can be added for spatial multivariate functional prediction, that is, for functional cokriging. It is not necessary that all variables are observed at the same spatial locations.
 }
   \item{\dots}{
 arguments from fda create.bspline.basis or create.fourier.basis.
