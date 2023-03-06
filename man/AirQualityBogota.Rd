@@ -6,8 +6,8 @@
 }
 \usage{data(AirQualityBogota)}
 \format{two data.frame of measurements 'PM10' and coordinates 'coord'. Also a map file of class SpatialPolygonDataFrame load from a shape file by \code{rgdal::readOGR}}
-\source{}
+\source{IDEAM}
 \references{
-
+IDEAM
 }
 \keyword{datasets}

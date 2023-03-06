@@ -1,11 +1,10 @@
 \name{ggplot_KS}
 \alias{ggplot_KS}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+ggplot of predicted functions
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Plot with or without predicted variance in each spatial location of the functional kriging.
 }
 \usage{
 ggplot_KS(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 3)
@@ -13,138 +12,52 @@ ggplot_KS(KS, show.varpred = T, main = "Functional Data", main2 = "Functional Da
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{KS}{
-%%     ~~Describe \code{KS} here~~
+Object of class 'KS_pred'. Not NULL.
 }
   \item{show.varpred}{
-%%     ~~Describe \code{show.varpred} here~~
+Boolean. If the predicted variance is shown. Default TRUE.
 }
   \item{main}{
-%%     ~~Describe \code{main} here~~
+character. Title of the plot.Default "Functional Data".
 }
   \item{main2}{
-%%     ~~Describe \code{main2} here~~
+character. If there are two methods where used, the title of the second plot. Default "Functional Data".
 }
   \item{ylab}{
-%%     ~~Describe \code{ylab} here~~
+character. Name of the y-axis.
 }
   \item{xlab}{
-%%     ~~Describe \code{xlab} here~~
+character. Name of the x-axis.
 }
   \item{ndigits}{
-%%     ~~Describe \code{ndigits} here~~
+numeric. Number of decimals for the predicted variance if shown. Default 3.
 }
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+ggplot. If there are two plots a list of ggplots.
 }
 \references{
-%% ~put references to the literature/web site here ~
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
 }
 \author{
 %%  ~~who you are~~
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{KS_scores_lambdas}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+library(gstat)
+data(AirQualityBogota)
+newcoorden=data.frame(X=seq(93000,105000,len=10),Y=seq(97000,112000,len=10))
+SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
+                vgm(psill = 101494.96, "Exp", range = 1484.57, nugget = 0),
+                vgm(psill =53673, "Exp", range = 42406, nugget =  0))
 
-## The function is currently defined as
-function (KS, show.varpred = T, main = "Functional Data", main2 = "Functional Data", 
-    ylab = "Value", xlab = "Time", ndigits = 3) 
-{
-    if (missing(KS)) {
-        stop("Missing KS")
-    }
-    if (!inherits(KS, "KS_pred")) {
-        stop("KS must be an object KS_pred")
-    }
-    SFD <- recons_fd(KS)
-    if (length(SFD) != 2) {
-        times <- SFD$basis$rangeval[1]:SFD$basis$rangeval[2]
-        eval <- eval.fd(times, SFD)
-        melt_s <- suppressWarnings(melt(eval))
-        melt_s$X2 <- as.factor(melt_s$X2)
-        if (show.varpred) {
-            if (inherits(KS[[2]], "scores_pred")) {
-                levels(melt_s$X2) <- paste(levels(melt_s$X2), 
-                  " \n(var_pred = ", round(KS[[2]]$scores_varpred$VTotal, 
-                    ndigits), ")", sep = "")
-                if (missing(main)) {
-                  main <- "Functional Data - Scores Method"
-                }
-            }
-            else {
-                levels(melt_s$X2) <- paste(levels(melt_s$X2), 
-                  " \n(var_pred = ", round(KS[[2]]$lambda_varpred$VTotal, 
-                    ndigits), ")", sep = "")
-                if (missing(main)) {
-                  main <- "Functional Data - Lambda Method"
-                }
-            }
-        }
-        names(melt_s) = c("Time", "Prediction", "Value")
-        graf = ggplot(melt_s, aes(x = Time, y = Value, col = Prediction)) + 
-            geom_line() + labs(title = main) + labs(x = xlab, 
-            y = ylab) + theme_minimal()
-        return(graf)
-    }
-    else {
-        graf <- list()
-        mainl <- list(main, main2)
-        if (missing(main)) {
-            mainl[[1]] <- "Functional Data - Scores Method"
-        }
-        if (missing(main2)) {
-            mainl[[2]] <- "Functional Data - Lambda Method"
-        }
-        for (i in 1:2) {
-            times <- SFD[[i]]$basis$rangeval[1]:SFD[[i]]$basis$rangeval[2]
-            eval <- eval.fd(times, SFD[[i]])
-            melt_s <- suppressWarnings(melt(eval))
-            melt_s$X2 <- as.factor(melt_s$X2)
-            if (show.varpred) {
-                if (inherits(KS[[1 + i]], "scores_pred")) {
-                  levels(melt_s$X2) <- paste(levels(melt_s$X2), 
-                    " \n(var_pred = ", round(KS[[1 + i]]$scores_varpred$VTotal, 
-                      ndigits), ")", sep = "")
-                }
-                else {
-                  levels(melt_s$X2) <- paste(levels(melt_s$X2), 
-                    " \n(var_pred = ", round(KS[[1 + i]]$lambda_varpred$VTotal, 
-                      ndigits), ")", sep = "")
-                }
-            }
-            names(melt_s) = c("Time", "Prediction", "Value")
-            graf[[i]] = ggplot(melt_s, aes(x = Time, y = Value, 
-                col = Prediction)) + geom_line() + labs(title = mainl[[i]]) + 
-                labs(x = xlab, y = ylab) + theme_minimal()
-        }
-        return(graf)
-    }
-  }
+KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both", model = modelos)
+ggplot_KS(KS_SFD_PM10_both,show.varpred = F,
+          main = "Plot 1 - Using Scores",
+          main2 = "Plot 2 - Using Lambda",
+          ylab = "PM10")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+\keyword{Functional data}
