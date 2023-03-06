@@ -3,18 +3,56 @@ rm(list=ls())
 #library(sgeostat)
 #library(geostatsp)
 library(fda)
-library(fda.usc)
 library(sp)
 library(geoR)
 library(gstat)
 library(splines)
 library(colorspace)
 library(dplyr)
-PM10=read.table("PM10.txt",head=T,dec=".")
-RAMA_Coordenadas=read.table("RAMA_PM10_coordenadas.txt",head=T,row.names=1,dec=",")
+
+# Datos
+PM10=read.table("tests/EjemploLMCMexico/PM10.txt",head=T,dec=".")
+RAMA_Coordenadas=read.table("tests/EjemploLMCMexico/RAMA_PM10_coordenadas.txt",head=T,row.names=1,dec=",")
 estaciones=colnames(PM10)
-CoordenadasPM10=RAMA_Coordenadas[estaciones,]
+CoordenadasPM10=RAMA_Coordenadas[estaciones,1:2]
 MPM10=as.matrix(PM10,nrow=nrow(PM10),ncol=18,dimnames=c(rownames(PM10[1,4344]),colnames=colnames(PM10)))
+PM10spat=SpatFD(MPM10,CoordenadasPM10,basis="Bsplines",nbasis=21,lambda=0.00002,nharm = 1)
+scoresPM10spat=scores(PM10spat)
+newcoorden=data.frame(x=c(500000,490000),y=c(2000000,1990000))
+matrix(c(500000,2000000),nrow=1,ncol=2,byrow=T)
+
+NO2=read.table("tests/EjemploLMCMexico/NO2.txt",head=T,dec=".")
+estacionesNO2=read.table("tests/EjemploLMCMexico/estacionesNO2.txt",head=T,dec=".")
+colnames(NO2)=rownames(estacionesNO2)
+MNO2=as.matrix(NO2,nrow=4292,ncol=13,dimnames=c(rownames(NO2),colnames=colnames(NO2)))
+PM10_MNO2_spat=SpatFD(MNO2, coords = estacionesNO2, basis = "Bsplines", nbasis = 27, lambda = 0.00002, nharm = 4,add=PM10spat)
+score_PM10_MNO2=scores(PM10_MNO2_spat)
+score_PM10_MNO2[[1]]
+score_PM10_MNO2[[2]]
+
+coordinates(newcoorden)
+PM10_scores_geodata=as.geodata(scoresPM10spat[[1]],data.col=6)
+#First eigenvalue 412808.0. This is me maximum for the sill of the variogram of the first score vector.
+#Second eigenvalue 3.139178e+04. This is me maximum for the sill of the variogram of the second score #vector.
+v1=variog(PM10_scores_geodata,trend="1st",max.dist = 38000)
+#x11()
+#plot(v1)
+#eyefit(v1)
+##model
+modelPM10_scores1=list(vgm(412808,"Gau",12698.19))
+class(modelPM10_scores1)
+##Second dimension
+PM10_scores_geodata2=as.geodata(score_PM10_MNO2[[1]],data.col=3)
+v2=variog(PM10_scores_geodata2,trend="1st",max.dist = 38000)
+#x11()
+#plot(v2)
+#eyefit(v2)
+modelPM10_scores2=vgm(31392, "Ste", 18558.89)
+model_ind_PM10_sc1_sc2=list(modelPM10_scores1,modelPM10_scores2)
+KS_scores_lambdas(PM10spat, newcoords=newcoorden, model=modelPM10_scores1, method = "scores", fill.all = NULL)
+
+
+
 #datosf=fdata(MPM10,argvals=1:nrow(MPM10))
 nbasis <-21
 hourange <- c(1,nrow(MPM10))
@@ -39,13 +77,6 @@ plot(variog(puntajesg_SC_PM10_1))
 #plot(variog(puntajesg_SC_PM10_2))
 #plot(variog(puntajesg_SC_PM10_1,max.dist=50000))
 
-NO2=read.table("NO2.txt",head=T,dec=".")
-estacionesNO2=RAMA_Coordenadas[-4,]
-estacionesNO2=estacionesNO2[-13,]
-nrow(estacionesNO2)
-colnames(NO2)=rownames(estacionesNO2)
-MNO2=as.matrix(NO2,nrow=4292,ncol=13,dimnames=c(rownames(NO2),colnames=colnames(NO2)))
-#datosf=fdata(MNO2,argvals=1:nrow(MNO2))
 nbasis <-27
 hourange <- c(1,nrow(MNO2))
 lambda=0.000001
@@ -81,18 +112,8 @@ g = gstat(g,"SC_NO2_1",SC_NO2_1~1,puntajesNO2,model=vgm(311722.8,"Wav",9408.63))
 v = variogram(g)
 plot(v,g$model)
 
-################################################################################################
-################################################################################################
-################################################################################################
-######REVISADO Y ORGANIZADO HASTA AQUI
-################################################################################################
-################################################################################################
-################################################################################################
-
 ################
 ################
-################
-######REVISADO HASTA AQUI
 ################
 ################
 ################
@@ -103,11 +124,7 @@ g.fit
 plot(v,g.fit)
 
 
-
-
-
-
-curve(52476.917-gaussiano(x,52476.917,32258.17),0A	,57000,xlab=expression(italic(h)),ylab="",cex.lab=1.5,cex.axis=1.2)
+curve(52476.917-gaussiano(x,52476.917,32258.17),0	,57000,xlab=expression(italic(h)),ylab="",cex.lab=1.5,cex.axis=1.2)
 legend("bottomright",legend=c(expression(hat(sigma)^2*" = 52476.917"),expression(hat(phi)*"   = 32258.17")),cex=1.2)
 loc <- par("usr")
 text(loc[1], loc[4], expression(hat(gamma)[bold(italic(f))[italic(2)]]), xpd = T, adj = c(2.2,4.8),cex=2)
@@ -117,8 +134,8 @@ yy2=variPuntaje2_NO2$v
 puntos=cbind(xx2,yy2)
 points(puntos,pch=19)
 
-write.table(puntajesNO2,"puntajesNO2.txt")
-write.table(puntajesPM10,"puntajesPM10.txt")
+# write.table(puntajesNO2,"puntajesNO2.txt")
+# write.table(puntajesPM10,"puntajesPM10.txt")
 puntajesPM10_NO2=puntajesNO2[-4,]
 puntajesPM10_NO2=puntajesNO2_NO2[-13,]
 puntajesPM10_NO2=data.frame(puntajesPM10_NO2,puntajesNO2[,3:4])
@@ -163,7 +180,7 @@ legend("topleft",legend=c(expression(hat(sigma)^2*" = 786932"),expression(hat(ph
 #mtext(expression(hat(gamma)[bold(italic(f))[italic(1)]]), side=2, line=2,cex=1.3)
 
 puntajes=data.frame(RAMA_Coordenadas[,1:2],puntaje)
-write.table(puntajes,"puntajesPM10.txt",dec = ".",row.names = TRUE,col.names = TRUE)
+#write.table(puntajes,"puntajesPM10.txt",dec = ".",row.names = TRUE,col.names = TRUE)
 puntajesg_SC_PM10_1=as.geodata(puntajes)
 puntajesg_SC_PM10_2=as.geodata(puntajes,data.col=4)
 #plot(variog(puntajesg_SC_PM10_1,max.dist=60000))
@@ -195,7 +212,7 @@ text(loc[1], loc[4], expression(hat(gamma)[bold(italic(f))[italic(1)]]), xpd = T
 
 plot(NO2_fd_Bspl)
 ####Gráfico último semana, parece q aumenta en época de verano
-plot(NO2_fd_Bspl,xlim=c(3420,3588),,col=rainbow(18),lwd=2,lty=1,ylab="",xlab="hour",cex.lab=1.2,cex.axis=1.2)
+plot(NO2_fd_Bspl,xlim=c(3420,3588),col=rainbow(18),lwd=2,lty=1,ylab="",xlab="hour",cex.lab=1.2,cex.axis=1.2)
 #plot(NO2_fd_Bspl,ylab="",xlim=c(4140,4294.5),xlab="hour",cex.lab=1.2,cex.axis=1.2)
 lines(NO2_fd_Bspl,col=rainbow(18),lwd=2,lty=1)
 title(ylab="NO2  (ppm)",cex.lab=1.2,mgp=c(2.5,0,0))
@@ -204,10 +221,3 @@ legend(5995,160,legend=ID_estaciones,lwd=2,cex=1,col=rainbow(9))
 #plotfit.fd(MPM10, argvals=1:nrow(MPM10),PM10_fd_Bspl,lwd=1,ylab=" ")
 #Para graficar uno solo, por ejemplo la estación 1
 #plot(PM10_fd_Bspline$fd[1])
-
-
-
-
-
-
-
