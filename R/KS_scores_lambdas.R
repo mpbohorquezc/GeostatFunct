@@ -106,8 +106,8 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
   if(method == "lambda" || method == "both"){
 
-    matdis = as.matrix(dist(SFD[[name]]$coords))
-    matdis_pred = as.matrix(dist(rbind(SFD[[name]]$coords, newcoords)))[(nrow(matdis)+1):(nrow(matdis)+nrow(newcoords)), 1:nrow(matdis)]
+    matdis = as.matrix(stats::dist(SFD[[name]]$coords))
+    matdis_pred = as.matrix(stats::dist(rbind(SFD[[name]]$coords, newcoords)))[(nrow(matdis)+1):(nrow(matdis)+nrow(newcoords)), 1:nrow(matdis)]
 
     if(nrow(newcoords) == 1){
       matdis_pred <- t(as.matrix(matdis_pred))

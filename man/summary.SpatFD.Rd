@@ -1,55 +1,37 @@
 \name{summary.SpatFD}
 \alias{summary.SpatFD}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Summary of SpatFD objects
-  %%  ~~function to do ... ~~
 }
 \description{
   This functions shows a summary of the main objects of SpatFD objects.
 }
 \usage{
-  summary(X)
+  summary(SpatFD, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{
-    %%     A SpatFD object
+  \item{SpatFD}{
+    Object of class 'SpatFD'.
   }
-}
-\details{
-  %%  ~~ If necessary, more details than the description above ~~
+  \item{...}{arguments from summary.}
 }
 \value{For each variable included in the SpatFd object, this functions return: Head of data, Coordinates, Eigenvalues, Mean coefficients, Proportion of explained variance by each component
-  %%
-    %%
-    %%  \item{comp1 }{Description of 'comp1'}
-  %%  \item{comp2 }{Description of 'comp2'}
-  %% ...
 }
 \references{
-  %% ~put references to the literature/web site here ~
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
 }
 \author{
-  Joan Nicolás Castro
+  Joan Nicolás Castro \email{jocastroc@unal.edu.co}.
 }
-\note{
-  %%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-  \seealso{
-    %% ~~objects to See Also as \code{\link{help}}, ~~~
+\seealso{
+\code{\link{SpatFD}}
   }
 \examples{
+# Load data
+data(AirQualityBogota)
 
+# Create an univariate object using 2 nharm
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91, lambda = 0.00002, nharm = 2)
+summary(SFD_PM10)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-  % \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-  % \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+\keyword{Functional geostatistics}

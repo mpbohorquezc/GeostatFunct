@@ -10,12 +10,8 @@ Once optimization process is finished and scores or lambda are obtained, this fu
 \usage{
 recons_fd(X)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{A 'KS_pred' object obtained with function \code{KS_scores_lambdas}}
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
 }
 \value{
 Spatial functional predictions. The fd object based on the two functional kriging methods described in Bohorquez, M., Giraldo, R., & Mateu, J. (2016).
@@ -38,9 +34,9 @@ Diego Sandoval \email{diasandovalsk@unal.edu.co}.
 \seealso{\code{\link{KS_scores_lambdas}}}
 \examples{
 library(gstat)
-data(BogotaAirQuality)
+data(AirQualityBogota)
 newcoorden=data.frame(X=110000,Y=125000)
-SFD_PM10 <- SpatFD(PM10, coords = coord, basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
 modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
                 vgm(psill = 101494.96, "Exp", range = 1484.57, nugget = 0),
                 vgm(psill =53673, "Exp", range = 42406, nugget =  0))

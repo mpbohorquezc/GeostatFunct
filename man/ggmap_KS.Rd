@@ -40,7 +40,7 @@ Plotly image
 Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
 }
 \author{
-
+Diego Sandoval \email{diasandovalsk@unal.edu.co}.
 }
 \seealso{
 \code{\link{KS_scores_lambdas}}

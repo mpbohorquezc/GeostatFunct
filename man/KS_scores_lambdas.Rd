@@ -48,19 +48,19 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 Bohorquez M.; Giraldo R. and Mateu J. Spatial prediction and optimal sampling of functional data in Geostatistical Functional Data Analysis: Theory and Methods (2021).  John Wiley  Sons, Chichester, UK. ISBN: 978-1-119-38784-8. https://www.wiley.com/en-us/Geostatistical+Functional+Data+Analysis-p-9781119387848.
 }
 \author{
-Diego Sandoval \email{diasandovalsk@unal.edu.co} & Angie Villamil.
+Diego Sandoval \email{diasandovalsk@unal.edu.co} & Angie Villamil \email{acvillamils@unal.edu.co}.
 }
 \seealso{
 \code{\link{SpatFD}},\code{\link{summary.KS_pred}}
 }
 \examples{
 library(gstat)
-data(BogotaAirQuality)
+data(AirQualityBogota)
 
 newcoorden=data.frame(X=110000,Y=125000)
 
 # Recibir los datos, suavizarlos y ACP
-SFD_PM10 <- SpatFD(PM10, coords = coord, basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
 
 #Variogram model for each component
 modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
@@ -78,24 +78,6 @@ KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores", mod
 
 #method = "both"
 KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both", model = modelos)
-
-# Retorna a SFD_PM10, scores, lambdas y las varianzas de predicción
-
-#method = "lambda"
-KS_SFD_PM10_l$KS_lambda$lambda_pred
-KS_SFD_PM10_l$KS_lambda$lambda_varpred
-
-#method = "scores"
-KS_SFD_PM10_sc$KS_scores$scores_pred
-KS_SFD_PM10_sc$KS_scores$scores_varpred
-
-#method = "both"
-KS_SFD_PM10_both$KS_lambda$lambda_pred
-KS_SFD_PM10_both$KS_lambda$lambda_varpred
-KS_SFD_PM10_both$KS_scores$scores_pred
-KS_SFD_PM10_both$KS_scores$scores_varpred
-
-summary(KS_SFD_PM10_both)
 }
 \keyword{Spatial functional prediction}
 \keyword{Linear combination}

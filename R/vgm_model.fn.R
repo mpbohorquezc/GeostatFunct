@@ -1,4 +1,4 @@
-.vgm_model.fn <- function(points, s0, model, method_i = "lambda", grid, fixed_stations){
+vgm_model.fn <- function(points, s0, model, method_i = "lambda", grid, fixed_stations){
 
   # Basic objects
   method <- method_i
@@ -52,7 +52,7 @@
   if (method == "scores"){
 
     VARIANCES <- lapply(model,function(m){
-      invisible(capture.output(
+      invisible(utils::capture.output(
         # kriging
         gstat::krige(
           formula = z~1,

@@ -1,55 +1,53 @@
 \name{print.OptimalSpatialDesign}
 \alias{print.OptimalSpatialDesign}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Summary of SpatFD objects
-%%  ~~function to do ... ~~
+\title{Print of OptimalSpatialDesign objects
 }
 \description{
-This functions shows a summary of the main objects of SpatFD objects.
+This functions prints a summary of the main objects of OptimalSpatialDesign objects.
 }
 \usage{
-summary(X)
+print(OSD, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{
-%%     A SpatFD object
+  \item{OSD}{
+Object of class 'OptimalSpatialDesign'.
 }
+\item{...}{arguments from print}
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
-\value{For each variable included in the SpatFd object, this functions return: Head of data, Coordinates, Eigenvalues, Mean coefficients, Proportion of explained variance by each component
-%%
-%%
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+\value{Shows the amount of fixed stations, new stations and the first six new coordinates.
 }
 \references{
-%% ~put references to the literature/web site here ~
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial prediction of functional data. Statistical Methods & Applications, 25(1), 39-54.
 }
 \author{
-Joan Nicolás Castro
+Samuel Sánchez Gutiérrez \email{ssanchezgu@unal.edu.co}.
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{FD_optimal_design}}
 }
 \examples{
+library(gstat)
+data(AirQualityBogota)
 
+vgm_model  <- gstat::vgm(psill = 5.665312,
+                  model = "Exc",
+                  range = 8000,
+                  kappa = 1.62,
+                  add.to = vgm(psill = 0.893,
+                               model = "Nug",
+                               range = 0,
+                               kappa = 0))
+
+my.CRS <- sp::CRS("+init=epsg:21899") # https://epsg.io/21899
+
+bogota_shp <- sp::spTransform(map,my.CRS)
+target <- sp::spsample(bogota_shp,n = 100, type = "random") # The set of points in which we want to predict optimally.
+old_stations <- sp::spsample(bogota_shp,n = 3, type = "random") # The set of stations that are already fixed.
+
+FD_optimal_design(k = 10, s0 = target,model = vgm_model,
+               map = map,plt = T,#method = "scores",
+               fixed_stations = old_stations) -> res
+print(res)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+\keyword{Optimal Spatial Design}

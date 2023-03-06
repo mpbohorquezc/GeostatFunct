@@ -1,55 +1,51 @@
 \name{summary.KS_pred}
 \alias{summary.KS_pred}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Summary of SpatFD objects
-  %%  ~~function to do ... ~~
+\title{Summary of KS_pred objects
 }
 \description{
-  This functions shows a summary of the main objects of SpatFD objects.
+  This functions shows a summary of the main objects of KS_pred objects.
 }
 \usage{
-  summary(X)
+  summary(SpatFD, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{
-    %%     A SpatFD object
+  \item{SpatFD}{
+    Object of class 'KS_pred'.
   }
+  \item{...}{arguments from summary}
 }
-\details{
-  %%  ~~ If necessary, more details than the description above ~~
-}
-\value{For each variable included in the SpatFd object, this functions return: Head of data, Coordinates, Eigenvalues, Mean coefficients, Proportion of explained variance by each component
-  %%
-    %%
-    %%  \item{comp1 }{Description of 'comp1'}
-  %%  \item{comp2 }{Description of 'comp2'}
-  %% ...
+\value{This functions prints according to method computed: eigenvalues, variance of prediction and each of the models.
 }
 \references{
-  %% ~put references to the literature/web site here ~
+Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
+
 }
 \author{
-  Joan Nicolás Castro
+  Joan Nicolás Castro \email{jocastroc@unal.edu.co}.
 }
-\note{
-  %%  ~~further notes~~
+\seealso{
+\code{\link{KS_scores_lambdas}}
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-  \seealso{
-    %% ~~objects to See Also as \code{\link{help}}, ~~~
-  }
 \examples{
+library(gstat)
+data(AirQualityBogota)
+
+newcoorden=data.frame(X=110000,Y=125000)
+
+# Recibir los datos, suavizarlos y ACP
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+
+#Variogram model for each component
+modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
+                vgm(psill = 101494.96, "Exp", range = 1484.57, nugget = 0),
+                vgm(psill =53673, "Exp", range = 42406, nugget =  0))
+
+#Genera los scores y los lambdas para predecir en nuevas coordenadas
+
+#method = "lambda"
+KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", model = modelos)
+summary(KS_SFD_PM10_l)
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-  % \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-  % \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+\keyword{Prediction}
+

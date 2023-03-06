@@ -1,6 +1,5 @@
 \name{scores}
 \alias{scores}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Spatial random field of scores
 }
@@ -10,7 +9,6 @@ Creates a list of P data-frames, one for each of the P spatial functional variab
 \usage{
 scores(X)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{An object of class SpatFD.
 }
@@ -19,11 +17,6 @@ scores(X)
 For a SpatFD object with P spatial functional variables measured on n_p locations each, and nharm=k_p, p=1,..., P. The scores-function builds a data-frame with n_p rows and k_p+2 columns. The first two columns are the horizontal and vertical spatial coordinates x,y.  The rest of the columns are the score values for each of the first k_p harmonics selected for the p variable, at each of the n_p locations.
 }
 \value{A list with P data-frames, with dimension \eqn{n_p \times k_p+2}, each. p=1,…,P.
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
 }
 \references{
 Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial prediction of functional data. Statistical Methods & Applications, 25(1), 39-54.
@@ -32,32 +25,20 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 }
 
 \author{Diego Sandoval \email{diasandovalsk@unal.edu.co}.
-%%  ~~who you are~~
 }
 \note{
 Functional principal components (FPCA) are applied to the centered data. The scores are scalar second order stationary Random fields, in virtue of the requirements for FPCA. Hence, the covariance function exists, that is, models are bounded, and always have sill and range parameters. Of course,  some models have additional parameters, such as smoothing parameters. From the theoretical perspective, in this case, there is no possibility of non-bounded variogram models. The spatial covariance between two curves is determined by the sum of the covariance between spatial score vectors associated,  see Bohorquez, Giraldo and Mateu 2016 and Bohorquez, Giraldo and Mateu 2021. This covariance can be modeled using the usual packages for geostatistical analysis, such as geoR and gstat.  Finally, the sill of the variogram model for each dimension is bounded for the respective eigenvalue. Actually, an adequate option is to use this eigenvalue as sill and estimate the rest of the parameters.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{SpatFD}}
 }
 \examples{
-PM10=read.table("PM10.txt",head=T,dec=".")
-RAMA_Coordenadas=read.table("RAMA_PM10_coordenadas.txt",head=T,row.names=1,dec=",")
-estaciones=colnames(PM10)
-CoordenadasPM10=RAMA_Coordenadas[estaciones,]
-MPM10=as.matrix(PM10,nrow=nrow(PM10),ncol=18,dimnames=c(rownames(PM10[1,4344]),colnames=colnames(PM10)))
-PM10spat=SpatFD(MPM10,CoordenadasPM10,basis="Bsplines",nbasis=21,lambda=0.00002,nharm = 2)
-NO2=read.table("NO2.txt",head=T,dec=".")
-estacionesNO2=read.table("estacionesNO2.txt",head=T,dec=".")
-colnames(NO2)=rownames(estacionesNO2)
-MNO2=as.matrix(NO2,nrow=4292,ncol=13,dimnames=c(rownames(NO2),colnames=colnames(NO2)))
-PM10_MNO2_spat=SpatFD(MNO2, coords = estacionesNO2, basis = "Bsplines", nbasis = 27, lambda = 0.00002, nharm = 4,add=PM10spat)
-score_PM10_MNO2=scores(PM10_MNO2_spat)
-score_PM10_MNO2[[1]]
-score_PM10_MNO2[[2]]
+data(AirQualityBogota)
+newcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))
+# Building the SpatFD object
+SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+scores(SFD_PM10)
 }
 
 \keyword{Functional principal component analysis}

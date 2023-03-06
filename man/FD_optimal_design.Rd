@@ -26,7 +26,6 @@ FD_optimal_designn(k, s0, model, fixed_stations = NULL,
   \item{plt}{\code{TRUE} or \code{FALSE}. If \code{TRUE}, a nice \code{ggplot2} plot with the result will be generated. Se example bellow.}
 }
 \details{
-
 Bohorquez, M., Giraldo, R., Mateu, J. (2016) present several methods for finding the best combination predictor-design according to the kriging prediction error variance for functional data. They show different functional kriging methods and two of them are implemented on this function.
 
 If method is "lambda", optimal spatial sampling using FPCA and simple kriging will be used (see section 3.2 of Bohorquez, M., Giraldo, R., Mateu, J. (2016)). If method is "scores", simple kriging will be applied on each harmonic and the total variance will be minimized. This total variance is computed as follows:
@@ -34,10 +33,8 @@ If method is "lambda", optimal spatial sampling using FPCA and simple kriging wi
 \deqn{TotVar = \sum_{j=1}^{nharm}V_j}
 
 where \eqn{V_j} is the variance of the simple kriging prediction of j-th score.
-
 }
 \value{
-
 The function returns an \code{OptimalSpatialDesign} object that is a list with the following elements:
 
   \item{new_stations}{\code{matrix} \code{array} object with the coordinates of the new stations.}
@@ -64,12 +61,13 @@ When method is 'lambda', the minimized value is not the variance, but the negati
 \seealso{\code{\link{print.OptimalSpatialDesign}}
 }
 \examples{
+library(gstat)
 s0 <- cbind(2*runif(100),runif(100)) # random coordinates on (0,2)x(0,1)
 fixed_stations <- cbind(2*runif(4),runif(4))
 x_grid <- seq(0,2,length = 30)
 y_grid <- seq(0,1,length = 30)
 grid <- cbind(rep(x_grid,each = 30),rep(y_grid,30))
-model  <- gstat::vgm(psill = 5.665312,
+model  <- vgm(psill = 5.665312,
                   model = "Exc",
                   range = 8000,
                   kappa = 1.62,
@@ -77,20 +75,18 @@ model  <- gstat::vgm(psill = 5.665312,
                                model = "Nug",
                                range = 0,
                                kappa = 0))
-#
 FD_optimal_design(k = 10, s0 = s0, model = model,
                   grid = grid, nharm = 2, plt = T,
                   fixed_stations = fixed_stations) -> OSD
-#
-OSD
+OSD$new_stations
+OSD$fixed_stations
+OSD$plot
 class(OSD)
-plot(OSD)
 
 #### Real Data Example ####
 
 data(AirQualityBogota)
-
-vgm_model  <- gstat::vgm(psill = 5.665312,
+vgm_model  <- vgm(psill = 5.665312,
                   model = "Exc",
                   range = 8000,
                   kappa = 1.62,
@@ -103,15 +99,12 @@ my.CRS <- sp::CRS("+init=epsg:21899") # https://epsg.io/21899
 
 bogota_shp <- sp::spTransform(map,my.CRS)
 target <- sp::spsample(bogota_shp,n = 100, type = "random") # The set of points in which we want to predict optimally.
-old_stations <- sp::spsample(map,n = 3, type = "random") # The set of stations that are already fixed.
-
+old_stations <- sp::spsample(bogota_shp,n = 3, type = "random") # The set of stations that are already fixed.
 
 FD_optimal_design(k = 10, s0 = target,model = vgm_model,
                map = map,plt = T,#method = "scores",
                fixed_stations = old_stations) -> res
 res
 class(res)
-plot(res)
-
 }
 

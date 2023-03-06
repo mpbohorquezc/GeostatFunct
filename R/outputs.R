@@ -9,7 +9,7 @@ print.OptimalSpatialDesign <- function(OSD, ...){
       "\n  New Stations:",n_new,
       "\n  New Coordinates:\n")
   if(n_new>6){
-    print(head(OSD$new_stations,6))
+    print(utils::head(OSD$new_stations,6))
     cat("⋮\n" )
   }else{
     print(OSD$new_stations)
@@ -28,25 +28,25 @@ summary.SpatFD <- function(SpatFD, ...){
     cat("# ",var,"\n")
 
     cat("## Data","\n")
-    print(rbind(head(df, 4),
+    print(rbind(utils::head(df, 4),
                 rep("...", times=dim(df)[2]),
-                tail(df, 4)))
+                utils::tail(df, 4)))
 
     cat("\n","## Coordinates","\n")
-    print(rbind(head(coor,4),
+    print(rbind(utils::head(coor,4),
                 rep("...", times=dim(coor)[2])))
 
     cat("\n","## Eigenvalues","\n")
-    print(rbind(head(data.frame(ev),4),
+    print(rbind(utils::head(data.frame(ev),4),
                 "..."))
 
     cat("\n","## Mean coefficients","\n")
-    print(rbind(head(data.frame(meanfd$coefs), 4),
+    print(rbind(utils::head(data.frame(meanfd$coefs), 4),
                 "...",
-                tail(data.frame(meanfd$coefs),4)))
+                utils::tail(data.frame(meanfd$coefs),4)))
 
   cat("\n","## Proportion of explained variance by component","\n")
-  print(rbind(head(data.frame(varprop))))
+  print(rbind(utils::head(data.frame(varprop))))
   cat("\n","\n")
 
   i=i+1
@@ -111,4 +111,3 @@ summary.KS_pred <- function(SpatFD, ...){
         print(model[[i]])}
     }
 }
-
