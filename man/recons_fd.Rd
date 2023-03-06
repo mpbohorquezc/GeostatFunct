@@ -36,18 +36,21 @@ Diego Sandoval \email{diasandovalsk@unal.edu.co}.
 library(gstat)
 data(AirQualityBogota)
 newcoorden=data.frame(X=110000,Y=125000)
-SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 17,
+norder=5, lambda = 0.00002, nharm=3)
 modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
                 vgm(psill = 101494.96, "Exp", range = 1484.57, nugget = 0),
                 vgm(psill =53673, "Exp", range = 42406, nugget =  0))
 
 #method = "lambda"
-KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", model = modelos)
+KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda",
+model = modelos)
 curves_PM10_l <- recons_fd(KS_SFD_PM10_l)
 plot(curves_PM10_l)
 
 #method = "scores"
-KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores", model = modelos)
+KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores",
+model = modelos)
 curves_PM10_sc <- recons_fd(KS_SFD_PM10_sc)
 plot(curves_PM10_sc)
 }

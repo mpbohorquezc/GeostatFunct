@@ -37,7 +37,8 @@ Functional principal components (FPCA) are applied to the centered data. The sco
 data(AirQualityBogota)
 newcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))
 # Building the SpatFD object
-SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,
+norder=5, lambda = 0.00002, nharm=3)
 scores(SFD_PM10)
 }
 

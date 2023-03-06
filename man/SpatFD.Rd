@@ -7,7 +7,8 @@ Creates univariate and multivariate SpatFD objects.
 Creates an object of the class SpatFD from spatial coordinates, and functions or time-series observed at each spatial location.  Time series is a generic term. In fact, observations might be across the frequency or across another spatial dimension such as depth, instead of time.
 }
 \usage{
-SpatFD(data, coords, basis = "Bsplines", nbasis = 4, lambda = 0, nharm = NULL, vp = NULL, name = NULL, add = NULL, ...)
+SpatFD(data, coords, basis = "Bsplines", nbasis = 4, lambda = 0, nharm = NULL,
+name = NULL, add = NULL, ...)
 }
 \arguments{
   \item{data}{Data must be provided in a data-frame or a matrix where each column corresponds to a location, and the rows are a sequence of data points, that is, the rows are ordered according to time, frequency, depth, …. Data can also be an fd-object from the fda package.
@@ -22,7 +23,7 @@ SpatFD(data, coords, basis = "Bsplines", nbasis = 4, lambda = 0, nharm = NULL, v
 }
   \item{nharm}{The number of harmonics or eigenfunctions to be reported in the Functional Principal Components results if vp is not given.
 }
-  \item{vp}{Threshold for the cumulative proportion of explained variance to select the number of components if nharm is not given.
+%  \item{vp}{Threshold for the cumulative proportion of explained variance to select the number of components if nharm is not given.
 }
 \item{name}{A new name for data can be assigned.
 }
@@ -53,7 +54,7 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 2. Locations must be in the same region of interest to make sense to include all of them in the same prediction model. However, each variable can be observed in different spatial locations and each can have a different number of observations. There is no limit for the number of variables to be included in this object.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+
 
 \seealso{
 \code{\link{summary.SpatFD}}
@@ -63,7 +64,8 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 data(BogotaAirQuality)
 
 # Create an univariate object using 2 nharm
-SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91, lambda = 0.00002, nharm = 2)
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91,
+lambda = 0.00002, nharm = 2)
 View(SFD_PM10)
 }
 

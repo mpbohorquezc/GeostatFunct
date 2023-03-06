@@ -49,12 +49,14 @@ Diego Sandoval \email{diasandovalsk@unal.edu.co}.
 library(gstat)
 data(AirQualityBogota)
 newcoorden=data.frame(X=seq(93000,105000,len=10),Y=seq(97000,112000,len=10))
-SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,
+norder=5, lambda = 0.00002, nharm=3)
 modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
                 vgm(psill = 101494.96, "Exp", range = 1484.57, nugget = 0),
                 vgm(psill =53673, "Exp", range = 42406, nugget =  0))
 
-KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both", model = modelos)
+KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both",
+model = modelos)
 ggplot_KS(KS_SFD_PM10_both,show.varpred = F,
           main = "Plot 1 - Using Scores",
           main2 = "Plot 2 - Using Lambda",

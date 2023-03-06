@@ -6,7 +6,7 @@
   This functions shows a summary of the main objects of KS_pred objects.
 }
 \usage{
-  summary(SpatFD, ...)
+  summary.KS_pred(SpatFD, ...)
 }
 \arguments{
   \item{SpatFD}{
@@ -33,7 +33,8 @@ data(AirQualityBogota)
 newcoorden=data.frame(X=110000,Y=125000)
 
 # Recibir los datos, suavizarlos y ACP
-SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 17,
+norder=5, lambda = 0.00002, nharm=3)
 
 #Variogram model for each component
 modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
@@ -43,7 +44,8 @@ modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
 #Genera los scores y los lambdas para predecir en nuevas coordenadas
 
 #method = "lambda"
-KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", model = modelos)
+KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda",
+model = modelos)
 summary(KS_SFD_PM10_l)
 
 }

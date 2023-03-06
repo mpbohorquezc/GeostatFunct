@@ -4,7 +4,7 @@
 Functional kriging Variance
 }
 \description{
-This is an internal function of the package that is used by \link{OptimalSpatialDesign} function to calculate a value directly proportional to the variance of functional kriging.
+This is an internal function of the package that is used by \code{FD_optimal_design} function to calculate a value directly proportional to the variance of functional kriging.
 }
 
 \usage{
@@ -40,7 +40,7 @@ Nathaly Vergel Serrano \email{nvergel@unal.edu.co} & Samuel Sánchez Gutiérrez 
 }
 
 \seealso{
-\link[SpatFD]{FD_scores_lambda}
+\code{\link[SpatFD]{FD_scores_lambda}}
 }
 \examples{
 # See FD_optimal_design examples

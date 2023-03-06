@@ -7,7 +7,7 @@ Optimal Spatial Design For Functional Data
 Given a variogram model and a set of points in which we want to predict certain variable optimally, this function finds where must be placed the stations in which the information will be collected for functional or scalar data.
 }
 \usage{
-FD_optimal_designn(k, s0, model, fixed_stations = NULL,
+FD_optimal_design(k, s0, model, fixed_stations = NULL,
                    scalar = FALSE, nharm = NULL,
                    method = "lambda", grid = NULL,
                    map = NULL, plt = F)
@@ -98,8 +98,10 @@ vgm_model  <- vgm(psill = 5.665312,
 my.CRS <- sp::CRS("+init=epsg:21899") # https://epsg.io/21899
 
 bogota_shp <- sp::spTransform(map,my.CRS)
-target <- sp::spsample(bogota_shp,n = 100, type = "random") # The set of points in which we want to predict optimally.
-old_stations <- sp::spsample(bogota_shp,n = 3, type = "random") # The set of stations that are already fixed.
+target <- sp::spsample(bogota_shp,n = 100, type = "random")
+# The set of points in which we want to predict optimally.
+old_stations <- sp::spsample(bogota_shp,n = 3, type = "random")
+# The set of stations that are already fixed.
 
 FD_optimal_design(k = 10, s0 = target,model = vgm_model,
                map = map,plt = T,#method = "scores",

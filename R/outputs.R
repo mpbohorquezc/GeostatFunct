@@ -10,7 +10,7 @@ print.OptimalSpatialDesign <- function(OSD, ...){
       "\n  New Coordinates:\n")
   if(n_new>6){
     print(utils::head(OSD$new_stations,6))
-    cat("⋮\n" )
+    cat("\n" )
   }else{
     print(OSD$new_stations)
   }

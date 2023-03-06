@@ -6,9 +6,9 @@
   This functions shows a summary of the main objects of SpatFD objects.
 }
 \usage{
-  summary(SpatFD, ...)
+  summary.SpatFD(SpatFD, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{SpatFD}{
     Object of class 'SpatFD'.
@@ -31,7 +31,8 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 data(AirQualityBogota)
 
 # Create an univariate object using 2 nharm
-SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91, lambda = 0.00002, nharm = 2)
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91,
+lambda = 0.00002, nharm = 2)
 summary(SFD_PM10)
 }
 \keyword{Functional geostatistics}
