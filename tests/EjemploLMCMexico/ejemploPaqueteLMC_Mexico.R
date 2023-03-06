@@ -1,20 +1,21 @@
 rm(list=ls())
 
-#library(sgeostat)
-#library(geostatsp)
-library(fda)
 library(sp)
 library(geoR)
 library(gstat)
-library(splines)
-library(colorspace)
-library(dplyr)
+# library(sgeostat)
+# library(geostatsp)
+library(fda)
+# library(fda.usc)
+# library(splines)
+# library(colorspace)
+# library(dplyr)
 
 # Datos
 PM10=read.table("tests/EjemploLMCMexico/PM10.txt",head=T,dec=".")
 RAMA_Coordenadas=read.table("tests/EjemploLMCMexico/RAMA_PM10_coordenadas.txt",head=T,row.names=1,dec=",")
 estaciones=colnames(PM10)
-CoordenadasPM10=RAMA_Coordenadas[estaciones,1:2]
+CoordenadasPM10=RAMA_Coordenadas[estaciones,]
 MPM10=as.matrix(PM10,nrow=nrow(PM10),ncol=18,dimnames=c(rownames(PM10[1,4344]),colnames=colnames(PM10)))
 PM10spat=SpatFD(MPM10,CoordenadasPM10,basis="Bsplines",nbasis=21,lambda=0.00002,nharm = 1)
 scoresPM10spat=scores(PM10spat)
@@ -42,16 +43,15 @@ v1=variog(PM10_scores_geodata,trend="1st",max.dist = 38000)
 modelPM10_scores1=list(vgm(412808,"Gau",12698.19))
 class(modelPM10_scores1)
 ##Second dimension
-PM10_scores_geodata2=as.geodata(score_PM10_MNO2[[1]],data.col=3)
+PM10_scores_geodata2=as.geodata(score_PM10_MNO2[[1]],data.col=6)
 v2=variog(PM10_scores_geodata2,trend="1st",max.dist = 38000)
 #x11()
 #plot(v2)
 #eyefit(v2)
 modelPM10_scores2=vgm(31392, "Ste", 18558.89)
 model_ind_PM10_sc1_sc2=list(modelPM10_scores1,modelPM10_scores2)
+# ERROR
 KS_scores_lambdas(PM10spat, newcoords=newcoorden, model=modelPM10_scores1, method = "scores", fill.all = NULL)
-
-
 
 #datosf=fdata(MPM10,argvals=1:nrow(MPM10))
 nbasis <-21
@@ -104,6 +104,8 @@ variPuntaje1_NO2=variog(puntajesg_SC_NO2_1,max.dist=60000)
 coordinates(puntajesPM10_1)=puntajesPM10_1[c("X", "Y")]
 coordinates(puntajesNO2)=puntajesNO2[c("X", "Y")]
 
+# ERROR
+puntajes=data.frame(RAMA_Coordenadas[,1:2],puntaje)
 SC_PM10_1.vgm = variogram(SC_PM10_1~1,puntajes)
 SC_PM10_2.vgm = variogram(SC_PM10_2~1,puntajes)
 #cross variogram
@@ -179,7 +181,6 @@ legend("topleft",legend=c(expression(hat(sigma)^2*" = 786932"),expression(hat(ph
 #par(las=1)
 #mtext(expression(hat(gamma)[bold(italic(f))[italic(1)]]), side=2, line=2,cex=1.3)
 
-puntajes=data.frame(RAMA_Coordenadas[,1:2],puntaje)
 #write.table(puntajes,"puntajesPM10.txt",dec = ".",row.names = TRUE,col.names = TRUE)
 puntajesg_SC_PM10_1=as.geodata(puntajes)
 puntajesg_SC_PM10_2=as.geodata(puntajes,data.col=4)
