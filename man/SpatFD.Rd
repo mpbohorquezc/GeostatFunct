@@ -56,6 +56,7 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 \code{\link{summary.SpatFD}}
 }
 \examples{
+\donttest{
 # Load data
 data(AirQualityBogota)
 
@@ -63,6 +64,7 @@ data(AirQualityBogota)
 SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91,
 lambda = 0.00002, nharm = 2)
 SFD_PM10
+}
 }
 
 \keyword{Functional geostatistics}

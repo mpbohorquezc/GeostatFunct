@@ -61,6 +61,7 @@ When method is 'lambda', the minimized value is not the variance, but the negati
 \seealso{\code{\link{print.OptimalSpatialDesign}}
 }
 \examples{
+\donttest{
 library(gstat)
 s0 <- cbind(2*runif(100),runif(100)) # random coordinates on (0,2)x(0,1)
 fixed_stations <- cbind(2*runif(4),runif(4))
@@ -108,5 +109,6 @@ FD_optimal_design(k = 10, s0 = target,model = vgm_model,
                fixed_stations = old_stations) -> res
 res
 class(res)
+}
 }
 
