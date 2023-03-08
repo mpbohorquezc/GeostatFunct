@@ -5,10 +5,14 @@ Version: 0.0.1
 Date: 2023-03-10
 Author: Martha Patricia Bohorquez Castañeda <mpbohorquezc@unal.edu.co>,
 	  Diego Alejandro Sandoval Skinner <diasandovalsk@unal.edu.co>,
+	  Angie Villamil <acvillamils@unal.edu.co>,
 	  Samuel Hernando Sanchez Gutierrez <ssanchezgu@unal.edu.co>,
+	  Nathaly Vergel Serrano <nvergel@unal.edu.co>,
 	  Miguel Angel Munoz Layton <mmunozl@unal.edu.co>,
 	  Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
-	  Joan Nicolas Castro Cortes <jocastroc@unal.edu.co>
+	  Joan Nicolas Castro Cortes <jocastroc@unal.edu.co>,
+	  Ramon Giraldo Henao <rgiraldoh@unal.edu.co>,
+	  Jorge Mateu <mateu@mat.uji.es>
 Depends: R (>= 3.6.0)
 Maintainer: Martha Patricia Bohorquez Castañeda <mpbohorquezc@unal.edu.co>,
             Samuel Hernando Sanchez Gutierrez <ssanchezgu@unal.edu.co>
