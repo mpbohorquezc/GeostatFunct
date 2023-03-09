@@ -1,5 +1,5 @@
 SpatFD <img src="man/figures/logo.png" align="right" />
-======================
+=======================
 Functional geostatistics: univariate and multivariate functional spatial prediction
 
 ![version](https://img.shields.io/badge/version-0.1.0-blue)
