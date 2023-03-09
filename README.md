@@ -1,4 +1,4 @@
-SpatFD
+SpatFD <img src="man/figures/logo.png" align="right" />
 ======================
 Functional geostatistics: univariate and multivariate functional spatial prediction
 
