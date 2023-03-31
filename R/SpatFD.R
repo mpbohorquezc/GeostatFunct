@@ -6,7 +6,7 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
      # jocastroc:vp no funciona, se define null por si se quiere volver a implementar en el código.
      vp=NULL
      # jocastroc2:Recuperar argumentos de la llamada del objeto
-     call_args=list(data,coords,basis,nbasis,lambda,nharm,name,add,...)
+     call_args=list(data=data,coords=coords,basis=basis,nbasis=nbasis,lambda=lambda,nharm=nharm,name=name,add=add,...)
      
      #all
      if(missing(data)){
