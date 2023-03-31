@@ -1,0 +1,152 @@
+crossval_loo = function(object,plot_show=TRUE){
+  
+  # validation -------------------------------------------------------------
+  if(!inherits(object,"KS_pred")){
+    stop("input object must be KS_pred")
+  }
+  
+  # object ----------------------------------------------------------------
+  SFD_main = object$SFD[[1]]
+  KS_main = object
+  args_SFD = SFD_main$call_args
+  
+  data = args_SFD$data
+  data_names=names(data)
+  coord = args_SFD$coords
+  n = ncol(data) 
+    
+  residual_norm_lambda = rep(NA,n)
+  residual_norm_scores = rep(NA,n)
+  
+  # iteration on method both ------------------------------------------------
+  if (!is.null(KS_main$KS_scores)&&!is.null(KS_main$KS_lambda)){
+    for (i in 1:n){
+      
+      new_coord_i = coord[i,]
+      data_i = data[,-i]
+      coord_i = coord[-i,]
+      
+      SFD_i = SpatFD(
+        data = data_i,
+        coords = coord_i,
+        basis = args_SFD$basis,
+        nbasis = args_SFD$nbasis,
+        lambda = args_SFD$lambda,
+        nharm = args_SFD$nharm,
+        name = args_SFD$name,
+        add = args_SFD$add)
+      
+      KS_i_lambda = KS_scores_lambdas(
+        SFD_i, 
+        new_coord_i, 
+        method = "lambda", 
+        model = object$model)
+      KS_i_scores = KS_scores_lambdas(
+        SFD_i, 
+        new_coord_i, 
+        method = "scores", 
+        model = object$model)
+      predict_i_lambda = recons_fd(KS_i_lambda)
+      predict_i_scores = recons_fd(KS_i_scores)
+      
+      residual_norm_lambda[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_lambda,SFD_i[[1]]$data_fd[1]-predict_i_lambda,rng=c(1,nrow(data))))
+      residual_norm_scores[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_scores,SFD_i[[1]]$data_fd[1]-predict_i_scores,rng=c(1,nrow(data))))
+      
+      if(plot_show){
+        par(mfrow = c(2,1))
+        
+        plot(SFD_i[[1]]$data_fd[1], las=2, main=paste(data_names[i]," lambda/scores"))
+        par(new=TRUE)
+        plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
+        
+        plot(SFD_i[[1]]$data_fd[1], las=2)
+        par(new=TRUE)
+        plot(predict_i_scores, ann=FALSE, axes=FALSE,col=2)
+        
+        par(mfrow = c(1,1), new=FALSE)
+      }
+    }
+  }
+  
+  # iteration on method lambda ------------------------------------------------
+  if (is.null(KS_main$KS_scores)&&!is.null(KS_main$KS_lambda)){
+    for (i in 1:n){
+      
+      new_coord_i = coord[i,]
+      data_i = data[,-i]
+      coord_i = coord[-i,]
+      
+      SFD_i = SpatFD(
+        data = data_i,
+        coords = coord_i,
+        basis = args_SFD$basis,
+        nbasis = args_SFD$nbasis,
+        lambda = args_SFD$lambda,
+        nharm = args_SFD$nharm,
+        name = args_SFD$name,
+        add = args_SFD$add)
+      
+      KS_i_lambda = KS_scores_lambdas(
+        SFD_i, 
+        new_coord_i, 
+        method = "lambda", 
+        model = object$model)
+      predict_i_lambda = recons_fd(KS_i_lambda)
+      
+      residual_norm_lambda[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_lambda,SFD_i[[1]]$data_fd[1]-predict_i_lambda,rng=c(1,nrow(data))))
+      
+      if(plot_show){
+        par(mfrow = c(1,1))
+        plot(SFD_i[[1]]$data_fd[1], las=2, main=data_names[i])
+        par(mfrow = c(1,1), new=TRUE)
+        plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
+        par(mfrow = c(1,1), new=FALSE)
+      }
+    }
+  }
+  
+  # iteration on method scores ------------------------------------------------
+  if (!is.null(KS_main$KS_scores)&&is.null(KS_main$KS_lambda)){
+    for (i in 1:n){
+      
+      new_coord_i = coord[i,]
+      data_i = data[,-i]
+      coord_i = coord[-i,]
+      
+      SFD_i = SpatFD(
+        data = data_i,
+        coords = coord_i,
+        basis = args_SFD$basis,
+        nbasis = args_SFD$nbasis,
+        lambda = args_SFD$lambda,
+        nharm = args_SFD$nharm,
+        name = args_SFD$name,
+        add = args_SFD$add)
+      
+      KS_i_scores = KS_scores_lambdas(
+        SFD_i, 
+        new_coord_i, 
+        method = "scores", 
+        model = object$model)
+      predict_i_scores = recons_fd(KS_i_scores)
+      
+      residual_norm_scores[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_scores,SFD_i[[1]]$data_fd[1]-predict_i_scores,rng=c(1,nrow(data))))
+      
+      if(plot_show){
+        par(mfrow = c(1,1))
+        plot(SFD_i[[1]]$data_fd[1], las=2, main=data_names[i])
+        par(mfrow = c(1,1), new=TRUE)
+        plot(predict_i_scores, ann=FALSE, axes=FALSE,col=2)
+        par(mfrow = c(1,1), new=FALSE)
+      }
+    }
+  }
+  
+  # output of mean residual norm ----------------------------------------------
+  cat("## Mean Residual Norm","\n")
+  cat("lambda method: ", mean(residual_norm_lambda),"\n")
+  cat("scores method: ", mean(residual_norm_scores),"\n")
+}
+  
+
+
