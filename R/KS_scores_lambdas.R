@@ -86,9 +86,6 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
   #jocastroc
   oldw <- getOption("warn")
   options(warn = -1)
-  # jocastroc2:Recuperar argumentos de la llamada del objeto
-  call_args=list(SFD=SFD,newcoords=newcoords,model=model,method=method,name=name,fill.all=fill.all)
-
 
   #scores
   puntaje=SFD[[name]]$fpca$scores
