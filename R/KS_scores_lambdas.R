@@ -1,6 +1,7 @@
 KS_scores_lambdas <-
 function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
+
   # Validation --------------------------------------------------------------
 
   #all
@@ -86,6 +87,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
   #jocastroc
   oldw <- getOption("warn")
   options(warn = -1)
+
 
   #scores
   puntaje=SFD[[name]]$fpca$scores
