@@ -1,7 +1,8 @@
 KS_scores_lambdas <-
 function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
-
+  # jocastroc2:Recuperar argumentos de la llamada del objeto
+  call_args=list(SFD=SFD,newcoords=newcoords,model=model,method=method,name=name,fill.all=fill.all)
   # Validation --------------------------------------------------------------
 
   #all
@@ -210,13 +211,13 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
 
   if(method == "both"){
-    out <- list(SFD=SFD, KS_scores = out_scores, KS_lambda = out_lambda, model = model, name=name)
+    out <- list(SFD=SFD, KS_scores = out_scores, KS_lambda = out_lambda, model = model, name=name, call_args=call_args)
     class(out)="KS_pred"
   } else if (method == "lambda"){
-    out <- list(SFD=SFD, KS_lambda = out_lambda,  model = model, name=name)
+    out <- list(SFD=SFD, KS_lambda = out_lambda,  model = model, name=name, call_args=call_args)
     class(out)="KS_pred"
   } else {
-    out <- list(SFD=SFD, KS_scores = out_scores,  model = model, name=name)
+    out <- list(SFD=SFD, KS_scores = out_scores,  model = model, name=name, call_args=call_args)
     class(out)="KS_pred"
   }
 
