@@ -13,7 +13,7 @@ The package provides new classes of data and  functions for modeling spatial dep
 You can install the **development** version from [Github](https://github.com/mpbohorquezc/GeostatFunct).
 ```s
 install.packages("devtools")
-devtools::install_github("mpbohorquezc/GeostatFunct")
+devtools::install_github("mpbohorquezc/GeostatFunct", ref = "KF_CrossValid")
 ```
 
 ## Overview
