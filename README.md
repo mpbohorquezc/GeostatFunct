@@ -24,7 +24,7 @@ The objects class and usage in the different functions are listed.
 - `FD_optimal_design` return an object class 'OptimalSpatialDesign' that can be used with print.
 
 ## Example of use
-```s
+```r
 library(SpatFD)
 library(gstat)
 
