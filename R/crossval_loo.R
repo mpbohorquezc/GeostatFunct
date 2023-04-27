@@ -26,6 +26,7 @@ crossval_loo = function(object,plot_show=TRUE){
       data_i = data[,-i]
       coord_i = coord[-i,]
       
+      suppressWarnings({
       SFD_i = SpatFD(
         data = data_i,
         coords = coord_i,
@@ -48,22 +49,19 @@ crossval_loo = function(object,plot_show=TRUE){
         model = object$model)
       predict_i_lambda = recons_fd(KS_i_lambda)
       predict_i_scores = recons_fd(KS_i_scores)
+      })
       
       residual_norm_lambda[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_lambda,SFD_i[[1]]$data_fd[1]-predict_i_lambda,rng=c(1,nrow(data))))
       residual_norm_scores[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_scores,SFD_i[[1]]$data_fd[1]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
-        par(mfrow = c(2,1))
-        
-        plot(SFD_i[[1]]$data_fd[1], las=2, main=paste(data_names[i]," lambda/scores"))
-        par(new=TRUE)
-        plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
-        
         plot(SFD_i[[1]]$data_fd[1], las=2)
         par(new=TRUE)
-        plot(predict_i_scores, ann=FALSE, axes=FALSE,col=2)
-        
-        par(mfrow = c(1,1), new=FALSE)
+        plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
+        par(new=TRUE)
+        plot(predict_i_scores, ann=FALSE, axes=FALSE,col=3)
+        par(new=FALSE)
+        legend("topleft", legend = c(paste(data_names[i]," lambda"), paste(data_names[i]," scores"), "KS_lambda"), col = c("red","green" ,"black"), lty = 1)
       }
     }
   }
@@ -76,6 +74,7 @@ crossval_loo = function(object,plot_show=TRUE){
       data_i = data[,-i]
       coord_i = coord[-i,]
       
+      suppressWarnings({
       SFD_i = SpatFD(
         data = data_i,
         coords = coord_i,
@@ -92,15 +91,17 @@ crossval_loo = function(object,plot_show=TRUE){
         method = "lambda", 
         model = object$model)
       predict_i_lambda = recons_fd(KS_i_lambda)
+      })
       
       residual_norm_lambda[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_lambda,SFD_i[[1]]$data_fd[1]-predict_i_lambda,rng=c(1,nrow(data))))
       
       if(plot_show){
         par(mfrow = c(1,1))
-        plot(SFD_i[[1]]$data_fd[1], las=2, main=data_names[i])
+        plot(SFD_i[[1]]$data_fd[1], las=2)
         par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
         par(mfrow = c(1,1), new=FALSE)
+        legend("topleft", legend = c(data_names[i],"KS_lambda"), col = c("red", "black"), lty = 1)
       }
     }
   }
@@ -113,6 +114,7 @@ crossval_loo = function(object,plot_show=TRUE){
       data_i = data[,-i]
       coord_i = coord[-i,]
       
+      suppressWarnings({
       SFD_i = SpatFD(
         data = data_i,
         coords = coord_i,
@@ -129,15 +131,17 @@ crossval_loo = function(object,plot_show=TRUE){
         method = "scores", 
         model = object$model)
       predict_i_scores = recons_fd(KS_i_scores)
+      })
       
       residual_norm_scores[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_scores,SFD_i[[1]]$data_fd[1]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
         par(mfrow = c(1,1))
-        plot(SFD_i[[1]]$data_fd[1], las=2, main=data_names[i])
+        plot(SFD_i[[1]]$data_fd[1], las=2)
         par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_scores, ann=FALSE, axes=FALSE,col=2)
         par(mfrow = c(1,1), new=FALSE)
+        legend("topleft", legend = c(data_names[i],"KS_score"), col = c("red", "black"), lty = 1)
       }
     }
   }
