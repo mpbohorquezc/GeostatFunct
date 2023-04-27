@@ -41,9 +41,9 @@ SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,n
 summary(SFD_PM10)
 
 #Semivariogram models for each spatial random field of scores
-modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
-                vgm(psill = 101494.96, "Exp", range = 1484.57, nugget = 0),
-                vgm(psill =53673, "Exp", range = 42406, nugget =  0))
+modelos <- list(vgm(psill = 2199288.58, "Wav", range = 1484.57, nugget =  0),
+                vgm(psill = 62640.74, "Mat", range = 1979.43, nugget = 0,kappa=0.68),
+                vgm(psill =37098.25, "Exp", range = 6433.16, nugget =  0))
 
 #Functional kriging. Functional spatial prediction at each location of interest
 #method = "lambda"
@@ -66,6 +66,11 @@ summary(KS_SFD_PM10_both)
 recons_fd(KS_SFD_PM10_l)
 recons_fd(KS_SFD_PM10_sc)
 recons_fd(KS_SFD_PM10_both)
+
+#Cross Validation 
+crossval_loo(KS_SFD_PM10_l)
+crossval_loo(KS_SFD_PM10_sc)
+crossval_loo(KS_SFD_PM10_both)
 
 #Curve and variance prediction plots
 ggplot_KS(KS_SFD_PM10_l)
