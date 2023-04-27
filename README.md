@@ -67,6 +67,11 @@ recons_fd(KS_SFD_PM10_l)
 recons_fd(KS_SFD_PM10_sc)
 recons_fd(KS_SFD_PM10_both)
 
+#Cross Validation 
+crossval_loo(KS_SFD_PM10_l)
+crossval_loo(KS_SFD_PM10_sc)
+crossval_loo(KS_SFD_PM10_both)
+
 #Curve and variance prediction plots
 ggplot_KS(KS_SFD_PM10_l)
 ggplot_KS(KS_SFD_PM10_l, show.varpred = F) 
