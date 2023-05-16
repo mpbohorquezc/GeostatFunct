@@ -6,15 +6,15 @@ crossval_loo = function(object,plot_show=TRUE){
   }
   
   # object ----------------------------------------------------------------
-  SFD_main = object$SFD[[1]]
+  SFD_main = object$SFD
   KS_main = object
-  args_SFD = SFD_main$call_args
+  args_SFD = SFD_main[[1]]$call_args
   
   data = args_SFD$data
   data_names=names(data)
   coord = args_SFD$coords
   n = ncol(data) 
-    
+  
   residual_norm_lambda = rep(NA,n)
   residual_norm_scores = rep(NA,n)
   
@@ -51,17 +51,17 @@ crossval_loo = function(object,plot_show=TRUE){
       predict_i_scores = recons_fd(KS_i_scores)
       })
       
-      residual_norm_lambda[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_lambda,SFD_i[[1]]$data_fd[1]-predict_i_lambda,rng=c(1,nrow(data))))
-      residual_norm_scores[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_scores,SFD_i[[1]]$data_fd[1]-predict_i_scores,rng=c(1,nrow(data))))
+      residual_norm_lambda[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_lambda,SFD_main[[1]]$data_fd[i]-predict_i_lambda,rng=c(1,nrow(data))))
+      residual_norm_scores[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
-        plot(SFD_i[[1]]$data_fd[1], las=2)
+        plot(SFD_main[[1]]$data_fd[i], las=2)
         par(new=TRUE)
         plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
         par(new=TRUE)
         plot(predict_i_scores, ann=FALSE, axes=FALSE,col=3)
         par(new=FALSE)
-        legend("topleft", legend = c(paste(data_names[i]," lambda"), paste(data_names[i]," scores"), "KS_lambda"), col = c("red","green" ,"black"), lty = 1)
+        legend("topleft", legend = c("KS lambda", "KS scores", data_names[i]), col = c("red","green" ,"black"), lty = 1)
       }
     }
   }
@@ -93,15 +93,15 @@ crossval_loo = function(object,plot_show=TRUE){
       predict_i_lambda = recons_fd(KS_i_lambda)
       })
       
-      residual_norm_lambda[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_lambda,SFD_i[[1]]$data_fd[1]-predict_i_lambda,rng=c(1,nrow(data))))
+      residual_norm_lambda[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_lambda,SFD_main[[1]]$data_fd[i]-predict_i_lambda,rng=c(1,nrow(data))))
       
       if(plot_show){
         par(mfrow = c(1,1))
-        plot(SFD_i[[1]]$data_fd[1], las=2)
+        plot(SFD_main[[1]]$data_fd[i], las=2)
         par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
         par(mfrow = c(1,1), new=FALSE)
-        legend("topleft", legend = c(data_names[i],"KS_lambda"), col = c("red", "black"), lty = 1)
+        legend("topleft", legend = c("KS lambda", data_names[i]), col = c("red", "black"), lty = 1)
       }
     }
   }
@@ -133,24 +133,23 @@ crossval_loo = function(object,plot_show=TRUE){
       predict_i_scores = recons_fd(KS_i_scores)
       })
       
-      residual_norm_scores[i]=sqrt(inprod(SFD_i[[1]]$data_fd[1]-predict_i_scores,SFD_i[[1]]$data_fd[1]-predict_i_scores,rng=c(1,nrow(data))))
+      residual_norm_scores[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
         par(mfrow = c(1,1))
-        plot(SFD_i[[1]]$data_fd[1], las=2)
+        plot(SFD_main[[1]]$data_fd[i], las=2)
         par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_scores, ann=FALSE, axes=FALSE,col=2)
         par(mfrow = c(1,1), new=FALSE)
-        legend("topleft", legend = c(data_names[i],"KS_score"), col = c("red", "black"), lty = 1)
+        legend("topleft", legend = c("KS scores", data_names[i]), col = c("green", "black"), lty = 1)
       }
     }
   }
   
   # output of mean residual norm ----------------------------------------------
   cat("## Mean Residual Norm","\n")
-  cat("lambda method: ", mean(residual_norm_lambda),"\n")
-  cat("scores method: ", mean(residual_norm_scores),"\n")
+  cat("lambda method: ", mean(residual_norm_lambda),"<---\n")
+  print(summary(residual_norm_lambda))
+  cat("scores method: ", mean(residual_norm_scores),"<---\n")
+  print(summary(residual_norm_scores))
 }
-  
-
-
