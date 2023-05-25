@@ -139,7 +139,7 @@ crossval_loo = function(object,plot_show=TRUE){
         par(mfrow = c(1,1))
         plot(SFD_main[[1]]$data_fd[i], las=2)
         par(mfrow = c(1,1), new=TRUE)
-        plot(predict_i_scores, ann=FALSE, axes=FALSE,col=2)
+        plot(predict_i_scores, ann=FALSE, axes=FALSE,col=3)
         par(mfrow = c(1,1), new=FALSE)
         legend("topleft", legend = c("KS scores", data_names[i]), col = c("green", "black"), lty = 1)
       }
