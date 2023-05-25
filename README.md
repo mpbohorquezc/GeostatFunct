@@ -13,7 +13,7 @@ The package provides new classes of data and  functions for modeling spatial dep
 You can install the **development** version from [Github](https://github.com/mpbohorquezc/GeostatFunct).
 ```s
 install.packages("devtools")
-devtools::install_github("mpbohorquezc/GeostatFunct")
+devtools::install_github("mpbohorquezc/GeostatFunct", ref = "KF_CrossValid")
 ```
 
 ## Overview
@@ -24,7 +24,7 @@ The objects class and usage in the different functions are listed.
 - `FD_optimal_design` return an object class 'OptimalSpatialDesign' that can be used with print.
 
 ## Example of use
-```s
+```r
 library(SpatFD)
 library(gstat)
 

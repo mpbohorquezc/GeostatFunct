@@ -5,6 +5,9 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
      #----------------------------------------------------------------------------
      # jocastroc:vp no funciona, se define null por si se quiere volver a implementar en el código.
      vp=NULL
+     # jocastroc2:Recuperar argumentos de la llamada del objeto
+     call_args=list(data=data,coords=coords,basis=basis,nbasis=nbasis,lambda=lambda,nharm=nharm,name=name,add=add,...)
+     
      #all
      if(missing(data)){
           stop("Missing data")
@@ -153,11 +156,11 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
      }
 
      if(is.null(add)){
-          s=list(list(data=data, coords=coords,coordsnames=cn, data_fd = data_fd, fpca=fpca, variable_name= name))
+          s=list(list(data=data, coords=coords,coordsnames=cn, data_fd = data_fd, fpca=fpca, variable_name= name, call_args=call_args))
           names(s)=name
           class(s)="SpatFD"
      }  else if (inherits(add,"SpatFD")){
-          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca, variable_name=name))
+          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca, variable_name=name, call_args=call_args))
           names(s)=name
           s=append(add,s)
           class(s)="SpatFD"
