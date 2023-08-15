@@ -74,9 +74,9 @@ crossval_loo(KS_SFD_PM10_both)
 
 # Curve and variance prediction plots
 ggplot_KS(KS_SFD_PM10_l)
-ggplot_KS(KS_SFD_PM10_l, show.varpred = F) 
+ggplot_KS(KS_SFD_PM10_l, show.varpred = T) 
 ggplot_KS(KS_SFD_PM10_sc)
-ggplot_KS(KS_SFD_PM10_sc, show.varpred = F) 
+ggplot_KS(KS_SFD_PM10_sc, show.varpred = T) 
 #Curve and variance prediction for both methods
 PlotKS=ggplot_KS(KS_SFD_PM10_both,
           main = "Plot 1 - Using Scores",
