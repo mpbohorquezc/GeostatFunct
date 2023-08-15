@@ -51,8 +51,8 @@ crossval_loo = function(object,plot_show=TRUE){
       predict_i_scores = recons_fd(KS_i_scores)
       })
       
-      residual_norm_lambda[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_lambda,SFD_main[[1]]$data_fd[i]-predict_i_lambda,rng=c(1,nrow(data))))
-      residual_norm_scores[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
+      residual_norm_lambda[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_lambda,SFD_main[[1]]$data_fd[i]-predict_i_lambda,rng=c(1,nrow(data))))
+      residual_norm_scores[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
         plot(SFD_main[[1]]$data_fd[i], las=2)
@@ -93,7 +93,7 @@ crossval_loo = function(object,plot_show=TRUE){
       predict_i_lambda = recons_fd(KS_i_lambda)
       })
       
-      residual_norm_lambda[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_lambda,SFD_main[[1]]$data_fd[i]-predict_i_lambda,rng=c(1,nrow(data))))
+      residual_norm_lambda[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_lambda,SFD_main[[1]]$data_fd[i]-predict_i_lambda,rng=c(1,nrow(data))))
       
       if(plot_show){
         par(mfrow = c(1,1))
@@ -133,7 +133,7 @@ crossval_loo = function(object,plot_show=TRUE){
       predict_i_scores = recons_fd(KS_i_scores)
       })
       
-      residual_norm_scores[i]=sqrt(inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
+      residual_norm_scores[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
         par(mfrow = c(1,1))
