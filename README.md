@@ -13,7 +13,7 @@ The package provides new classes of data and  functions for modeling spatial dep
 You can install the **development** version from [Github](https://github.com/mpbohorquezc/GeostatFunct).
 ```s
 install.packages("devtools")
-devtools::install_github("mpbohorquezc/GeostatFunct", ref = "KF_CrossValid")
+devtools::install_github("mpbohorquezc/GeostatFunct", ref = "main")
 ```
 
 ## Overview
@@ -28,7 +28,7 @@ The objects class and usage in the different functions are listed.
 library(SpatFD)
 library(gstat)
 
-# load data and coordinates
+# Load data and coordinates
 data(AirQualityBogota)
 
 #s_0 nonsampled location. It could be data.frame or matrix and one or more locations of interest
@@ -40,39 +40,39 @@ newcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))
 SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
 summary(SFD_PM10)
 
-#Semivariogram models for each spatial random field of scores
+# Semivariogram models for each spatial random field of scores
 modelos <- list(vgm(psill = 2199288.58, "Wav", range = 1484.57, nugget =  0),
                 vgm(psill = 62640.74, "Mat", range = 1979.43, nugget = 0,kappa=0.68),
                 vgm(psill =37098.25, "Exp", range = 6433.16, nugget =  0))
 
-#Functional kriging. Functional spatial prediction at each location of interest
+# Functional kriging. Functional spatial prediction at each location of interest
 #method = "lambda"
 #Computation of lambda_i
 KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", model = modelos)
 class(KS_SFD_PM10_l)
 
-#method = "scores"
+# method = "scores"
 #Simple kriging of scores
 KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores", model = modelos)
 
-#method = "both"
+# method = "both"
 KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both", model = modelos)
 
 summary(KS_SFD_PM10_l)
 summary(KS_SFD_PM10_sc)
 summary(KS_SFD_PM10_both)
 
-#Linear combinations among weigths predictions and eigenfunctions
+# Linear combinations among weigths predictions and eigenfunctions
 recons_fd(KS_SFD_PM10_l)
 recons_fd(KS_SFD_PM10_sc)
 recons_fd(KS_SFD_PM10_both)
 
-#Cross Validation 
+# Cross Validation 
 crossval_loo(KS_SFD_PM10_l)
 crossval_loo(KS_SFD_PM10_sc)
 crossval_loo(KS_SFD_PM10_both)
 
-#Curve and variance prediction plots
+# Curve and variance prediction plots
 ggplot_KS(KS_SFD_PM10_l)
 ggplot_KS(KS_SFD_PM10_l, show.varpred = F) 
 ggplot_KS(KS_SFD_PM10_sc)
@@ -85,7 +85,7 @@ PlotKS=ggplot_KS(KS_SFD_PM10_both,
 PlotKS[[1]]
 PlotKS[[2]]
 
-#Smoothed prediction maps for the given specific times 
+# Smoothed prediction maps for the given specific times 
 ggmap_KS(KS_SFD_PM10_l,
          map_path = map,
          window_time = c(3500),
@@ -105,7 +105,31 @@ ggmap_KS(KS_SFD_PM10_both,
          method = "scores",
          zmin = 50,
          zmax = 120)
+         
+# Optimal desing
+vgm_model  <- gstat::vgm(psill = 5.665312,
+                  model = "Exc",
+                  range = 8000,
+                  kappa = 1.62,
+                  add.to = vgm(psill = 0.893,
+                               model = "Nug",
+                               range = 0,
+                               kappa = 0))
+
+my.CRS <- sp::CRS("+init=epsg:21899") # https://epsg.io/21899
+
+bogota_shp <- sp::spTransform(map,my.CRS)
+target <- sp::spsample(bogota_shp,n = 100, type = "random")
+# The set of points in which we want to predict optimally.
+old_stations <- sp::spsample(bogota_shp,n = 3, type = "random")
+# The set of stations that are already fixed.
+
+FD_optimal_design(k = 10, s0 = target,model = vgm_model,
+               map = map,plt = TRUE,#method = "scores",
+               fixed_stations = old_stations) -> res
+print(res)
 ```
+
 
 ## For more information
 You can read:
