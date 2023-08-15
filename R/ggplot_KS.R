@@ -1,4 +1,4 @@
-ggplot_KS2 <-
+ggplot_KS <-
   function(KS, show.varpred = F, main = "Functional Data", main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 2){
     
     # Validation
