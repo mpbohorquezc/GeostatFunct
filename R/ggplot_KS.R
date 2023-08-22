@@ -1,5 +1,5 @@
 ggplot_KS <-
-  function(KS, show.varpred = F, main = "Functional Data", main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 2){
+  function(KS, show.varpred = F, main = "Functional Data", main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 2, palette.plot=c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")){
     
     # Validation
     if(missing(KS)){
@@ -14,7 +14,7 @@ ggplot_KS <-
     SFD <- recons_fd(KS)
     
     # Color palette
-    custom_palette <- c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")
+    custom_palette <- palette.plot
     
     # If just one method was used
     if(length(SFD) != 2){

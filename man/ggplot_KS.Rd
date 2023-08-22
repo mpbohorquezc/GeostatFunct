@@ -33,6 +33,9 @@ character. Name of the x-axis.
   \item{ndigits}{
 numeric. Number of decimals for the predicted variance if shown. Default 3.
 }
+\item{palette.plot}{
+list. String values of hexadecimal colors. Default c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")  
+}
 }
 \value{
 ggplot. If there are two plots a list of ggplots.
