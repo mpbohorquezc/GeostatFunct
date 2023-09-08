@@ -4,11 +4,11 @@
 Map plot of a 'KS_pred' object
 }
 \description{
-A plotly visualization of the predicted kriging in a colormap for a specific window time.
+A visualization of the predicted kriging in a colormap for a specific window time.
 }
 \usage{
 ggmap_KS(KS, map_path, window_time = NULL, method = "lambda", map_n = 5000,
-zmin = NULL, zmax = NULL)
+zmin = NULL, zmax = NULL, graph = "plotly")
 }
 \arguments{
   \item{KS}{
@@ -33,9 +33,12 @@ numeric. Minimum value predicted for the color scale. If NULL is chosen from the
   \item{zmax}{
 numeric. Maximum value predicted for the color scale. If NULL is chosen from the data. Default NULL.
 }
+ \item{graph}{
+character. "plotly" or "gg" whether to use plotly or ggplot graphics. Default "plotly".
+}
 }
 \value{
-Plotly image
+Plotly or ggplot image
 }
 \references{
 Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).

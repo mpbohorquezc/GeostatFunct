@@ -1,5 +1,5 @@
 ggmap_KS <-
-function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL){
+function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL, graph = "plotly"){
   if (!is.null(map_path)){
     if(is.character(map_path)){
       map <- rgdal::readOGR(map_path)
@@ -57,6 +57,7 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
 
     melt_s_2 <- melt_s[melt_s$Time == i,]
 
+    if (graph == 'plotly'){
     graf[[i]] <- dplyr::`%>%`(plotly::plot_ly(
       x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
       y = as.numeric(as.character(melt_s_2$Y)), #melt_s_2$Y,
@@ -72,6 +73,23 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
         xaxis = list(showticklabels = FALSE), yaxis = list(showticklabels = FALSE),
         scene = list(aspectration = list(x = 1, y = 1))
       ))
+    }
+    if (graph == 'gg'){
+      graf[[i]] <- ggplot2::ggplot(data = NULL,
+                                   aes(x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
+                                       y = as.numeric(as.character(melt_s_2$Y))))+ #melt_s_2$Y,
+        ggplot2::geom_tile(aes(fill = melt_s_2$Value))+
+        ggplot2::labs(fill = "Prediction",title = paste("Prediction - Time = ", times[i]),
+                      x = '',y = '',color = NULL,lwd = NULL)+
+        ggplot2::scale_fill_viridis_c(direction = -1,limits = c(zmin,zmax)) +
+        ggplot2::coord_fixed() +
+        ggplot2::theme(plot.background = element_blank(),
+                       panel.grid.major = element_blank(),
+                       panel.grid.minor = element_blank(),
+                       panel.border = element_blank(),
+                       axis.line = element_blank(),
+                       axis.text = element_blank())
+    }
 
   }
 
