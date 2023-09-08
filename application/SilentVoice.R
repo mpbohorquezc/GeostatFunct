@@ -1,11 +1,10 @@
-devtools::install_github("mpbohorquezc/GeostatFunct", ref = "main")
+# devtools::install_github("mpbohorquezc/GeostatFunct", ref = "main")
 library(SpatFD)
 
 library(gstat)
 library(sp)
 library(rgdal)
 library(sf)
-library(plotly)
 library(fda)
 library(reshape)
 library(tidyverse)
@@ -22,19 +21,19 @@ thinks_u = thinks %>% filter(clase == 'U')
 # ------------------------------ FUNCTIONAL APPROX ----------------------- # ####
 SFD_thinks_a <- SpatFD(thinks_a %>% select(`...1`:`...21`),
                               coords = coord, basis = "Bsplines", nbasis = 91,
-                              lambda = 0.00002, nharm = 2)
+                              lambda = 0.00002, nharm = 2,name = 'A')
 SFD_thinks_e <- SpatFD(thinks_e %>% select(`...1`:`...21`),
                               coords = coord, basis = "Bsplines", nbasis = 91,
-                              lambda = 0.00002, nharm = 2)
+                              lambda = 0.00002, nharm = 2,name = 'E')
 SFD_thinks_i <- SpatFD(thinks_i %>% select(`...1`:`...21`),
                               coords = coord, basis = "Bsplines", nbasis = 91,
-                              lambda = 0.00002, nharm = 2)
+                              lambda = 0.00002, nharm = 2,name = 'I')
 SFD_thinks_o <- SpatFD(thinks_o %>% select(`...1`:`...21`),
                               coords = coord, basis = "Bsplines", nbasis = 91,
-                              lambda = 0.00002, nharm = 2)
+                              lambda = 0.00002, nharm = 2,name = 'O')
 SFD_thinks_u <- SpatFD(thinks_u %>% select(`...1`:`...21`),
                             coords = coord, basis = "Bsplines", nbasis = 91,
-                            lambda = 0.00002, nharm = 2)
+                            lambda = 0.00002, nharm = 2,name = 'U')
 
 ptj_a = data.frame(scores(SFD_thinks_a)[[1]])
 ptj_e = data.frame(scores(SFD_thinks_e)[[1]])
@@ -49,8 +48,8 @@ sp::coordinates(ptj_a) = sp::coordinates(ptj_e) =
 # --------------------------- VARIOGRAMS MODELS -------------------------- # ####
 
 # an example is done, the models are loaded
-f1var <- gstat::variogram(X1~1,data = ptj_a,cutoff = 80)
-f2var <- gstat::variogram(X2~1,data = ptj_a,cutoff = 48)
+f1var <- gstat::variogram(sc1_A~1,data = ptj_a,cutoff = 80)
+f2var <- gstat::variogram(sc2_A~1,data = ptj_a,cutoff = 48)
 
 f1m = gstat::vgm(psill = 10, "Per", range = 90, nugget =  1,
                  add.to = gstat::vgm(psill = 50,'Gau',range = 20,nugget = 1))
