@@ -21,3 +21,4 @@ License: GPL-3
 Encoding: UTF-8
 Imports: ggplot2,plotly,dplyr,utils,stats,proxy,reshape,gstat,sp,fda,sf
 LazyData: true
+ usethis::use_package("rlang")
