@@ -67,7 +67,8 @@ recons_fd(KS_SFD_PM10_l)
 recons_fd(KS_SFD_PM10_sc)
 recons_fd(KS_SFD_PM10_both)
 
-# Cross Validation 
+# Cross Validation
+x11()
 crossval_loo(KS_SFD_PM10_l)
 crossval_loo(KS_SFD_PM10_sc)
 crossval_loo(KS_SFD_PM10_both)
