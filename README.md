@@ -10,7 +10,7 @@ The R package *SpatFD* carries out functional kriging  and optimal sampling for 
 The package provides new classes of data and  functions for modeling spatial dependence structure among curves. The spatial prediction of curves at unsampled locations can be carried out using two types of predictors, and both of them report, the respective variances of the prediction error.  In addition, there is a function for the determination of spatial locations sampling configuration that ensures minimum variance of spatial functional prediction. There are also two functions for plotting predicted curves at each location and mapping the surface at each time point, respectively.
 
 ## Installation
-You can install the **development** version from [Github](https://github.com/mpbohorquezc/GeostatFunct).
+You can install the **development** version from [Github](https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics).
 ```s
 install.packages("devtools")
 devtools::install_github("mpbohorquezc/GeostatFunct", ref = "main")
