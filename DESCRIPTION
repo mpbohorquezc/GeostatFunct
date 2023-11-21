@@ -21,7 +21,6 @@ License: GPL-3
 Encoding: UTF-8
 Imports: ggplot2,plotly,dplyr,utils,stats,proxy,reshape,gstat,sp,fda,sf
 ## quiets concerns of R CMD check re: the .'s that appear in pipelines
-if(getRversion() >= "2.15.1")  utils::globalVariables(c("."))
 usethis::use_package("rlang")
 LazyData: true
 
