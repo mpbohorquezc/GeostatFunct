@@ -2,4 +2,5 @@ exportPattern('^[[:alpha:]]+')
 S3method(summary,SpatFD)
 S3method(print,OptimalSpatialDesign)
 S3method(summary,KS_pred)
-
+importFrom("grDevices", "colorRampPalette")
+importFrom("graphics", "legend", "par")
