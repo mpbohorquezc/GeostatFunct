@@ -20,5 +20,6 @@ Description: An R package that carries out functional kriging  and optimal sampl
 License: GPL-3
 Encoding: UTF-8
 Imports: ggplot2,plotly,dplyr,utils,stats,proxy,reshape,gstat,sp,fda,sf
+usethis::use_package("rlang")
 LazyData: true
- usethis::use_package("rlang")
+
