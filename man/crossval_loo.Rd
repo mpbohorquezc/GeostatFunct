@@ -45,7 +45,8 @@ newcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))
 #newcoorden=matrix(c(110000.23,109000,109500,130000.81,129000,131000),nrow=3,ncol=2,byrow=T)
 
 # Building the SpatFD object
-SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
+SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", 
+nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
 
 # Semivariogram models for each spatial random field of scores
 modelos <- list(vgm(psill = 2199288.58, "Wav", range = 1484.57, nugget =  0),
@@ -55,7 +56,8 @@ modelos <- list(vgm(psill = 2199288.58, "Wav", range = 1484.57, nugget =  0),
 # Functional kriging. Functional spatial prediction at each location of interest
 #method = "lambda"
 #Computation of lambda_i
-KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", model = modelos)
+KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", 
+model = modelos)
 # method = "scores"
 #Simple kriging of scores
 KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores", model = modelos)
