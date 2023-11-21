@@ -13,7 +13,7 @@ The package provides new classes of data and  functions for modeling spatial dep
 You can install the **development** version from [Github](https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics).
 ```s
 install.packages("devtools")
-devtools::install_github("mpbohorquezc/GeostatFunct", ref = "main")
+devtools::install_github("mpbohorquezc/SpatFD-Functional-Geostatistics", ref = "main")
 ```
 
 ## Overview
