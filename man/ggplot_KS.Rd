@@ -8,7 +8,8 @@ Plot with or without predicted variance in each spatial location of the function
 }
 \usage{
 ggplot_KS(KS, show.varpred = T, main = "Functional Data",
-main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 3)
+main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 3,
+palette.plot = c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
