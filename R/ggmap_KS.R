@@ -2,7 +2,7 @@ ggmap_KS <-
 function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000, zmin = NULL, zmax = NULL, graph = "plotly"){
   if (!is.null(map_path)){
     if(is.character(map_path)){
-      map <- rgdal::readOGR(map_path)
+      map <- sf::st_read(map_path)
     }else{
       map = map_path
     }
@@ -11,14 +11,13 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
     Mx <- max(KS$SFD[[1]]$coords[,1])
     my <- min(KS$SFD[[1]]$coords[,2])
     My <- max(KS$SFD[[1]]$coords[,2])
-    map <- sp::SpatialPolygons(list(
-    sp::Polygons(list(
-    sp::Polygon(matrix(c(mx,my,Mx,my,Mx,My,mx,My),byrow = T,ncol = 2))),1)
-    ))
+    map <- sf::st_polygon(list(
+    matrix(c(mx,my,Mx,my,Mx,My,mx,My,mx,my),byrow = T,ncol = 2)),
+    )
   }
 
-  newcoords <- sp::spsample(map, map_n, type = "regular")
-  newcoords <- as.data.frame(newcoords)
+  newcoords <- sf::st_sample(map, map_n, type = "regular")
+  newcoords <- sf::st_coordinates(newcoords)
   colnames(newcoords) <- colnames(KS$SFD[[1]]$coords)
 
   KS_SFD <- KS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
@@ -76,19 +75,19 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
     }
     if (graph == 'gg'){
       graf[[i]] <- ggplot2::ggplot(data = NULL,
-                                   aes(x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
+                                   ggplot2::aes(x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
                                        y = as.numeric(as.character(melt_s_2$Y))))+ #melt_s_2$Y,
-        ggplot2::geom_tile(aes(fill = melt_s_2$Value))+
+        ggplot2::geom_tile(ggplot2::aes(fill = melt_s_2$Value))+
         ggplot2::labs(fill = "Prediction",title = paste("Prediction - Time = ", times[i]),
                       x = '',y = '',color = NULL,lwd = NULL)+
         ggplot2::scale_fill_viridis_c(direction = -1,limits = c(zmin,zmax)) +
         ggplot2::coord_fixed() +
-        ggplot2::theme(plot.background = element_blank(),
-                       panel.grid.major = element_blank(),
-                       panel.grid.minor = element_blank(),
-                       panel.border = element_blank(),
-                       axis.line = element_blank(),
-                       axis.text = element_blank())
+        ggplot2::theme(plot.background = ggplot2::element_blank(),
+                       panel.grid.major = ggplot2::element_blank(),
+                       panel.grid.minor = ggplot2::element_blank(),
+                       panel.border = ggplot2::element_blank(),
+                       axis.line = ggplot2::element_blank(),
+                       axis.text = ggplot2::element_blank())
     }
 
   }
