@@ -2,7 +2,7 @@ Package: SpatFD
 Type: Package
 Title: Functional Geostatistics: Univariate and Multivariate Functional Spatial Prediction
 Version: 0.0.1
-Date: 2023-03-10
+Date: 2023-11-20
 Author: Martha Patricia Bohorquez Castañeda <mpbohorquezc@unal.edu.co>,
 	  Diego Alejandro Sandoval Skinner <diasandovalsk@unal.edu.co>,
 	  Angie Villamil <acvillamils@unal.edu.co>,
