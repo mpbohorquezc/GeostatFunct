@@ -1,5 +1,8 @@
-ggplot_KS <-
-  function(KS, show.varpred = F, main = "Functional Data", main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 2, palette.plot=c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")){
+ggplot_KS2 <- function(
+    KS, show.varpred = F, 
+    main = "Functional Data", main2 = "Functional Data", 
+    ylab = "Value", xlab = "Time", ndigits = 2, 
+    palette.plot=c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")){
     
     # Validation
     if(missing(KS)){
@@ -42,7 +45,7 @@ ggplot_KS <-
       color_palette <- colorRampPalette(custom_palette)(n_colors)
       
       # Plot
-      graf=ggplot2::ggplot(melt_s, ggplot2::aes_string(x= Time, y= Value, col= Prediction)) +
+      graf=ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, col= Prediction)) +
         ggplot2::geom_line() +
         ggplot2::scale_color_manual(values = color_palette) +
         ggplot2::labs(title = main ) +
@@ -89,7 +92,7 @@ ggplot_KS <-
         color_palette <- colorRampPalette(custom_palette)(n_colors)
         
         # Plot
-        graf[[i]] =ggplot2::ggplot(melt_s, ggplot2::aes_string(x= Time, y= Value, col= Prediction)) +
+        graf[[i]] =ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, col= Prediction)) +
           ggplot2::geom_line() +
           ggplot2::scale_color_manual(values = color_palette) +
           ggplot2::labs(title = mainl[[i]] ) +
@@ -104,4 +107,4 @@ ggplot_KS <-
       
       return(graf)
     }
-  }
+}
