@@ -39,7 +39,8 @@ vgm_model  <- gstat::vgm(psill = 5.665312,
                                range = 0,
                                kappa = 0))
 
-my.CRS <- sp::CRS("+init=epsg:21899") # https://epsg.io/21899
+my.CRS <- sp::CRS("EPSG:21899") # https://epsg.io/21899
+map <- as(map, "Spatial")
 
 bogota_shp <- sp::spTransform(map,my.CRS)
 target <- sp::spsample(bogota_shp,n = 100, type = "random")
