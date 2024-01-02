@@ -9,7 +9,7 @@ ggplot_KS <- function(
       stop("Missing KS")
     }
     
-    if(!inherits(KS,"KS_pred") | !inherits(KS,"COKS_pred")){
+    if(!(inherits(KS,"KS_pred")|inherits(KS,"COKS_pred"))){
       stop("KS must be an object KS_pred or COKS_pred")
     }
     

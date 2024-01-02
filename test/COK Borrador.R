@@ -68,8 +68,8 @@ v = variogram(gst)
 plot(v)
 
 # Modelo Semivariograma gstat
-model1 <- vgm(647677.1,"Gau",23317.05)
-model1 <- vgm(127633,"Wav",9408.63, add.to = model1)
+model1 <- gstat::vgm(647677.1,"Gau",23317.05)
+model1 <- gstat::vgm(127633,"Wav",9408.63, add.to = model1)
 model1
 
 gfit <- fit.lmc(v, gst, model = model1, correct.diagonal=1.01,
