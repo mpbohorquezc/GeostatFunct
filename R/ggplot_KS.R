@@ -14,7 +14,7 @@ ggplot_KS <- function(
     }
     
     # Functional object
-    SFD <- recons_fd(KS)
+    SFD <- SpatFD::recons_fd(KS)
     
     # Color palette
     custom_palette <- palette.plot

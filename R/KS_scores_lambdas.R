@@ -46,16 +46,16 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     stop("method must be one of the following: 'lambda', 'scores' or 'both'")
   }
 
-  #vari
+  #name
   if(is.null(name)){
     name=1
   } else if ((is.character(name)&& length(name)==1)){
     if (length(which(names(SFD)==name))==1){
       name=which(names(SFD)==name)
     }else if (length(which(names(SFD)==name))==0){
-      stop(paste(name,"doesn't not exists. Change name for an existing nameable name."))
+      stop(paste(name,"doesn't not exists. Change name for an existing variable name."))
     }else if (length(which(names(SFD)==name))==0){
-      stop("There are more than one nameable with the same name")
+      stop("There are more than one variable with the same name")
     }
   }
   if ((is.null(name)  || !(is.numeric(name)&& length(name)==1))){
@@ -83,11 +83,8 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
 
   # Kriging -----------------------------------------------------------------
-
-  #jocastroc
   oldw <- getOption("warn")
   options(warn = -1)
-
 
   #scores
   puntaje=SFD[[name]]$fpca$scores
@@ -95,7 +92,6 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
   puntajes=as.data.frame(puntaje)
   sp::coordinates(puntajes)=SFD[[name]]$coords
 
-  #jocastroc:
   if ("numeric" %in% class(newcoords)){
     newcoords= matrix(newcoords, nrow = length(newcoords))}
   if ("matrix" %in% class(newcoords)){
@@ -160,10 +156,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     class(out_lambda)="lambda_pred"
   }
 
-
-
-
-                                   # Method 2 #
+                                     # Method 2 #
 
   if(method == "scores" || method == "both") {
 
@@ -203,26 +196,16 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     out_scores=list(scores_pred = pred, scores_varpred = varpred)
     class(out_scores)="scores_pred"
   }
-
-
-
+  
   #Output
-
-
   if(method == "both"){
     out <- list(SFD=SFD, KS_scores = out_scores, KS_lambda = out_lambda, model = model, name=name)
-    class(out)="KS_pred"
   } else if (method == "lambda"){
     out <- list(SFD=SFD, KS_lambda = out_lambda,  model = model, name=name)
-    class(out)="KS_pred"
   } else {
     out <- list(SFD=SFD, KS_scores = out_scores,  model = model, name=name)
-    class(out)="KS_pred"
   }
-
-
-  #jocastroc:
+  class(out)="KS_pred"
   options(warn = oldw)
-
   return(out)
 }

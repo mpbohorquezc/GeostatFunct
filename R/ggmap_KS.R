@@ -20,9 +20,9 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
   newcoords <- sf::st_coordinates(newcoords)
   colnames(newcoords) <- colnames(KS$SFD[[1]]$coords)
 
-  KS_SFD <- KS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
+  KS_SFD <- SpatFD::KS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
 
-  SFD <- recons_fd(KS_SFD)
+  SFD <- SpatFD::recons_fd(KS_SFD)
 
   if(is.null(window_time)) {
     times <- SFD$basis$rangeval[1]

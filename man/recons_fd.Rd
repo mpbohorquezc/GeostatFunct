@@ -11,7 +11,9 @@ Once optimization process is finished and scores or lambda are obtained, this fu
 recons_fd(X)
 }
 \arguments{
-  \item{X}{A 'KS_pred' object obtained with function \code{KS_scores_lambdas}}
+  \item{X}{A 'KS_pred' or 'COKS_pred' object obtained with function \code{KS_scores_lambdas} or 
+  \code{COKS_scores_lambdas}}
+  \item{name}{Name of the variable of interest. Default 1, the first variable.}
 }
 \value{
 Spatial functional predictions. The fd object based on the two functional kriging methods described in Bohorquez, M., Giraldo, R., & Mateu, J. (2016).
