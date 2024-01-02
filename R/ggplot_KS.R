@@ -9,18 +9,18 @@ ggplot_KS <- function(
       stop("Missing KS")
     }
     
-    if(!inherits(KS,"KS_pred")){
-      stop("KS must be an object KS_pred")
+    if(!inherits(KS,"KS_pred") | !inherits(KS,"COKS_pred")){
+      stop("KS must be an object KS_pred or COKS_pred")
     }
     
     # Functional object
-    SFD <- SpatFD::recons_fd(KS)
+    SFD <- SpatFD::recons_fd(KS,KS$name)
     
     # Color palette
     custom_palette <- palette.plot
     
     # If just one method was used
-    if(length(SFD) != 2){
+    if(!all(c("fd_scores","fd_lambda") %in% names(SFD))){
       
       times <- SFD$basis$rangeval[1]:SFD$basis$rangeval[2]
       eval <- fda::eval.fd(times, SFD)
@@ -92,7 +92,8 @@ ggplot_KS <- function(
         color_palette <- colorRampPalette(custom_palette)(n_colors)
         
         # Plot
-        graf[[i]] =ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, col= Prediction)) +
+        graf[[i]] = ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, 
+                                                         col= Prediction)) +
           ggplot2::geom_line() +
           ggplot2::scale_color_manual(values = color_palette) +
           ggplot2::labs(title = mainl[[i]] ) +

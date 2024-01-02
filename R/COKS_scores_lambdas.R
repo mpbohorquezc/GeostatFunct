@@ -140,11 +140,11 @@ COKS_scores_lambdas <-
   class(out_scores) <- "scores_pred"
   
   if(method == "both"){
-    out <- list(SFD=SFD,COKS_scores=out_scores, COKS_lambda = NULL,name = name, model = mcl)
+    out <- list(SFD=SFD,COKS_scores=out_scores, COKS_lambda = NULL,name = name, model = model,modelfit = mcl)
   } else if (method == "lambda"){
-    out <- list(SFD=SFD,COKS_lambda = NULL,name = name, model = mcl)
+    out <- list(SFD=SFD,COKS_lambda = NULL,name = name, model = model,modelfit = mcl)
   } else {
-    out <- list(SFD=SFD,COKS_scores=out_scores,name = name, model = mcl)
+    out <- list(SFD=SFD,COKS_scores=out_scores,name = name, model = model,modelfit = mcl)
   }
   class(out)="COKS_pred"
   return(out)
