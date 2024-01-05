@@ -152,7 +152,8 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     lambda_var_data = data.frame(lambda_var_data, "VTotal" = rowSums(lambda_var_data))
     rownames(lambda_var_data)=rownames(newcoords)
 
-    out_lambda=list(lambda_pred = lambda_data, lambda_varpred = lambda_var_data)
+    out_lambda=list(lambda_pred = lambda_data, lambda_varpred = lambda_var_data, 
+                    omega = omega)
     class(out_lambda)="lambda_pred"
   }
 

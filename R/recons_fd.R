@@ -1,6 +1,5 @@
 recons_fd <-
 function(X,name = 1){
-
   if (inherits(X,"KS_pred")|inherits(X,"COKS_pred")) {
     result <- list()
     if(any(grepl("scores",names(X)))) {
@@ -21,10 +20,7 @@ function(X,name = 1){
       sc <- grep("lambda",names(X))
       # Lambdas
       b = as.matrix(X[[sc]]$lambda_pred)
-      mean_coef = X$SFD[[name]]$fpca$meanfd$coefs
-      nr = ncol(b)
-      mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
-      coef_lambda = (X$SFD[[name]]$data_fd$coefs %*% b) + mean_coef
+      coef_lambda = (X$SFD[[name]]$data_fd$coefs %*% b)
       result_lambda = fda::fd(coef_lambda, X$SFD[[name]]$data_fd$basis)
       result$fd_lambda = result_lambda
     }
