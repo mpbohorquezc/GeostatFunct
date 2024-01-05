@@ -137,7 +137,7 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
           data_fd=data
           cn=data_fd$fdnames$reps
      }
-     call_args$basis <- data_fd$basis
+     call_args$basis_fd <- data_fd$basis
      #----------------------------------------------------------------------------
      #            FPCA
      #----------------------------------------------------------------------------
