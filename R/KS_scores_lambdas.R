@@ -1,7 +1,6 @@
 KS_scores_lambdas <-
 function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
-
   # Validation --------------------------------------------------------------
 
   #all

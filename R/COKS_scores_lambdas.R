@@ -1,5 +1,5 @@
 COKS_scores_lambdas <- 
-  function(SFD, newcoords, model, method = "scores", name = NULL, fill.all=T){
+  function(SFD, newcoords, model, method = "scores", fill.all=T){
   #----------------------------------------------------------------------------
   #           VALIDANDO ARGUMENTOS *
   #----------------------------------------------------------------------------
@@ -28,9 +28,6 @@ COKS_scores_lambdas <-
   }
 
   # messages default values
-  if(missing(name)){
-    message("Using first variable by default")
-  }
   if(missing(fill.all)){
     message("Using fill.all = TRUE by default")
   }
@@ -45,22 +42,6 @@ COKS_scores_lambdas <-
     stop("method must be one of the following: 'lambda', 'scores' or 'both'")
   }
   
-  #name
-  if(is.null(name)){
-    name <- 1
-  } else if ((is.character(name)&& length(name)==1)){
-    if (length(which(names(SFD)==name))==1){
-      name <- which(names(SFD)==name)
-    }else if (length(which(names(SFD)==name))==0){
-      stop(paste(name,"doesn't not exists. Change name for an existing variable name."))
-    }else if (length(which(names(SFD)==name))==0){
-      stop("There are more than one variable with the same name")
-    }
-  }
-  if ((is.null(name)  || !(is.numeric(name)&& length(name)==1))){
-    stop("Wrong class of name object")
-  }
-
   #fill.all
   if ( !( ( isTRUE(fill.all) || isFALSE(fill.all) ) && length(fill.all)==1 ) ){
     stop("Wrong class of fill.all object")
@@ -71,11 +52,7 @@ COKS_scores_lambdas <-
     stop("Wrong class of model, model should be of class variogramModel or a list of them (use vgm of gstat package) ")
   }else if(inherits(model,"list") && !all(lapply(model,inherits,"variogramModel"))){
     stop("Wrong class of model, each element of list should be of class variogramModel (use vgm of gstat package)")
-  }#else if(inherits(model,"list") && (length(model)!=ncol(as.data.frame(SFD[[name]]$fpca$scores)))){
-  #       stop("length of list of models must be equal to number of harmonics of the choosen variable ")
-  #}else if(inherits(model,"variogramModel") && !(fill.all || (ncol(as.data.frame(SFD[[name]]$fpca$scores))==1))){
-  #        stop("If model is not a list and there are more than one nharm of that variable, then fill.all must be TRUE or you can create a list of models with the same number of harmonics")
-  #}
+  }
 
   puntaje <- list()
   puntajes <- list()
@@ -140,11 +117,11 @@ COKS_scores_lambdas <-
   class(out_scores) <- "scores_pred"
   
   if(method == "both"){
-    out <- list(SFD=SFD,COKS_scores=out_scores, COKS_lambda = NULL,name = name, model = model,modelfit = mcl)
+    out <- list(SFD=SFD,COKS_scores=out_scores, COKS_lambda = NULL, model = model,modelfit = mcl)
   } else if (method == "lambda"){
-    out <- list(SFD=SFD,COKS_lambda = NULL,name = name, model = model,modelfit = mcl)
+    out <- list(SFD=SFD,COKS_lambda = NULL, model = model,modelfit = mcl)
   } else {
-    out <- list(SFD=SFD,COKS_scores=out_scores,name = name, model = model,modelfit = mcl)
+    out <- list(SFD=SFD,COKS_scores=out_scores, model = model,modelfit = mcl)
   }
   class(out)="COKS_pred"
   return(out)

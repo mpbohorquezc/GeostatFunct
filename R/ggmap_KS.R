@@ -22,11 +22,12 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
   
   if(inherits(KS,"KS_pred")){
     KS_SFD <- SpatFD::KS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
+    SFD <- SpatFD::recons_fd(KS_SFD,KS$name)
   }
   if(inherits(KS,"COKS_pred")){
     KS_SFD <- SpatFD::COKS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
   }
-  SFD <- SpatFD::recons_fd(KS_SFD,KS$name)
+  
 
   if(is.null(window_time)) {
     times <- SFD$basis$rangeval[1]

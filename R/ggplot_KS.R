@@ -3,109 +3,115 @@ ggplot_KS <- function(
     main = "Functional Data", main2 = "Functional Data", 
     ylab = "Value", xlab = "Time", ndigits = 2, 
     palette.plot=c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")){
+  
+  # Validation
+  if(missing(KS)){
+    stop("Missing KS")
+  }
+  
+  if(!(inherits(KS,"KS_pred")|inherits(KS,"COKS_pred"))){
+    stop("KS must be an object KS_pred or COKS_pred")
+  }
+  
+  # Functional object
+  if (inherits(KS,"KS_pred")){
+    SFD <- SpatFD::recons_fd(KS,KS$name)  
+  }else{
+    for (i in 1:length(KS$SFD))
+    SFD[[i]] <- SpatFD::recons_fd(KS,i)
+  }
+  
+  
+  # Color palette
+  custom_palette <- palette.plot
+  
+  # If just one method was used
+  if(!all(c("fd_scores","fd_lambda") %in% names(SFD))){
     
-    # Validation
-    if(missing(KS)){
-      stop("Missing KS")
+    times <- SFD$basis$rangeval[1]:SFD$basis$rangeval[2]
+    eval <- fda::eval.fd(times, SFD)
+    melt_s <- suppressWarnings(reshape::melt(eval))
+    melt_s$X2 <- as.factor(melt_s$X2)
+    
+    # Show predictions variance
+    if(show.varpred){
+      if(inherits(KS[[2]],"scores_pred")){
+        levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[2]]$scores_varpred$VTotal, ndigits), ")", sep = "")
+        if(missing(main)){main <- "Functional Data - Scores Method"}
+      } else {
+        levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[2]]$lambda_varpred$VTotal, ndigits), ")", sep = "")
+        if(missing(main)){main <- "Functional Data - Lambda Method"}
+      }
     }
     
-    if(!(inherits(KS,"KS_pred")|inherits(KS,"COKS_pred"))){
-      stop("KS must be an object KS_pred or COKS_pred")
-    }
-    
-    # Functional object
-    SFD <- SpatFD::recons_fd(KS,KS$name)
+    names(melt_s) = c("Time","Prediction","Value")
     
     # Color palette
-    custom_palette <- palette.plot
+    n_colors <- length(unique(melt_s$Prediction))
+    color_palette <- colorRampPalette(custom_palette)(n_colors)
     
-    # If just one method was used
-    if(!all(c("fd_scores","fd_lambda") %in% names(SFD))){
+    # Plot
+    graf=ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, col= Prediction)) +
+      ggplot2::geom_line() +
+      ggplot2::scale_color_manual(values = color_palette) +
+      ggplot2::labs(title = main ) +
+      ggplot2::labs(x = xlab, y = ylab) +
+      ggplot2::theme_minimal()
+    
+    if(!show.varpred){
+      graf <- graf + ggplot2::theme(legend.position="none")
+    }
+    
+    return(graf)
+    
+  } else { # If both methods were used
+    
+    graf <- list()
+    
+    # Titles
+    mainl <- list(main, main2)
+    if(missing(main)){mainl[[1]] <- "Functional Data - Scores Method"}
+    if(missing(main2)){mainl[[2]] <- "Functional Data - Lambda Method"}
+    
+    for(i in 1:2){
       
-      times <- SFD$basis$rangeval[1]:SFD$basis$rangeval[2]
-      eval <- fda::eval.fd(times, SFD)
+      times <- SFD[[i]]$basis$rangeval[1]:SFD[[i]]$basis$rangeval[2]
+      eval <- fda::eval.fd(times, SFD[[i]])
       melt_s <- suppressWarnings(reshape::melt(eval))
       melt_s$X2 <- as.factor(melt_s$X2)
       
       # Show predictions variance
       if(show.varpred){
-        if(inherits(KS[[2]],"scores_pred")){
-          levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[2]]$scores_varpred$VTotal, ndigits), ")", sep = "")
-          if(missing(main)){main <- "Functional Data - Scores Method"}
+        if(inherits(KS[[1+i]],"scores_pred")){
+          levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[1+i]]$scores_varpred$VTotal, ndigits), ")", sep = "")
+          
         } else {
-          levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[2]]$lambda_varpred$VTotal, ndigits), ")", sep = "")
-          if(missing(main)){main <- "Functional Data - Lambda Method"}
+          levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[1+i]]$lambda_varpred$VTotal, ndigits), ")", sep = "")
+          
         }
       }
       
       names(melt_s) = c("Time","Prediction","Value")
       
-      # Color palette
+      # color palette
       n_colors <- length(unique(melt_s$Prediction))
       color_palette <- colorRampPalette(custom_palette)(n_colors)
       
       # Plot
-      graf=ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, col= Prediction)) +
+      graf[[i]] = ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, 
+                                                       col= Prediction)) +
         ggplot2::geom_line() +
         ggplot2::scale_color_manual(values = color_palette) +
-        ggplot2::labs(title = main ) +
+        ggplot2::labs(title = mainl[[i]] ) +
         ggplot2::labs(x = xlab, y = ylab) +
         ggplot2::theme_minimal()
       
       if(!show.varpred){
-        graf <- graf + ggplot2::theme(legend.position="none")
+        graf[[i]] <- graf[[i]] + ggplot2::theme(legend.position="none")
       }
       
-      return(graf)
-      
-    } else { # If both methods were used
-      
-      graf <- list()
-      
-      # Titles
-      mainl <- list(main, main2)
-      if(missing(main)){mainl[[1]] <- "Functional Data - Scores Method"}
-      if(missing(main2)){mainl[[2]] <- "Functional Data - Lambda Method"}
-      
-      for(i in 1:2){
-        
-        times <- SFD[[i]]$basis$rangeval[1]:SFD[[i]]$basis$rangeval[2]
-        eval <- fda::eval.fd(times, SFD[[i]])
-        melt_s <- suppressWarnings(reshape::melt(eval))
-        melt_s$X2 <- as.factor(melt_s$X2)
-        
-        # Show predictions variance
-        if(show.varpred){
-          if(inherits(KS[[1+i]],"scores_pred")){
-            levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[1+i]]$scores_varpred$VTotal, ndigits), ")", sep = "")
-            
-          } else {
-            levels(melt_s$X2) <- paste(levels(melt_s$X2), " (v_pred = ", round(KS[[1+i]]$lambda_varpred$VTotal, ndigits), ")", sep = "")
-            
-          }
-        }
-        
-        names(melt_s) = c("Time","Prediction","Value")
-        
-        # color palette
-        n_colors <- length(unique(melt_s$Prediction))
-        color_palette <- colorRampPalette(custom_palette)(n_colors)
-        
-        # Plot
-        graf[[i]] = ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, 
-                                                         col= Prediction)) +
-          ggplot2::geom_line() +
-          ggplot2::scale_color_manual(values = color_palette) +
-          ggplot2::labs(title = mainl[[i]] ) +
-          ggplot2::labs(x = xlab, y = ylab) +
-          ggplot2::theme_minimal()
-        
-        if(!show.varpred){
-          graf[[i]] <- graf[[i]] + ggplot2::theme(legend.position="none")
-        }
-        
-      }
-      
-      return(graf)
     }
+    
+    return(graf)
+  }
 }

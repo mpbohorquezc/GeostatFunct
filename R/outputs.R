@@ -114,3 +114,63 @@ summary.KS_pred <- function(object, ...){
       print(model[[i]])}
   }
 }
+summary.COKS_pred <- function(object, ...){
+  SpatFD = object
+  if (is.null(SpatFD$COKS_scores)&&!is.null(SpatFD$COKS_lambda)){
+    lambda_pred = SpatFD$COKS_lambda$lambda_pred
+    lambda_varpred = SpatFD$COKS_lambda$lambda_varpred
+    model = SpatFD$model
+    
+    cat("\n","## Lambda values","\n")
+    print(lambda_pred)
+    
+    cat("\n","## Lambda var_predicted","\n")
+    print(lambda_varpred)
+    
+    cat("\n","## Models","\n")
+    for (i in 1:length(model)){
+      cat("The model ",i,"is: \n")
+      print(model[[i]])}
+  }
+  if (!is.null(SpatFD$COKS_scores)&&is.null(SpatFD$COKS_lambda)){
+    scores_pred = SpatFD$COKS_scores$scores_pred
+    scores_varpred = SpatFD$COKS_scores$scores_varpred
+    model = SpatFD$model
+    
+    cat("\n","## Scores","\n")
+    print(scores_pred)
+    
+    cat("\n","## Scores var_predicted","\n")
+    print(scores_varpred)
+    
+    cat("\n","## Models","\n")
+    for (i in 1:length(model)){
+      cat("The model ",i,"is: \n")
+      print(model[[i]])}
+    
+  }
+  if (!is.null(SpatFD$COKS_scores)&&!is.null(SpatFD$COKS_lambda)){
+    scores_pred = SpatFD$COKS_scores$scores_pred
+    scores_varpred = SpatFD$COKS_scores$scores_varpred
+    lambda_pred = SpatFD$COKS_lambda$lambda_pred
+    lambda_varpred = SpatFD$COKS_lambda$lambda_varpred
+    model = SpatFD$model
+    
+    cat("\n","## Lambda values","\n")
+    print(lambda_pred)
+    
+    cat("\n","## Lambda var_predicted","\n")
+    print(lambda_varpred)
+    
+    cat("\n","## Scores","\n")
+    print(scores_pred)
+    
+    cat("\n","## Scores var_predicted","\n")
+    print(scores_varpred)
+    
+    cat("\n","## Models","\n")
+    for (i in 1:length(model)){
+      cat("The model ",i,"is: \n")
+      print(model[[i]])}
+  }
+}

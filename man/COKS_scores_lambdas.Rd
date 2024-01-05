@@ -54,11 +54,17 @@ Bohorquez M.; Giraldo R. and Mateu J. Spatial prediction and optimal sampling of
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{SpatFD}},\code{\link{recons_fd}}
+\code{\link{SpatFD}},\code{\link{summary.COKS_pred}}
 }
 \examples{
-COKS_scores_lambdas(SFD_PM10_NO2, as.data.frame(newcoords[1,]), 
-vgm(psill = 381766.8, "Gau", range = 7125.97, nugget =  0))
+data(COKMexico)
+SFD_PM10_NO2 <- SpatFD(PM10, coords = coord_PM10, basis = "Fourier", nbasis = 21, lambda = 0.000001, nharm = 2)
+SFD_PM10_NO2 <- SpatFD(NO2, coords = coord_NO2, basis = "Fourier", nbasis = 27, lambda = 0.000001, nharm = 2,
+                      add = SFD_PM10_NO2)
+model1 <- gstat::vgm(647677.1,"Gau",23317.05)
+model1 <- gstat::vgm(127633,"Wav",9408.63, add.to = model1)
+newcoords <- data.frame(x = 509926,y = 2179149)
+COKS_scores_lambdas(SFD_PM10_NO2,newcoords,model1)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

@@ -13,9 +13,16 @@ estacionesPM10 = colnames(PM10)
 CoordenadasPM10 = RAMA_Coordenadas[estacionesPM10,]
 MPM10 = as.matrix(PM10, nrow=nrow(PM10), ncol=ncol(PM10), dimnames=c(rownames(PM10), colnames=colnames(PM10)))
 
-CoordenadasNO2 = RAMA_Coordenadas[c(-4, -14),]
+estacionesNO2 <- gsub("imputations.imp1.","",colnames(NO2))
+CoordenadasNO2 = RAMA_Coordenadas[estacionesNO2,]
 colnames(NO2) = rownames(CoordenadasNO2)
 MNO2 = as.matrix(NO2,nrow=nrow(NO2),ncol=ncol(NO2),dimnames=c(rownames(NO2),colnames=colnames(NO2)))
+
+# PM10 <- MPM10
+# NO2 <- MNO2
+# coord_PM10 <- CoordenadasPM10[,1:2]
+# coord_NO2 <- CoordenadasNO2[, 1:2]
+# save(PM10,NO2,coord_PM10,coord_NO2,file = 'data/COKMexico.rda')
 
 # Recibir los datos, suavizarlos y ACP
 SFD_PM10_NO2 <- SpatFD(MPM10, coords = CoordenadasPM10[,1:2], basis = "Fourier", nbasis = 21, lambda = 0.000001, nharm = 2)
