@@ -1,9 +1,9 @@
 library(readr)
 
 # Cargar Datos
-PM10 <- read.csv("EjemploLMCMexico/PM10.txt", sep="")
-NO2 <- read.csv("EjemploLMCMexico/NO2.txt", sep="")
-RAMA_Coordenadas = read.table("EjemploLMCMexico/RAMA_PM10_coordenadas.txt", head=T, row.names=1, dec=",")
+PM10 <- read.csv("test/EjemploLMCMexico/PM10.txt", sep="")
+NO2 <- read.csv("test/EjemploLMCMexico/NO2.txt", sep="")
+RAMA_Coordenadas = read.table("test/EjemploLMCMexico/RAMA_PM10_coordenadas.txt", head=T, row.names=1, dec=",")
 
 View(PM10)
 View(NO2)
