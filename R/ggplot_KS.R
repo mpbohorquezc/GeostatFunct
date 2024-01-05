@@ -15,16 +15,20 @@ ggplot_KS <- function(
   
   # Functional object
   if (inherits(KS,"KS_pred")){
-    SFD <- SpatFD::recons_fd(KS,KS$name)  
+    SFDl <- list(SpatFD::recons_fd(KS,KS$name))
   }else{
-    for (i in 1:length(KS$SFD))
-    SFD[[i]] <- SpatFD::recons_fd(KS,i)
+    SFDl <- list()
+    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS,k)}
   }
-  
   
   # Color palette
   custom_palette <- palette.plot
   
+  grafl <- list()
+  for (k in 1:length(SFDl)){
+  SFD <- SFDl[[k]]
+  mainl <- paste(main,'-',names(KS$SFD)[k])
+  main2l <- paste(main2,'-',names(KS$SFD)[k])
   # If just one method was used
   if(!all(c("fd_scores","fd_lambda") %in% names(SFD))){
     
@@ -54,22 +58,21 @@ ggplot_KS <- function(
     graf=ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, col= Prediction)) +
       ggplot2::geom_line() +
       ggplot2::scale_color_manual(values = color_palette) +
-      ggplot2::labs(title = main ) +
+      ggplot2::labs(title = mainl ) +
       ggplot2::labs(x = xlab, y = ylab) +
       ggplot2::theme_minimal()
     
     if(!show.varpred){
       graf <- graf + ggplot2::theme(legend.position="none")
     }
-    
-    return(graf)
+    grafl[[k]] <- graf
     
   } else { # If both methods were used
     
     graf <- list()
     
     # Titles
-    mainl <- list(main, main2)
+    mainl <- list(mainl, main2l)
     if(missing(main)){mainl[[1]] <- "Functional Data - Scores Method"}
     if(missing(main2)){mainl[[2]] <- "Functional Data - Lambda Method"}
     
@@ -111,7 +114,10 @@ ggplot_KS <- function(
       }
       
     }
-    
-    return(graf)
+    grafl[[k]] <- graf
   }
+  }
+  names(grafl) <- names(KS$SFD)
+  if (length(SFDl) == 1){grafl <- grafl[[1]]}
+  return(grafl)
 }

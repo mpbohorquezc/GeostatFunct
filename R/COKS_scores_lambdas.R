@@ -92,7 +92,7 @@ COKS_scores_lambdas <-
   g <- gstat::gstat(g, model=model, fill.all=fill.all)
   vg <- gstat::variogram(g)
   mcl <- gstat::fit.lmc(vg, g, fit.method=6,correct.diagonal=1.01)
-  gstat:::plot.gstatVariogram(vg, model = mcl)
+  print(gstat:::plot.gstatVariogram(vg, model = mcl))
   z <- gstat:::predict.gstat(mcl, newdata = newcoords)
   
   coordn <- as.data.frame(z)[,c(1,2)]

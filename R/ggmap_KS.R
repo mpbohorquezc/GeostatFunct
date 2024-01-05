@@ -22,13 +22,18 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
   
   if(inherits(KS,"KS_pred")){
     KS_SFD <- SpatFD::KS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
-    SFD <- SpatFD::recons_fd(KS_SFD,KS$name)
+    SFDl <- list(SpatFD::recons_fd(KS_SFD,KS$name))
   }
   if(inherits(KS,"COKS_pred")){
-    KS_SFD <- SpatFD::COKS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
+    KS_SFD <- SpatFD::COKS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method)
+    SFDl <- list()
+    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS_SFD,k)}
   }
   
-
+  grafl <- list()
+  for (k in 1:length(SFDl)){
+  SFD <- SFDl[[k]]  
+  namek <- names(KS$SFD)[k]
   if(is.null(window_time)) {
     times <- SFD$basis$rangeval[1]
   } else if (!(all(window_time >= SFD$basis$rangeval[1]) && all(window_time <= SFD$basis$rangeval[2]))) {
@@ -39,53 +44,47 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
 
   eval <- fda::eval.fd(times, SFD)
 
-  melt_s <- suppressWarnings(reshape::melt(eval))
-
-  melt_s$X2 <- as.factor(melt_s$X2)
-
-  melt_s$X <- as.factor(melt_s$X2)
-  levels(melt_s$X) <- newcoords[,1]
-
-  melt_s$Y <- as.factor(melt_s$X2)
-  levels(melt_s$Y) <- newcoords[,2]
-
-  names(melt_s) = c("Time","Prediction","Value", "X", "Y")
-
-  melt_s$Time <- as.factor(melt_s$Time)
-
+  melt_s <- data.frame(Time = times[1],Value = t(eval)[,1],
+             X = newcoords[,1],Y = newcoords[,2])
+  if (length(time) > 1){
+  for (t in 2:length(times)){
+    melt_s <- rbind(melt_s,data.frame(Time = times[t],Value = t(eval)[,t],
+                         X = newcoords[,1],Y = newcoords[,2]))
+  }
+  }
   graf <- list()
-  if(is.null(zmin)){zmin = min(melt_s$Value)}
-  if(is.null(zmax)){zmax = max(melt_s$Value)}
+  if(is.null(zmin)){zminl = min(melt_s$Value)}else{zminl <- zmin}
+  if(is.null(zmax)){zmaxl = max(melt_s$Value)}else{zmaxl <- zmax}
 
-  for(i in 1:nlevels(melt_s$Time)){
+  for(i in 1:length(times)){
 
-    melt_s_2 <- melt_s[melt_s$Time == i,]
+    melt_s_2 <- melt_s[melt_s$Time == times[i],]
 
     if (graph == 'plotly'){
-    graf[[i]] <- dplyr::`%>%`(plotly::plot_ly(
-      x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
-      y = as.numeric(as.character(melt_s_2$Y)), #melt_s_2$Y,
-      z = melt_s_2$Value,
+    graf[[i]] <- dplyr::`%>%`(plotly::plot_ly(data = melt_s_2,
+      x = ~X,
+      y = ~Y,
+      z = ~Value,
       type = "heatmap",
       colorbar = list(title = "Prediction"),
       reversescale = T,
-      zmin = zmin,
-      zmax = zmax
+      zmin = zminl,
+      zmax = zmaxl
     ),
       plotly::layout(
-        title = paste("Prediction - Time = ", times[i]),
+        title = paste(namek,"- Prediction - Time = ", times[i]),
         xaxis = list(showticklabels = FALSE), yaxis = list(showticklabels = FALSE),
         scene = list(aspectration = list(x = 1, y = 1))
       ))
     }
     if (graph == 'gg'){
-      graf[[i]] <- ggplot2::ggplot(data = NULL,
-                                   ggplot2::aes(x = as.numeric(as.character(melt_s_2$X)), #melt_s_2$X,
-                                       y = as.numeric(as.character(melt_s_2$Y))))+ #melt_s_2$Y,
-        ggplot2::geom_tile(ggplot2::aes(fill = melt_s_2$Value))+
+      graf[[i]] <- ggplot2::ggplot(data = melt_s_2,
+                                   ggplot2::aes(x = X,
+                                       y = Y))+
+        ggplot2::geom_tile(ggplot2::aes(fill = Value))+
         ggplot2::labs(fill = "Prediction",title = paste("Prediction - Time = ", times[i]),
-                      x = '',y = '',color = NULL,lwd = NULL)+
-        ggplot2::scale_fill_viridis_c(direction = -1,limits = c(zmin,zmax)) +
+                      x = '',y = '',color = NULL,lwd = NULL,subtitle = namek)+
+        ggplot2::scale_fill_viridis_c(direction = -1,limits = c(zminl,zmaxl)) +
         ggplot2::coord_fixed() +
         ggplot2::theme(plot.background = ggplot2::element_blank(),
                        panel.grid.major = ggplot2::element_blank(),
@@ -96,7 +95,10 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
     }
 
   }
-
-  return(graf)
+  grafl[[k]] <- graf
+  }
+  names(grafl) <- names(KS$SFD)
+  if(length(SFDl) == 1){grafl <- grafl[[1]]}
+  return(grafl)
 
 }
