@@ -17,6 +17,9 @@ COKS_scores_lambdas <-
   if(!inherits(SFD,"SpatFD")){
     stop("SFD must be an object SpatFD")
   }
+  if(length(SFD) == 1){
+    stop("SFD must have more than one variable in order to perform cokriging")
+  }
 
   #newcoords
   if(!(is.matrix(newcoords) || is.data.frame(newcoords))){
@@ -69,6 +72,65 @@ COKS_scores_lambdas <-
     newcoords=as.data.frame(newcoords)}
   colnames(newcoords) <- c('x','y')
   sp::coordinates(newcoords) <- ~x+y
+  
+  if(method == "lambda" || method == "both"){
+    
+    matdis = as.matrix(stats::dist(SFD[[name]]$coords))
+    matdis_pred = as.matrix(stats::dist(rbind(SFD[[name]]$coords, newcoords)))[(nrow(matdis)+1):(nrow(matdis)+nrow(newcoords)), 1:nrow(matdis)]
+    
+    if(nrow(newcoords) == 1){
+      matdis_pred <- t(as.matrix(matdis_pred))
+    }
+    
+    # Omega
+    omegas <- list()
+    omega <- matrix(0, nrow = nrow(matdis), ncol = ncol(matdis))
+    for(i in 1:ncol(puntajes)){
+      
+      omegas[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis, covariance = T)
+      omega = omega + omegas[[i]]
+    }
+    
+    # C
+    vectores_c <- list()
+    vector_c = matrix(0, ncol = nrow(matdis), nrow = nrow(matdis_pred))
+    
+    for(i in 1:ncol(puntajes)){
+      
+      vectores_c[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis_pred, covariance = T)
+      vector_c = vector_c + vectores_c[[i]]
+    }
+    
+    # Lambda
+    lambda <- solve(omega) %*% t(vector_c)
+    lambda_data = as.data.frame(lambda)
+    colnames(lambda_data) = rownames(newcoords)
+    rownames(lambda_data) = SFD[[name]]$coordsnames
+    
+    # Var
+    lambda_var <- list()
+    for(i in 1:ncol(puntajes)){
+      
+      lambda_var[[i]] <- SFD[[name]]$fpca$values[i] - 2*(vectores_c[[i]] %*% lambda) + t(lambda) %*% (omegas[[i]]) %*% lambda
+    }
+    
+    # Var data
+    lambda_var_data <- matrix(0, nrow = nrow(newcoords), ncol = ncol(puntajes))
+    for(i in 1:ncol(puntajes)){
+      
+      for(j in 1:nrow(newcoords)){
+        lambda_var_data[j, i] <- lambda_var[[i]][j,j]
+      }
+    }
+    lambda_var_data = data.frame(lambda_var_data, "VTotal" = rowSums(lambda_var_data))
+    rownames(lambda_var_data)=rownames(newcoords)
+    
+    out_lambda=list(lambda_pred = lambda_data, lambda_varpred = lambda_var_data, 
+                    omega = omega)
+    class(out_lambda)="lambda_pred"
+  }
+  
+  if(method == "scores" || method == "both") {
   aa <- rep(1:length(SFD),lapply(puntajes,ncol))
   bb <- unlist(lapply(lapply(puntajes,ncol),seq))
   cc <- paste0(
@@ -115,11 +177,12 @@ COKS_scores_lambdas <-
   names(pred) = names(varpred) <- names(SFD)
   out_scores <- list(scores_pred = pred, scores_varpred = varpred)
   class(out_scores) <- "scores_pred"
+  }
   
   if(method == "both"){
-    out <- list(SFD=SFD,COKS_scores=out_scores, COKS_lambda = NULL, model = model,modelfit = mcl)
+    out <- list(SFD=SFD,COKS_scores=out_scores, COKS_lambda = out_lambda, model = model,modelfit = mcl)
   } else if (method == "lambda"){
-    out <- list(SFD=SFD,COKS_lambda = NULL, model = model,modelfit = mcl)
+    out <- list(SFD=SFD,COKS_lambda = out_lambda, model = model,modelfit = mcl)
   } else {
     out <- list(SFD=SFD,COKS_scores=out_scores, model = model,modelfit = mcl)
   }

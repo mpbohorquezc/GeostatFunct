@@ -95,12 +95,12 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     newcoords= matrix(newcoords, nrow = length(newcoords))}
   if ("matrix" %in% class(newcoords)){
     newcoords=as.data.frame(newcoords)}
-  coords_name=colnames(newcoords)
-  newcoords=stats::setNames(newcoords, c("X", "Y"))
+  colnames(newcoords)=c('x','y')
+  sp::coordinates(newcoords)=~x+y
+  
                                    # Method 1 #
 
   if(method == "lambda" || method == "both"){
-
     matdis = as.matrix(stats::dist(SFD[[name]]$coords))
     matdis_pred = as.matrix(stats::dist(rbind(SFD[[name]]$coords, newcoords)))[(nrow(matdis)+1):(nrow(matdis)+nrow(newcoords)), 1:nrow(matdis)]
 
@@ -159,11 +159,6 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
                                      # Method 2 #
 
   if(method == "scores" || method == "both") {
-
-    #newcoords
-    colnames(newcoords)=c('x','y')
-    sp::coordinates(newcoords)=~x+y
-
     #kriging
     K=list()
     for (i in 1:ncol(puntajes)){
