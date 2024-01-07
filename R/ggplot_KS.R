@@ -15,10 +15,10 @@ ggplot_KS <- function(
   
   # Functional object
   if (inherits(KS,"KS_pred")){
-    SFDl <- list(SpatFD::recons_fd(KS,KS$name))
+    SFDl <- list(SpatFD::recons_fd(KS))
   }else{
     SFDl <- list()
-    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS,k)}
+    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS)}
   }
   
   # Color palette

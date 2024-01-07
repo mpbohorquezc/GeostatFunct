@@ -22,12 +22,12 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
   
   if(inherits(KS,"KS_pred")){
     KS_SFD <- SpatFD::KS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method, name = KS$name)
-    SFDl <- list(SpatFD::recons_fd(KS_SFD,KS$name))
+    SFDl <- list(SpatFD::recons_fd(KS_SFD))
   }
   if(inherits(KS,"COKS_pred")){
     KS_SFD <- SpatFD::COKS_scores_lambdas(KS$SFD, newcoords, model = KS$model, method = method)
     SFDl <- list()
-    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS_SFD,k)}
+    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS_SFD)}
   }
   
   grafl <- list()
