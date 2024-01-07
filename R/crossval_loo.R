@@ -26,11 +26,10 @@ crossval_loo = function(object,plot_show=TRUE){
       coord_i = coord[-i,]
       
       suppressWarnings({
-        SFD_i = SpatFD(
+        SFD_i = CrossSpatFD(
           data = data_i,
           coords = coord_i,
-          basis = args_SFD$basis,
-          nbasis = args_SFD$nbasis,
+          basis = SFD_main[[1]]$data_fd$basis,
           lambda = args_SFD$lambda,
           nharm = args_SFD$nharm,
           name = args_SFD$name,
@@ -73,11 +72,10 @@ crossval_loo = function(object,plot_show=TRUE){
       coord_i = coord[-i,]
       
       suppressWarnings({
-        SFD_i = SpatFD(
+        SFD_i = CrossSpatFD(
           data = data_i,
           coords = coord_i,
-          basis = args_SFD$basis,
-          nbasis = args_SFD$nbasis,
+          basis = SFD_main[[1]]$data_fd$basis,
           lambda = args_SFD$lambda,
           nharm = args_SFD$nharm,
           name = args_SFD$name,
@@ -112,11 +110,10 @@ crossval_loo = function(object,plot_show=TRUE){
       coord_i = coord[-i,]
       
       suppressWarnings({
-        SFD_i = SpatFD(
+        SFD_i = CrossSpatFD(
           data = data_i,
           coords = coord_i,
-          basis = args_SFD$basis,
-          nbasis = args_SFD$nbasis,
+          basis = SFD_main[[1]]$data_fd$basis,
           lambda = args_SFD$lambda,
           nharm = args_SFD$nharm,
           name = args_SFD$name,
