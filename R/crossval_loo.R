@@ -26,15 +26,8 @@ crossval_loo = function(object,plot_show=TRUE){
       coord_i = coord[-i,]
       
       suppressWarnings({
-        SFD_i = SpatFD(
-          data = data_i,
-          coords = coord_i,
-          basis = args_SFD$basis,
-          nbasis = args_SFD$nbasis,
-          lambda = args_SFD$lambda,
-          nharm = args_SFD$nharm,
-          name = args_SFD$name,
-          add = args_SFD$add)
+        SFD_i = CrossSpatFD(data_i,coord_i,SFD_main[[1]]$data_fd$basis,
+            nharm=args_SFD$nharm,lambda = args_SFD$lambda)
         
         KS_i_lambda = KS_scores_lambdas(
           SFD_i, 
@@ -73,15 +66,8 @@ crossval_loo = function(object,plot_show=TRUE){
       coord_i = coord[-i,]
       
       suppressWarnings({
-        SFD_i = SpatFD(
-          data = data_i,
-          coords = coord_i,
-          basis = args_SFD$basis,
-          nbasis = args_SFD$nbasis,
-          lambda = args_SFD$lambda,
-          nharm = args_SFD$nharm,
-          name = args_SFD$name,
-          add = args_SFD$add)
+        SFD_i = CrossSpatFD(data_i,coord_i,SFD_main[[1]]$data_fd$basis,
+            nharm=args_SFD$nharm,lambda = args_SFD$lambda)
         KS_i_lambda = KS_scores_lambdas(
           SFD_i, 
           new_coord_i, 
@@ -112,15 +98,8 @@ crossval_loo = function(object,plot_show=TRUE){
       coord_i = coord[-i,]
       
       suppressWarnings({
-        SFD_i = SpatFD(
-          data = data_i,
-          coords = coord_i,
-          basis = args_SFD$basis,
-          nbasis = args_SFD$nbasis,
-          lambda = args_SFD$lambda,
-          nharm = args_SFD$nharm,
-          name = args_SFD$name,
-          add = args_SFD$add)
+        SFD_i = CrossSpatFD(data_i,coord_i,SFD_main[[1]]$data_fd$basis,
+            nharm=args_SFD$nharm,lambda = args_SFD$lambda)
         
         KS_i_scores = KS_scores_lambdas(
           SFD_i, 
