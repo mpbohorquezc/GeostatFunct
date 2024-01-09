@@ -1,5 +1,4 @@
 library(CompRandFld)
-library(CompRandFld)
 library(RandomFields)
 library(mapproj)
 library(fields)

@@ -18,11 +18,11 @@ CoordenadasNO2 = RAMA_Coordenadas[estacionesNO2,]
 colnames(NO2) = rownames(CoordenadasNO2)
 MNO2 = as.matrix(NO2,nrow=nrow(NO2),ncol=ncol(NO2),dimnames=c(rownames(NO2),colnames=colnames(NO2)))
 
-# PM10 <- MPM10
+# Mex_PM10 <- MPM10
 # NO2 <- MNO2
 # coord_PM10 <- CoordenadasPM10[,1:2]
 # coord_NO2 <- CoordenadasNO2[, 1:2]
-# save(PM10,NO2,coord_PM10,coord_NO2,file = 'data/COKMexico.rda')
+# save(Mex_PM10,NO2,coord_PM10,coord_NO2,file = 'data/COKMexico.rda')
 
 # Recibir los datos, suavizarlos y ACP
 SFD_PM10_NO2 <- SpatFD(MPM10, coords = CoordenadasPM10[,1:2], basis = "Fourier", nbasis = 21, lambda = 0.000001, nharm = 2)

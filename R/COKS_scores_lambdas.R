@@ -186,6 +186,6 @@ COKS_scores_lambdas <-
   } else {
     out <- list(SFD=SFD,COKS_scores=out_scores, model = model,modelfit = mcl)
   }
-  class(out)="COKS_pred"
+  class(out) = "COKS_pred"
   return(out)
 }
