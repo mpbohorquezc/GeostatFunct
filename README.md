@@ -101,6 +101,53 @@ ggmap_KS(KS_SFD_PM10_both,
          zmin = 50,
          zmax = 120)
          
+library(gstat)
+s0 <- cbind(2*runif(100),runif(100)) # random coordinates on (0,2)x(0,1)
+fixed_stations <- cbind(2*runif(4),runif(4))
+x_grid <- seq(0,2,length = 30)
+y_grid <- seq(0,1,length = 30)
+grid <- cbind(rep(x_grid,each = 30),rep(y_grid,30))
+model  <- vgm(psill = 5.665312,
+                  model = "Exc",
+                  range = 8000,
+                  kappa = 1.62,
+                  add.to = vgm(psill = 0.893,
+                               model = "Nug",
+                               range = 0,
+                               kappa = 0))
+FD_optimal_design(k = 10, s0 = s0, model = model,
+                  grid = grid, nharm = 2, plt = TRUE,
+                  fixed_stations = fixed_stations) -> OSD
+OSD$new_stations
+OSD$fixed_stations
+OSD$plot
+class(OSD)
+
+#### Real Data Example ####
+data(AirQualityBogota)
+vgm_model  <- vgm(psill = 5.665312,
+                  model = "Exc",
+                  range = 8000,
+                  kappa = 1.62,
+                  add.to = vgm(psill = 0.893,
+                               model = "Nug",
+                               range = 0,
+                               kappa = 0))
+
+my.CRS <- sp::CRS("EPSG:21899") # https://epsg.io/21899
+map <- as(map, "Spatial")
+
+bogota_shp <- sp::spTransform(map,my.CRS)
+target <- sp::spsample(bogota_shp,n = 100, type = "random")
+# The set of points in which we want to predict optimally.
+old_stations <- sp::spsample(bogota_shp,n = 3, type = "random")
+# The set of stations that are already fixed.
+
+FD_optimal_design(k = 10, s0 = target,model = vgm_model,
+               map = map,plt = TRUE,
+               fixed_stations = old_stations) -> res
+res
+class(res)
 
 ```
 
