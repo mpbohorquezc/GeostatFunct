@@ -22,7 +22,7 @@ The N × 2 matrix or data.frame with the spatial coordinates corresponding to th
 The scores variogram model. A variogramModel object. See gstat package.
 }  
 \item{method}{
-Prediction method: "lambda" or "scores". By default "scores".
+Prediction method: "scores"
 }
   \item{name}{
 The variable to predict in SpatFD object. By default, the predictions is performed for the first variable in the SpatFD object.
