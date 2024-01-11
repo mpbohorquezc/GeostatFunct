@@ -1,5 +1,5 @@
 ggplot_KS <- function(
-    KS, show.varpred = F, 
+    KS, show.varpred = FALSE, 
     main = "Functional Data", main2 = "Functional Data", 
     ylab = "Value", xlab = "Time", ndigits = 2, 
     palette.plot=c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")){

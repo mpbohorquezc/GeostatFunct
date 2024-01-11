@@ -7,8 +7,8 @@ ggplot of predicted functions
 Plot with or without predicted variance in each spatial location of the functional kriging.
 }
 \usage{
-ggplot_KS(KS, show.varpred = T, main = "Functional Data",
-main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 3,
+ggplot_KS(KS, show.varpred = FALSE, main = "Functional Data",
+main2 = "Functional Data", ylab = "Value", xlab = "Time", ndigits = 2,
 palette.plot = c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF"))
 }
 %- maybe also 'usage' for other objects documented here.
@@ -17,7 +17,7 @@ palette.plot = c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF"))
 Object of class 'KS_pred'. Not NULL.
 }
   \item{show.varpred}{
-Boolean. If the predicted variance is shown. Default TRUE.
+Boolean. If the predicted variance is shown. Default FALSE.
 }
   \item{main}{
 character. Title of the plot.Default "Functional Data".
@@ -32,7 +32,7 @@ character. Name of the y-axis.
 character. Name of the x-axis.
 }
   \item{ndigits}{
-numeric. Number of decimals for the predicted variance if shown. Default 3.
+numeric. Number of decimals for the predicted variance if shown. Default 2.
 }
 \item{palette.plot}{
 list. String values of hexadecimal colors. Default c("#440154FF", "#3336FF", "#33FCFF", "#33FF4C", "#FDE725FF")  
