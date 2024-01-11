@@ -1,66 +1,38 @@
 recons_fd <-
-function(X){
-
+function(X,name = NULL){
+  if (is.null(name)){
+    if ("name" %in% names(X)){
+      name <- X$name
+    }else{message('No name provided, first variable by default')
+      name <- 1}
+  }
   if (inherits(X,"KS_pred")|inherits(X,"COKS_pred")) {
-    vari = X$name
-    if(length(X) == 4) {
-
-      if(inherits(X[[2]],"scores_pred")) {
-
+    result <- list()
+    if(any(grepl("scores",names(X)))) {
+      sc <- grep("scores",names(X))
+      if(inherits(X[[sc]],"scores_pred")) {
         # Scores
-        a = scores(X[[2]])
-        mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
+        a = SpatFD::scores(X[[sc]])
+        if(inherits(a,'list')){a <- a[[name]]}
+        mean_coef = X$SFD[[name]]$fpca$meanfd$coefs
         nr=nrow(a)
         mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
-
-        coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef %*% t(a)) + mean_coef
-        result_scores = fda::fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
-
-        result = result_scores
-
-      } else {
-
-        # Lambdas
-        b = as.matrix(X[[2]]$lambda_pred)
-        mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
-        nr = ncol(b)
-        mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
-
-        coef_lambda = (X$SFD[[vari]]$data_fd$coefs %*% b) + mean_coef
-        result_lambda = fda::fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
-
-        result = result_lambda
+        coef_scores = (X$SFD[[name]]$fpca$harmonics$coef %*% t(a)) + mean_coef
+        result_scores = fda::fd(coef_scores, X$SFD[[name]]$fpca$harmonics$basis)
+        result$fd_scores = result_scores
       }
-
-    } else {
-
-      # Scores
-      a = scores(X[[2]])
-      mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
-      nr=nrow(a)
-      mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
-
-      coef_scores = (X$SFD[[vari]]$fpca$harmonics$coef %*% t(a)) + mean_coef
-      result_scores = fda::fd(coef_scores, X$SFD[[vari]]$fpca$harmonics$basis)
-
-      # Lambdas
-      b = as.matrix(X[[3]]$lambda_pred)
-
-      mean_coef = X$SFD[[vari]]$fpca$meanfd$coefs
-      nr=nrow(a)
-      mean_coef = matrix(rep(mean_coef,nr),ncol = nr)
-
-      coef_lambda = (X$SFD[[vari]]$data_fd$coefs %*% b) + mean_coef
-
-      result_lambda = fda::fd(coef_lambda, X$SFD[[vari]]$data_fd$basis)
-
-      result = list(fd_scores = result_scores, fd_lambda = result_lambda)
     }
-
-
-
-  }else{
-    stop("Wrong class KS_pred")
+    if(any(grepl("lambda",names(X)))) {
+      sc <- grep("lambda",names(X))
+      # Lambdas
+      b = as.matrix(X[[sc]]$lambda_pred)
+      coef_lambda = (X$SFD[[name]]$data_fd$coefs %*% b)
+      result_lambda = fda::fd(coef_lambda, X$SFD[[name]]$data_fd$basis)
+      result$fd_lambda = result_lambda
+    }
+    if(length(result) == 1){result <- result[[1]]}
+    return(result)
+  }else {
+    stop("Wrong class KS_pred or COKS_pred")
   }
-  return(result)
 }

@@ -101,39 +101,12 @@ ggmap_KS(KS_SFD_PM10_both,
          zmin = 50,
          zmax = 120)
 
-data(AirQualityBogota)
-
-#s_0 nonsampled location. It could be data.frame or matrix and one or more locations of interest
-newcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))
-#newcoorden=data.frame(X=110000,Y=126000)
-#newcoorden=matrix(c(110000.23,109000,109500,130000.81,129000,131000),nrow=3,ncol=2,byrow=T)
-
-# Building the SpatFD object
-SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", 
-nbasis = 17,norder=5, lambda = 0.00002, nharm=3)
-
-# Semivariogram models for each spatial random field of scores
-modelos <- list(vgm(psill = 2199288.58, "Wav", range = 1484.57, nugget =  0),
-                vgm(psill = 62640.74, "Mat", range = 1979.43, nugget = 0,kappa=0.68),
-                vgm(psill =37098.25, "Exp", range = 6433.16, nugget =  0))
-
-# Functional kriging. Functional spatial prediction at each location of interest
-#method = "lambda"
-#Computation of lambda_i
-KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden ,method = "lambda", 
-model = modelos)
-# method = "scores"
-#Simple kriging of scores
-KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores", model = modelos)
-# method = "both"
-KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both", model = modelos)
-
 # Cross Validation 
 crossval_loo(KS_SFD_PM10_l)
 crossval_loo(KS_SFD_PM10_sc)
 crossval_loo(KS_SFD_PM10_both)
 
-library(gstat)
+# Optimal spatial design
 s0 <- cbind(2*runif(100),runif(100)) # random coordinates on (0,2)x(0,1)
 fixed_stations <- cbind(2*runif(4),runif(4))
 x_grid <- seq(0,2,length = 30)
@@ -156,7 +129,6 @@ OSD$plot
 class(OSD)
 
 #### Real Data Example ####
-data(AirQualityBogota)
 vgm_model  <- vgm(psill = 5.665312,
                   model = "Exc",
                   range = 8000,
@@ -181,6 +153,7 @@ FD_optimal_design(k = 10, s0 = target,model = vgm_model,
 res
 class(res)
 
+# Functional cokriging
 data(COKMexico)
 SFD_PM10_NO2 <- SpatFD(Mex_PM10, coords = coord_PM10, basis = "Fourier", nbasis = 21, lambda = 0.000001, nharm = 2)
 SFD_PM10_NO2 <- SpatFD(NO2, coords = coord_NO2, basis = "Fourier", nbasis = 27, lambda = 0.000001, nharm = 2,
@@ -188,7 +161,10 @@ SFD_PM10_NO2 <- SpatFD(NO2, coords = coord_NO2, basis = "Fourier", nbasis = 27, 
 model1 <- gstat::vgm(647677.1,"Gau",23317.05)
 model1 <- gstat::vgm(127633,"Wav",9408.63, add.to = model1)
 newcoords <- data.frame(x = 509926,y = 2179149)
-COKS_scores_lambdas(SFD_PM10_NO2,newcoords,model1)
+COKS_Mex <- COKS_scores_lambdas(SFD_PM10_NO2,newcoords,model1)
+summary(COKS_Mex)
+ggplot_KS(COKS_Mex)
+ggmap_KS(COKS_Mex,method = 'scores')
 ```
 
 

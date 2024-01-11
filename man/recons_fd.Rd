@@ -8,7 +8,7 @@ This is an internal function for functional kriging and cokriging. To perform th
 Once optimization process is finished and scores or lambda are obtained, this function builds the prediction, performing the linear combination between coefficients and basis functions.
 }
 \usage{
-recons_fd(X)
+recons_fd(X,name = NULL)
 }
 \arguments{
   \item{X}{A 'KS_pred' or 'COKS_pred' object obtained with function \code{KS_scores_lambdas} or 

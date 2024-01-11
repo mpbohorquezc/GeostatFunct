@@ -15,10 +15,10 @@ ggplot_KS <- function(
   
   # Functional object
   if (inherits(KS,"KS_pred")){
-    SFDl <- list(SpatFD::recons_fd(KS))
+    SFDl <- list(SpatFD::recons_fd(KS,KS$name))
   }else{
     SFDl <- list()
-    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS)}
+    for (k in 1:length(KS$SFD)){SFDl[[k]] <- SpatFD::recons_fd(KS,k)}
   }
   
   # Color palette
@@ -101,8 +101,8 @@ ggplot_KS <- function(
       color_palette <- colorRampPalette(custom_palette)(n_colors)
       
       # Plot
-      graf[[i]] = ggplot2::ggplot(melt_s, ggplot2::aes(x= melt_s$Time, y= melt_s$Value, 
-                                                       col= melt_s$Prediction)) +
+      graf[[i]] = ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, 
+                                                       col= Prediction)) +
         ggplot2::geom_line() +
         ggplot2::scale_color_manual(values = color_palette) +
         ggplot2::labs(title = mainl[[i]] ) +
