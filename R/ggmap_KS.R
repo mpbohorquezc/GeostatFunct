@@ -46,7 +46,7 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
 
   melt_s <- data.frame(Time = times[1],Value = t(eval)[,1],
              X = newcoords[,1],Y = newcoords[,2])
-  if (length(time) > 1){
+  if (length(times) > 1){
   for (t in 2:length(times)){
     melt_s <- rbind(melt_s,data.frame(Time = times[t],Value = t(eval)[,t],
                          X = newcoords[,1],Y = newcoords[,2]))
@@ -61,10 +61,10 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
     melt_s_2 <- melt_s[melt_s$Time == times[i],]
 
     if (graph == 'plotly'){
-    graf[[i]] <- dplyr::`%>%`(plotly::plot_ly(data = melt_s_2,
-      x = ~X,
-      y = ~Y,
-      z = ~Value,
+    graf[[i]] <- dplyr::`%>%`(plotly::plot_ly(
+      x = melt_s_2$X,
+      y = melt_s_2$Y,
+      z = melt_s_2$Value,
       type = "heatmap",
       colorbar = list(title = "Prediction"),
       reversescale = T,

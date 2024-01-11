@@ -101,8 +101,8 @@ ggplot_KS <- function(
       color_palette <- colorRampPalette(custom_palette)(n_colors)
       
       # Plot
-      graf[[i]] = ggplot2::ggplot(melt_s, ggplot2::aes(x= Time, y= Value, 
-                                                       col= Prediction)) +
+      graf[[i]] = ggplot2::ggplot(melt_s, ggplot2::aes(x= melt_s$Time, y= melt_s$Value, 
+                                                       col= melt_s$Prediction)) +
         ggplot2::geom_line() +
         ggplot2::scale_color_manual(values = color_palette) +
         ggplot2::labs(title = mainl[[i]] ) +

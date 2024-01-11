@@ -28,9 +28,9 @@ Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random f
 }
 \examples{
 data(COKMexico)
-SFD_PM10_NO2 <- SpatFD(Mex_PM10, coords = coord_PM10, basis = "Fourier", nbasis = 21, lambda = 0.000001, nharm = 2)
-SFD_PM10_NO2 <- SpatFD(NO2, coords = coord_NO2, basis = "Fourier", nbasis = 27, lambda = 0.000001, nharm = 2,
-                      add = SFD_PM10_NO2)
+SFD_PM10_NO2 <- SpatFD(Mex_PM10, coords = coord_PM10, basis = "Fourier", 
+nbasis = 21, lambda = 0.000001, nharm = 2)
+SFD_PM10_NO2 <- SpatFD(NO2, coords = coord_NO2, basis = "Fourier", nbasis = 27, lambda = 0.000001, nharm = 2,add = SFD_PM10_NO2)
 model1 <- gstat::vgm(647677.1,"Gau",23317.05)
 model1 <- gstat::vgm(127633,"Wav",9408.63, add.to = model1)
 newcoords <- data.frame(x = 509926,y = 2179149)
