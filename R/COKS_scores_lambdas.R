@@ -100,7 +100,7 @@ COKS_scores_lambdas <-
   vg <- gstat::variogram(g)
   mcl <- gstat::fit.lmc(vg, g, fit.method=6,correct.diagonal=1.01)
   print(plot(vg, model = mcl))
-  z <- predict(mcl, newdata = newcoords)
+  z <- stats::predict(mcl, newdata = newcoords)
   
   coordn <- as.data.frame(z)[,c(1,2)]
   z <- as.data.frame(z)[,-c(1,2)]
