@@ -79,9 +79,9 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
     }
     if (graph == 'gg'){
       graf[[i]] <- ggplot2::ggplot(data = melt_s_2,
-                                   ggplot2::aes(x = X,
-                                       y = Y))+
-        ggplot2::geom_tile(ggplot2::aes(fill = Value))+
+                                   ggplot2::aes_(x = ~X,
+                                       y = ~Y))+
+        ggplot2::geom_tile(ggplot2::aes(fill = ~Value))+
         ggplot2::labs(fill = "Prediction",title = paste("Prediction - Time = ", times[i]),
                       x = '',y = '',color = NULL,lwd = NULL,subtitle = namek)+
         ggplot2::scale_fill_viridis_c(direction = -1,limits = c(zminl,zmaxl)) +
