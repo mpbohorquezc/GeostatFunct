@@ -89,3 +89,4 @@ model = modelos)
 \keyword{Functional kriging}
 \keyword{Spatial correlation}
 \keyword{Spatio-temporal data}
+\keyword{Functional random field}
