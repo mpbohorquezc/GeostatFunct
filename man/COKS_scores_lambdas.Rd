@@ -72,3 +72,4 @@ COKS_scores_lambdas(SFD_PM10_NO2,newcoords,model1)
 \keyword{Spatial functional prediction}
 \keyword{Linear model of coregionalization}
 \keyword{Multivariate functional random field}
+\keyword{Multivariate Spatio-temporal data}
