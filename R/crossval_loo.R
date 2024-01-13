@@ -20,7 +20,7 @@ crossval_loo = function(object,plot_show=TRUE){
   # iteration on method both ------------------------------------------------
   if (!is.null(KS_main$KS_scores)&&!is.null(KS_main$KS_lambda)){
     for (i in 1:n){
-      
+ 
       new_coord_i = coord[i,]
       data_i = data[,-i]
       coord_i = coord[-i,]
@@ -29,16 +29,16 @@ crossval_loo = function(object,plot_show=TRUE){
         SFD_i = CrossSpatFD(data_i,coord_i,SFD_main[[1]]$data_fd$basis,
             nharm=args_SFD$nharm,lambda = args_SFD$lambda)
         
-        KS_i_lambda = KS_scores_lambdas(
+        KS_i_lambda = suppressMessages(KS_scores_lambdas(
           SFD_i, 
           new_coord_i, 
           method = "lambda", 
-          model = object$model)
-        KS_i_scores = KS_scores_lambdas(
+          model = object$model))
+        KS_i_scores = suppressMessages(KS_scores_lambdas(
           SFD_i, 
           new_coord_i, 
           method = "scores", 
-          model = object$model)
+          model = object$model))
         predict_i_lambda = recons_fd(KS_i_lambda)
         predict_i_scores = recons_fd(KS_i_scores)
       })
@@ -53,7 +53,10 @@ crossval_loo = function(object,plot_show=TRUE){
         plot(predict_i_scores, ann=FALSE, axes=FALSE,col=3)
         par(new=FALSE)
         legend("topleft", legend = c("KS lambda", "KS scores", data_names[i]), col = c("red","green" ,"black"), lty = 1)
+        readline(prompt = "Press [Enter] to continue...")
+        
       }
+     
     }
   }
   
@@ -68,23 +71,25 @@ crossval_loo = function(object,plot_show=TRUE){
       suppressWarnings({
         SFD_i = CrossSpatFD(data_i,coord_i,SFD_main[[1]]$data_fd$basis,
             nharm=args_SFD$nharm,lambda = args_SFD$lambda)
-        KS_i_lambda = KS_scores_lambdas(
+        KS_i_lambda = suppressMessages(KS_scores_lambdas(
           SFD_i, 
           new_coord_i, 
           method = "lambda", 
-          model = object$model)
+          model = object$model))
         predict_i_lambda = recons_fd(KS_i_lambda)
       })
       
       residual_norm_lambda[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_lambda,SFD_main[[1]]$data_fd[i]-predict_i_lambda,rng=c(1,nrow(data))))
       
       if(plot_show){
+      
         par(mfrow = c(1,1))
         plot(SFD_main[[1]]$data_fd[i], las=2)
         par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
         par(mfrow = c(1,1), new=FALSE)
         legend("topleft", legend = c("KS lambda", data_names[i]), col = c("red", "black"), lty = 1)
+        readline(prompt = "Press [Enter] to continue...")
       }
     }
   }
@@ -101,23 +106,25 @@ crossval_loo = function(object,plot_show=TRUE){
         SFD_i = CrossSpatFD(data_i,coord_i,SFD_main[[1]]$data_fd$basis,
             nharm=args_SFD$nharm,lambda = args_SFD$lambda)
         
-        KS_i_scores = KS_scores_lambdas(
+        KS_i_scores = suppressMessages(KS_scores_lambdas(
           SFD_i, 
           new_coord_i, 
           method = "scores", 
-          model = object$model)
+          model = object$model))
         predict_i_scores = recons_fd(KS_i_scores)
       })
       
       residual_norm_scores[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
+      
         par(mfrow = c(1,1))
         plot(SFD_main[[1]]$data_fd[i], las=2)
         par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_scores, ann=FALSE, axes=FALSE,col=3)
         par(mfrow = c(1,1), new=FALSE)
         legend("topleft", legend = c("KS scores", data_names[i]), col = c("green", "black"), lty = 1)
+        readline(prompt = "Press [Enter] to continue...")
       }
     }
   }
