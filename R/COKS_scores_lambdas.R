@@ -14,7 +14,7 @@ COKS_scores_lambdas <-
     stop("Missing model")
   }
   #SFD
-  if(!inherits(SFD,"SpatFD")){
+  if(!inherits(SFD,"SpatFD") & !inherits(SFD,"CrossSpatFD")){
     stop("SFD must be an object SpatFD")
   }
   if(length(SFD) == 1){

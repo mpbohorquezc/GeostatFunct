@@ -160,7 +160,7 @@ function(data,coords,basis="Bsplines",nbasis=4,lambda=0,nharm=NULL,name=NULL,add
           names(s)=name
           class(s)="SpatFD"
      }  else if (inherits(add,"SpatFD")){
-          s=list(list(data=data,coords=coords,coordsnames=cn,fpca=fpca, variable_name=name, call_args=call_args))
+          s=list(list(data=data,coords=coords,data_fd = data_fd,coordsnames=cn,fpca=fpca, variable_name=name, call_args=call_args))
           names(s)=name
           s=append(add,s)
           class(s)="SpatFD"
