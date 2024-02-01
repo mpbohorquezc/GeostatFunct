@@ -9,7 +9,7 @@ location at a time from the dataset, fits the model to the remaining data, and t
 It is used to assess the predictive performance of the functional Cokriging model.
 }
 \usage{
-crossval_loo(object, plot_show, var, show_all)
+COK_crossval_loo(object, plot_show, var, show_all)
 } 
 \arguments{
   \item{object}{A 'COKS_pred' object obtained with function \code{COKS_scores_lambdas}.}
