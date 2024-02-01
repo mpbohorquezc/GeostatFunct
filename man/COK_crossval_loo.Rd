@@ -35,8 +35,6 @@ Venus Puertas \email{vpuertasg@unal.edu.co}
 }
 \seealso{\code{\link{recons_fd}}, \code{\link{KS_scores_lambdas}}}
 \examples{
-# Example code demonstrating how to use the crossval_loo function
-
 # Load the data and the required packages
 library(SpatFD)
 library(gstat)
@@ -57,10 +55,11 @@ model1 <- gstat::vgm(127633,"Wav",9408.63, add.to = model1)
 # Perform the cokriging
 newcoords <- data.frame(x = 509926,y = 2179149)
 coks <- COKS_scores_lambdas(SFD_PM10_NO2,newcoords,model1)
+\donttest{
 # Perform the cross-validation along NO2
 COK_crossval_loo(object = coks, var = 2,show_all=TRUE)
 }
-
+}
 \keyword{Cross-validation}
 \keyword{Leave-one-out}
 \keyword{Spatial prediction}

@@ -29,11 +29,11 @@ gstat function parameter. If there are more than 1 score vector and not all mode
 }
 }
 \details{Each functional variable is represented in terms of its functional principal components 
-\eqn{\chi_{\bm s_i}(t)=\bm \xi^T(t)\bm f_{\bm s_i},\;i=1,...,n\]
-where \[\bm f_{\bm s_i}=\left(f_{\bm s_i}^1,...,f_{\bm s_i}^K\right)^T}
+\eqn{\chi_{\bm s_i}(t)=\bm \xi^T(t)\bm f_{\bm s_i},\;i=1,...,n}
+where \eqn{\bm f_{\bm s_i}=\left(f_{\bm s_i}^1,...,f_{\bm s_i}^K\right)^T}
 
 
-The goal is the prediction of a spatial functional variable of \linebreak $\chi^r_{\bm s_0}(t)\;1\leq r\leq P$ at the unsampled site $\bm s_0$ based on $P$ spatial functional variables. The method performs cokriging directly on the scores chosen for all functional variables involved.
+The goal is the prediction of a spatial functional variable of \eqn{\chi^r_{\bm s_0}(t)\;1\leq r\leq P} at the unsampled site \eqn{\bm s_0} based on P spatial functional variables. The method performs cokriging directly on the scores chosen for all functional variables involved.
 
 \eqn{\left(\bm f_{\bm s}^{11},...,f_{\bm s}^{1K_1},...,f_{\bm s}^{P1},...,f_{\bm s}^{PK_P}\right)} 
 
