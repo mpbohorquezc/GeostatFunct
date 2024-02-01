@@ -36,7 +36,7 @@ and weigths are found such that minimize
 
 "scores" method performs kriging or cokriging directly on the scores and predictions are used to build the functional prediction
 
-It is used simple cokriging to predict the vector \[\bm f(\bm s_0)=\left(f_1(\bm s_0),...,f_K(\bm s_0)\right)^T\] at the unsampled location $\bm s_0$. The predictor is f^*(\bm s_0), so the prediction of the curve $\chi_{\bm s_0}(t)$ is \[\chi^*_{\bm s_0}(t)=\bm \xi^T(t)\bm f^*(\bm s_0),\;\;\;\;\;\;i=1,...,n\].
+It is used simple cokriging to predict the vector \eqn{\bm f(\bm s_0)=\left(f_1(\bm s_0),...,f_K(\bm s_0)\right)^T} at the unsampled location $\bm s_0$. The predictor is f^*(\bm s_0), so the prediction of the curve $\chi_{\bm s_0}(t)$ is \eqn{\chi^*_{\bm s_0}(t)=\bm \xi^T(t)\bm f^*(\bm s_0),\;\;\;\;\;\;i=1,...,n}.
 }
 \value{
 Returns a 'KS_pred' object with functional kriging:
