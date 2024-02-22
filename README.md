@@ -164,7 +164,7 @@ newcoords <- data.frame(x = 509926,y = 2179149)
 COKS_Mex <- COKS_scores_lambdas(SFD_PM10_NO2,newcoords,model1)
 summary(COKS_Mex)
 ggplot_KS(COKS_Mex)
-ggmap_KS(COKS_Mex,method = 'scores')
+ggmap_KS(COKS_Mex,map_path = map_mex,method = 'scores')
 ```
 
 

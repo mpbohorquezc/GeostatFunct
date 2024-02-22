@@ -5,7 +5,7 @@
   Map of Bogota.
 }
 \usage{data(AirQualityBogota)}
-\format{Map file of class SpatialPolygonDataFrame load from a shape file by \code{rgdal::readOGR}}
+\format{Map file of class SpatialPolygonDataFrame}
 \source{Unidad Administrativa Especial de Catastro Distrital}
 \references{
   \code{https://datosabiertos.bogota.gov.co/dataset/sector-catastral}
