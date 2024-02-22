@@ -83,28 +83,5 @@ OSD$new_stations
 OSD$fixed_stations
 OSD$plot
 class(OSD)
-
-#### Real Data Example ####
-data(AirQualityBogota)
-vgm_model  <- vgm(psill = 5.665312,
-                  model = "Exc",
-                  range = 8000,
-                  kappa = 1.62,
-                  add.to = vgm(psill = 0.893,
-                               model = "Nug",
-                               range = 0,
-                               kappa = 0))
-
-bogota_shp <- sp::spTransform(map,my.CRS)
-target <- sp::spsample(bogota_shp,n = 100, type = "random")
-# The set of points in which we want to predict optimally.
-old_stations <- sp::spsample(bogota_shp,n = 3, type = "random")
-# The set of stations that are already fixed.
-
-FD_optimal_design(k = 10, s0 = target,model = vgm_model,
-               map = map,plt = TRUE,
-               fixed_stations = old_stations) -> res
-res
-class(res)
 }
 }
