@@ -5,7 +5,7 @@ Functional Geostatistics: Univariate and Multivariate Functional Spatial Predict
 ![version](https://img.shields.io/badge/version-0.1.0-blue)
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-The R package *SpatFD* carries out functional kriging  and optimal sampling for spatial prediction of functional data. The methods are based on XAs and YAs  that extend the framework of  spatial prediction and optimal sampling from scalar to functional data. SpatFD is based on the KHH expansion that allows to represent the observed functions in terms of its empirical functional principal components. Based on this approach, the functional auto-covariances and cross-covariances required for  spatial functional predictions and optimal sampling, are completely determined by the sum of the spatial auto-covariances and cross-covariances of the respective score components.  
+The R package *SpatFD* carries out functional kriging, cokriging and optimal sampling for spatial prediction of functional data. The methods are based on XAs and YAs  that extend the framework of  spatial prediction and optimal sampling from scalar to functional data. SpatFD is based on the KHH expansion that allows to represent the observed functions in terms of its empirical functional principal components. Based on this approach, the functional auto-covariances and cross-covariances required for  spatial functional predictions and optimal sampling, are completely determined by the sum of the spatial auto-covariances and cross-covariances of the respective score components.  
 
 The package provides new classes of data and  functions for modeling spatial dependence structure among curves. The spatial prediction of curves at unsampled locations can be carried out using two types of predictors, and both of them report, the respective variances of the prediction error.  In addition, there is a function for the determination of spatial locations sampling configuration that ensures minimum variance of spatial functional prediction. There are also two functions for plotting predicted curves at each location and mapping the surface at each time point, respectively.
 
@@ -20,7 +20,7 @@ devtools::install_github("mpbohorquezc/SpatFD-Functional-Geostatistics", ref = "
 The objects class and usage in the different functions are listed.
 
 - `SpatFD` return an object class 'SpatFD' which is used in functional kriging and to obtain the spatial random field of scores.
-- `KS_scores_lambdas` return an object class 'KS_pred' to use in the linear combinations to obtain functional kriging and plots with `ggplot_KS` and `ggmap_KS`.
+- `KS_scores_lambdas`,`COKS_scores_lambdas` return an object class 'KS_pred','COKS_pred' to use in the linear combinations to obtain functional kriging and cokriging. Plots are made with `ggplot_KS` and `ggmap_KS`.
 - `FD_optimal_design` return an object class 'OptimalSpatialDesign' that can be used with print.
 
 ## Example of use

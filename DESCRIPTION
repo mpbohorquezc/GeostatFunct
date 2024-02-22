@@ -2,7 +2,7 @@ Package: SpatFD
 Type: Package
 Title: Functional Geostatistics: Univariate and Multivariate Functional Spatial Prediction
 Version: 0.0.1
-Date: 2023-11-20
+Date: 2024-02-22
 Author: Martha Patricia Bohorquez Castañeda <mpbohorquezc@unal.edu.co>,
 	  Diego Alejandro Sandoval Skinner <diasandovalsk@unal.edu.co>,
 	  Angie Villamil <acvillamils@unal.edu.co>,
@@ -10,7 +10,8 @@ Author: Martha Patricia Bohorquez Castañeda <mpbohorquezc@unal.edu.co>,
 	  Nathaly Vergel Serrano <nvergel@unal.edu.co>,
 	  Miguel Angel Munoz Layton <mmunozl@unal.edu.co>,
 	  Valeria Bejarano Salcedo <vbejaranos@unal.edu.co>,
-          Ruben Dario Guevara Gonzalez <rdguevarag@unal.edu.co>,
+	  Venus Celeste Puertas <vpuertasg@unal.edu.co>,
+    Ruben Dario Guevara Gonzalez <rdguevarag@unal.edu.co>,
 	  Joan Nicolas Castro Cortes <jocastroc@unal.edu.co>,
 	  Ramon Giraldo Henao <rgiraldoh@unal.edu.co>,
 	  Jorge Mateu <mateu@mat.uji.es>
@@ -20,7 +21,5 @@ Description: An R package that carries out functional kriging  and optimal sampl
 License: GPL-3
 Encoding: UTF-8
 Imports: ggplot2,plotly,dplyr,utils,stats,proxy,reshape,gstat,sp,fda,sf
-## quiets concerns of R CMD check re: the .'s that appear in pipelines
-usethis::use_package("rlang")
 LazyData: true
 
