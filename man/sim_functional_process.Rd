@@ -45,5 +45,77 @@ Samuel Sánchez Gutiérrez \email{ssanchezgu@unal.edu.co}.
 }
 \examples{
 \donttest{
+library(gstat)
+library(fda)
+
+data("CanadianWeather")
+canada.CRS <- CRS("+init=epsg:4608")
+coords <- SpatialPoints(CanadianWeather$coordinates,
+                        proj4string = CRS("+init=epsg:4326"))
+coords <- spTransform(coords,canada.CRS)
+obs <- CanadianWeather$dailyAv[,,1] # Temperature
+
+Lfd_obj <- int2Lfd(m = 2)
+create.bspline.basis(rangeval = c(1,365),
+                     nbasis = 40, norder = 4) -> mi.base
+mi.fdPar <- fdPar(mi.base, Lfd_obj, lambda = 7.389)
+mi.fd <- smooth.basis(argvals = 1:365,
+                      y = obs, fdParobj = mi.fdPar)
+
+nbasis <- 5
+canada <- mi.fd$fd
+canada.pca <- pca.fd(canada,nharm = 10)
+base_ort <- canada.pca$harmonics[1:nbasis]
+canada_mean <- canada.pca$meanfd
+
+formula2fd <- function(rango, expresion) {
+  # Generate grid
+  n <- 500  # length of the grid
+  x <- seq(rango[1], rango[2], length.out = n)
+  
+  # evaluate expression on the grid
+  y_vals <- eval(parse(text = expresion))
+  
+  # convert to fd
+  basis <- create.bspline.basis(rangeval = rango, nbasis = 30)
+  fd_obj <- Data2fd(x, y_vals,basisobj = basis)
+  
+  return(fd_obj)
+}
+media <- formula2fd(c(-1,1),"3*sin(x*4)")
+
+# No conditional
+vario <- vgm(.25, "Exp", .5, .05)
+nbasis <- 6
+sims <- sim_functional_process(10,vario,nbasis,coords,basis = 'Legendre',mu = media)
+class(sims)
+length(sims)
+
+class(sims[[1]])
+# plot(sims[[3]][[1]]$data_fd)
+
+sims <- sim_functional_process(10,vario,nbasis,coords,basis = 'Legendre')
+class(sims)
+length(sims)
+class(sims[[1]])
+# plot(sims[[3]][[1]]$data_fd)
+
+# Conditional
+vario <- vgm(100, "Exp", 900, 10)
+new_coords <- spsample(coords,100,type = "regular")
+gridded(new_coords) <- TRUE
+length(new_coords)
+a <- sim_functional_process(10,vario,nbasis,new_coords,canada,coords)
+class(a)
+length(a)
+class(a[[1]])
+#plot(a[[1]][[1]]$data_fd)
+
+vario <- vgm(100, "Wav", 900, 10)
+a <- sim_functional_process(10,vario,nbasis,new_coords,canada,coords)
+class(a)
+length(a)
+class(a[[1]])
+#plot(a[[1]][[1]]$data_fd)
 }
 }
