@@ -27,6 +27,9 @@ When \code{data} is passed, conditional simulation is performed. That means that
 \value{
 A list of \code{nsims} \code{SpatFD} objects each one with as much curves as points are in \code{coords}.
 }
+\references{
+Bohorquez, M., Giraldo, R. & Mateu, J. Multivariate functional random fields: prediction and optimal sampling. Stoch Environ Res Risk Assess 31, 53–70 (2017). https://doi.org/10.1007/s00477-016-1266-y
+}
 \author{
 Samuel Sánchez Gutiérrez \email{ssanchezgu@unal.edu.co}.
 }
