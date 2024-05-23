@@ -6,7 +6,7 @@
 ## https://www.jstatsoft.org/index.php/jss/article/downloadSuppFile/v055i09/v55i09.R
 
 # https://github.com/r-spatial/gstat/blob/5dbe096f58497cb1795907ece4451a4cc82d52be/R/krige0.R#L28
-extractFormula = function(formula, data, newdata) {
+.extractFormula = function(formula, data, newdata) {
   # extract y and X from data:
   m = model.frame(terms(formula), as(data, "data.frame"), na.action = na.fail)
   y = model.extract(m, "response")
@@ -22,7 +22,7 @@ extractFormula = function(formula, data, newdata) {
   list(y = y, X = X, x0 = x0)
 }
 
-CHsolve = function(A, b) {
+.CHsolve = function(A, b) {
   # solves A x = b for x if A is PD symmetric
   #A = chol(A, LINPACK=TRUE) -> deprecated
   A = chol(A) # but use pivot=TRUE?
@@ -33,14 +33,14 @@ CHsolve = function(A, b) {
 # extend the grid 
 # input: SpatialGrid/SpatialPixels/GridTopology
 # output: extended grid of class GridTopology
-ceExtGrid <- function(grid, ext=2) {
+.ceExtGrid <- function(grid, ext=2) {
   if (!inherits(grid, "GridTopology")) {
-    stopifnot(gridded(grid))
+    stopifnot(sp::gridded(grid))
     
     grid <- grid@grid
   }
   
-  GridTopology(grid@cellcentre.offset,
+  sp::GridTopology(grid@cellcentre.offset,
                grid@cellsize,
                grid@cells.dim*ext)
 }
@@ -49,13 +49,13 @@ ceExtGrid <- function(grid, ext=2) {
 # expand and wrap a grid on a torus + calc distances
 # input: SpatialGrid
 # output: distance matrix
-ceWrapOnTorusCalcDist <- function(grid, ext=2) {
-  grid <- ceExtGrid(grid, ext)
+.ceWrapOnTorusCalcDist <- function(grid, ext=2) {
+  grid <- .ceExtGrid(grid, ext)
   
   rangeXY <- grid@cellsize * grid@cells.dim
   
   MN.ext <- prod(grid@cells.dim)
-  gridCoords <- coordinates(grid)
+  gridCoords <- sp::coordinates(grid)
   
   mmat.ext <- matrix(rep(gridCoords[, 1], MN.ext), MN.ext, MN.ext)
   nmat.ext <- matrix(rep(gridCoords[, 2], MN.ext), MN.ext, MN.ext)
@@ -70,8 +70,8 @@ ceWrapOnTorusCalcDist <- function(grid, ext=2) {
 }
 
 ## FFT preparation with only first row of cov-matrix
-ceWrapOnTorusCalcCovRow1 <- function(grid, vgmModel, ext=2) {
-  grid <- ceExtGrid(grid, ext)
+.ceWrapOnTorusCalcCovRow1 <- function(grid, vgmModel, ext=2) {
+  grid <- .ceExtGrid(grid, ext)
   
   stopifnot("variogramModel" %in% class(vgmModel))
   
@@ -95,7 +95,7 @@ ceWrapOnTorusCalcCovRow1 <- function(grid, vgmModel, ext=2) {
                        grid@cells.dim[1], 
                        grid@cells.dim[2])
   
-  variogramLine(vgmModel, dist_vector = D.ext.row1, covariance = T)
+  gstat::variogramLine(vgmModel, dist_vector = D.ext.row1, covariance = T)
 }
 
 # simulate GRF with given covariance structure using fft
@@ -106,7 +106,7 @@ ceWrapOnTorusCalcCovRow1 <- function(grid, vgmModel, ext=2) {
 #   grid.index: grid.index of a SpatialPixels object to select the right pixels from the larger square-grid
 # @output
 #   matrix where each column holds one simulated GRF corresponding to cells.dim (and grid.index if appropriate)
-ceSim <- function(covMatRow1, n=1, cells.dim, grid.index) {
+.ceSim <- function(covMatRow1, n=1, cells.dim, grid.index) {
   d <- dim(covMatRow1)
   dp <- prod(d)
   sdp <- sqrt(dp)
@@ -136,22 +136,22 @@ ceSim <- function(covMatRow1, n=1, cells.dim, grid.index) {
 # the multiVarMatrix copied from krige0 to avoid repeted calls to krige with
 # multiple, identical inversions of the weights matrix
 
-krigeMultiple <- function(formula, from, to, model, multiVarMatrix) {
-  lst = extractFormula(formula, from, to)
+.krigeMultiple <- function(formula, from, to, model, multiVarMatrix) {
+  lst = .extractFormula(formula, from, to)
   X = lst$X
   x0 = lst$x0
-  ll = (!is.na(is.projected(from)) && !is.projected(from))
-  s = coordinates(from)
-  s0 = coordinates(to)
+  ll = (!is.na(sp::is.projected(from)) && !sp::is.projected(from))
+  s = sp::coordinates(from)
+  s0 = sp::coordinates(to)
   
-  V = variogramLine(model,
-                    dist_vector = spDists(s, s, ll),
+  V = gstat::variogramLine(model,
+                    dist_vector = sp::spDists(s, s, ll),
                     covariance = TRUE)
-  v0 = variogramLine(model,
-                     dist_vector = spDists(s, s0, ll),
+  v0 = gstat::variogramLine(model,
+                     dist_vector = sp::spDists(s, s0, ll),
                      covariance = TRUE)
   
-  skwts = CHsolve(V, cbind(v0, X))
+  skwts = .CHsolve(V, cbind(v0, X))
   ViX = skwts[, -(1:nrow(s0))]
   skwts = skwts[, 1:nrow(s0)]
   
@@ -175,9 +175,9 @@ krigeMultiple <- function(formula, from, to, model, multiVarMatrix) {
 # @output
 # SpatialPixels or SpatailGridDataFrame with (additional) n columns holding one (un)conditional simulation each
 
-krigeSimCE <- function(formula, data, newdata, model, n = 1, ext = 2) {
+.krigeSimCE <- function(formula, data, newdata, model, n = 1, ext = 2) {
   stopifnot(is(model, "variogramModel"))
-  stopifnot(gridded(newdata))
+  stopifnot(sp::gridded(newdata))
   if (!missing(data))
     stopifnot(identical(data@proj4string@projargs, newdata@proj4string@projargs))
   
@@ -186,17 +186,17 @@ krigeSimCE <- function(formula, data, newdata, model, n = 1, ext = 2) {
   condSim <- TRUE
   if (missing(data)) {
     condSim <- FALSE
-    message("[No data provided: performing unconditional simulation.]")
+    #message("[No data provided: performing unconditional simulation.]")
   } else {
-    message("[Performing conditional simulation.]")
+    #message("[Performing conditional simulation.]")
   }
   
   # prepare covariance matrix
-  covMat <- ceWrapOnTorusCalcCovRow1(newdata, model, ext = ext)
+  covMat <- .ceWrapOnTorusCalcCovRow1(newdata, model, ext = ext)
   # covMat <- Matrix::nearPD(covMat) # ARREGLO
   
   # simulate
-  sims <- ceSim(covMat, n, newdata@grid@cells.dim, newdata@grid.index)
+  sims <- .ceSim(covMat, n, newdata@grid@cells.dim, newdata@grid.index)
   colnames(sims) <- paste0(varName, ".sim", 1:n)
   
   # bind simulations to newdata geometry
@@ -204,7 +204,7 @@ krigeSimCE <- function(formula, data, newdata, model, n = 1, ext = 2) {
     if ("data" %in% slotNames(newdata))
       newdata@data <- cbind(newdata@data, sims)
     else
-      addAttrToGeom(newdata, as.data.frame(sims))
+      sp::addAttrToGeom(newdata, as.data.frame(sims))
     return(newdata)
   }
   
@@ -212,72 +212,25 @@ krigeSimCE <- function(formula, data, newdata, model, n = 1, ext = 2) {
   
   ## conditioning
   # interpolate the observations to the simulation grid
-  obsMeanField <- krige(formula, data, newdata, model)
+  obsMeanField <- gstat::krige(formula, data, newdata, model)
   
   # interpolate to observation locations from the simulated grids for each simulation
-  simMeanObsLoc <- krigeMultiple(as.formula(paste0("var1.pred ~", formula[[3]])),
+  simMeanObsLoc <- .krigeMultiple(as.formula(paste0("var1.pred ~", formula[[3]])),
                                  obsMeanField, data, model, sims)
   
   # interpolate from kriged mean sim at observed locations back to the grid for mean surface of the simulations
-  simMeanFields <- krigeMultiple(as.formula(paste0(varName, "~", formula[[3]])),
+  simMeanFields <- .krigeMultiple(as.formula(paste0(varName, "~", formula[[3]])),
                                  data, newdata, model, simMeanObsLoc)
   
   # add up the mean field and the corrected data
   sims <- obsMeanField@data$var1.pred + sims - simMeanFields
   
   # bind simulations to newdata geometry
-  if ("data" %in% slotNames(newdata)) {
+  if ("data" %in% methods::slotNames(newdata)) {
     newdata@data <- cbind(newdata@data, sims)
     return(newdata)
   }
   
-  addAttrToGeom(newdata, as.data.frame(sims))
+  sp::addAttrToGeom(newdata, as.data.frame(sims))
 }
-
-###
-# Note: to avoid the smoothing effect, the irregular observation locations could also be independently simulated by e.g. their surrounding grid values
-###
-
-## circulant embedding for ST-ocvariance functions with grids along one spatial and one temporal axis
-
-
-# inputs: 
-#   hDiscrete = c(hStep, hn): spatial step width and number of steps
-#   tDiscrete = c(tStep, tn): temporal step length and number of steps
-
-# CAVE: hDiscrete and tDiscrete must have the correct spatial and temporal metrics
-
-ceWrapSpaceTimeOnTorusCalcCovRow1 <- function(hDiscrete, tDiscrete, vgmStModel, ext=2, turningLayers=TRUE) {
-  stopifnot(is(vgmStModel)  == "StVariogramModel")
-  
-  hDiscrete[2] <- hDiscrete[2]*ext
-  tDiscrete[2] <- tDiscrete[2]*ext
-  
-  rangeST <- c(prod(hDiscrete), prod(tDiscrete))
-  
-  cenX <- seq(from = 0, by = hDiscrete[1], length.out = hDiscrete[2])
-  cenY <- seq(from = 0, by = tDiscrete[1], length.out = tDiscrete[2])
-  
-  m.diff.row1 <- abs(cenX[1] - cenX)
-  m.diff.row1 <- pmin(m.diff.row1, rangeST[1] - m.diff.row1)
-  
-  n.diff.row1 <- abs(cenY[1] - cenY)
-  n.diff.row1 <- pmin(n.diff.row1, rangeST[2] - n.diff.row1)
-  
-  cent.ext.row1 <- expand.grid(m.diff.row1, n.diff.row1)
-  D.ext.row1 <- matrix(sqrt(cent.ext.row1[, 1]^2 + cent.ext.row1[, 2]^2), 
-                       hDiscrete[2], 
-                       tDiscrete[2])
-  colnames(cent.ext.row1) <- c("spacelag", "timelag")
-  
-  if (turningLayers) {
-    return(matrix(tbOperator(vgmStModel, dist_grid = cent.ext.row1)$gamma,
-                  hDiscrete[2], tDiscrete[2]))
-  } 
-  
-  matrix(variogramSurface(vgmStModel, dist_grid = cent.ext.row1, 
-                          covariance = TRUE)$gamma,
-         hDiscrete[2], tDiscrete[2])
-}
-
 

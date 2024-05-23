@@ -7,13 +7,8 @@ Simulation of unconditional or conditional functional spatial process.
 Given a variogram model, this functions simulates several realizations of a functional spatial process. This simulation can be conditioned to observed data.
 }
 \usage{
-sim_functional_process <- function(nsims,variograms,
-                                   nbasis,coords,
-                                   data = NULL,
-                                   data_coords = NULL,
-                                   basis = NULL,
-                                   mu = NULL,
-                                   L = NULL)
+sim_functional_process(nsims,variograms,nbasis,coords,data = NULL,
+                      data_coords = NULL,basis = NULL,mu = NULL,L = NULL)
 }
 \arguments{
   \item{nsims}{Integer giving the number of curves to simulate.}
@@ -30,23 +25,18 @@ sim_functional_process <- function(nsims,variograms,
 When \code{data} is passed, conditional simulation is performed. That means that each simulated realization of the process interpolated the observed curves in \code{data}. If \code{data} is \code{NULL}, the realizations of the process are simulated without imterpolation restrictions.
 }
 \value{
-A list of \code{nsims} \code{fd} objects each one with as much curves as points are in \code{coords}.
-}
-\references{
+A list of \code{nsims} \code{SpatFD} objects each one with as much curves as points are in \code{coords}.
 }
 \author{
 Samuel Sánchez Gutiérrez \email{ssanchezgu@unal.edu.co}.
 }
-
-\section{Warning}{
-}
-
 \seealso{\code{\link{generate_basis}}
 }
 \examples{
 \donttest{
 library(gstat)
 library(fda)
+library(sp)
 
 data("CanadianWeather")
 canada.CRS <- CRS("+init=epsg:4608")

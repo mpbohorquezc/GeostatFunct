@@ -1,7 +1,6 @@
-library(fda)
 
 # https://stackoverflow.com/questions/44894052/computing-the-nth-derivative-of-a-function
-DD <- function(expr, names, order = 1, debug=FALSE) {
+.DD <- function(expr, names, order = 1, debug=FALSE) {
   if (any(order>=1)) {  ## do we need to do any more work?
     w <- which(order>=1)[1]  ## find a derivative to compute
     if (debug) {
@@ -10,7 +9,7 @@ DD <- function(expr, names, order = 1, debug=FALSE) {
     ## update order
     order[w] <- order[w]-1
     ## recurse ...
-    return(DD(D(expr,names[w]), names, order, debug))
+    return(.DD(D(expr,names[w]), names, order, debug))
   }
   return(expr)
 }
@@ -76,7 +75,7 @@ generate_basis <- function(basis = "Fourier",n_functions = 10,
     }
   }else{
     f_gen <- function(x,n){
-      deriv_term <- DD(expression((x^2 - 1)^n),'x',order = n)
+      deriv_term <- .DD(expression((x^2 - 1)^n),'x',order = n)
       1/(2^n*factorial(n)) * eval(deriv_term)
     }
   }
@@ -96,12 +95,12 @@ generate_basis <- function(basis = "Fourier",n_functions = 10,
   ## fda basis ----
   if(is.null(fda_basis)){
     if(basis == "Fourier"){
-      create.bspline.basis(
+      fda::create.bspline.basis(
         rangeval = c(-L,L),
         nbasis = 40,
         norder = 4) -> fda_basis
     }else{
-      create.fourier.basis(
+      fda::create.fourier.basis(
         rangeval = c(-L,L),
         nbasis = 40
       ) -> fda_basis
@@ -109,13 +108,13 @@ generate_basis <- function(basis = "Fourier",n_functions = 10,
   }
   
   ## lambda optimization ----
-  Lfd_obj <- int2Lfd(m = 2)
+  Lfd_obj <- fda::int2Lfd(m = 2)
   GCV.bsp <- NULL
   log_lambdas <- -40:4
   for (k in log_lambdas){
     lambda <- exp(k)
-    mi.fdPar <- fdPar(fda_basis, Lfd_obj, lambda = lambda)
-    mi.fd <- smooth.basis(argvals = x_seq,
+    mi.fdPar <- fda::fdPar(fda_basis, Lfd_obj, lambda = lambda)
+    mi.fd <- fda::smooth.basis(argvals = x_seq,
                           y = values, fdParobj = mi.fdPar)
     GCV.bsp <- c(GCV.bsp,sum(mi.fd$gcv,na.rm=T))
   }
@@ -123,7 +122,7 @@ generate_basis <- function(basis = "Fourier",n_functions = 10,
   log_lam <- log_lambdas[which.min(GCV.bsp)]
   
   ## Create object ----
-  mi.fdPar <- fdPar(fda_basis, Lfd_obj, lambda = exp(log_lam))
+  mi.fdPar <- fda::fdPar(fda_basis, Lfd_obj, lambda = exp(log_lam))
   
   
   if(basis == "Legendre"){
@@ -137,7 +136,7 @@ generate_basis <- function(basis = "Fourier",n_functions = 10,
     'values' = 'value'
   )
   
-  mi.fd <- smooth.basis(argvals = x_seq,
+  mi.fd <- fda::smooth.basis(argvals = x_seq,
                         y = values, 
                         fdParobj = mi.fdPar,
                         fdnames = fdnames)
@@ -146,15 +145,3 @@ generate_basis <- function(basis = "Fourier",n_functions = 10,
   
   
 }
-
-# res <- generate_basis(L=1)
-# plot(res)
-# 
-# res <- generate_basis(n_functions = 20,L = 3)
-# plot(res)
-# 
-# res <- generate_basis(basis = "Legendre")
-# plot(res)
-# 
-# res <- generate_basis(basis = "Legendre", n_functions = 7)
-# plot(res)

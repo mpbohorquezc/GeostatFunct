@@ -1,10 +1,5 @@
-# Simulación (no) condicional funcional
-library(gstat)
-library(fda)
+# (Un)Conditional simulation
 
-setwd('~/extra/U/GstatFD/Simulación condicional/')
-source('generate_basis.R')
-source('krigeSimCE.R')
 
 sim_functional_process <- function(nsims, # Integer giving the number of curves to simulate
                                    variograms, # gstat::gstatVariogram or list of them giving the variogram model for each score. If only one is provided, it will be recycled
@@ -64,12 +59,12 @@ sim_functional_process <- function(nsims, # Integer giving the number of curves 
             is.numeric(coords)))
       stop("coords must be a SpatialPoints object or nsimsx2 numeric array.")
     
-    coords <- SpatialPoints(coods)
+    coords <- sp::SpatialPoints(coords)
     
   }
   
   if(cond)
-    gridded(coords) <- TRUE
+    sp::gridded(coords) <- TRUE
   
   n_points <- length(coords)
   
@@ -82,7 +77,7 @@ sim_functional_process <- function(nsims, # Integer giving the number of curves 
               is.numeric(data_coords)))
         stop("data_coords must be a SpatialPoints object or ncol(canada$coefs)x2 numeric array.")
       
-      data_coords <- SpatialPoints(data_coods)
+      data_coords <- sp::SpatialPoints(data_coords)
     }
   }
   
@@ -94,14 +89,6 @@ sim_functional_process <- function(nsims, # Integer giving the number of curves 
       if(!(basis %in% c('Fourier','Legendre')))
         stop("basis must be one of the following characters: 'Fourier', 'Legendre'.")
     }
-  
-  ## argvals ----
-  # if(!cond)
-  #   if(!all(is.numeric(argvals),length(argvals) >= 10))
-  #     stop("argvals must be a vector of at least ten observation points.")
-  
-  # if(any(diff(argvals) <= 0))
-  #   stop("argvals must be an increasing sequence.")
   
   ## mu ----
   if(!is.null(mu))
@@ -117,9 +104,9 @@ sim_functional_process <- function(nsims, # Integer giving the number of curves 
     
     ## Covariances matrix ----
     
-    dists_matrix <- spDists(coords,coords) |> as.matrix()
+    dists_matrix <- sp::spDists(coords,coords) |> as.matrix()
     cov_matrices <- lapply(variograms,
-                           FUN = \(v)(variogramLine(v,
+                           FUN = \(v)(gstat::variogramLine(v,
                                                     dist_vector = dists_matrix,
                                                     covariance = TRUE)))
     
@@ -140,7 +127,7 @@ sim_functional_process <- function(nsims, # Integer giving the number of curves 
     # Conditional simulation ----
   
     ## FPCA ----
-    fpca <- pca.fd(data,nharm = nbasis)
+    fpca <- fda::pca.fd(data,nharm = nbasis)
     
     # Varianza explicada
     lambs <- fpca$values
@@ -150,17 +137,15 @@ sim_functional_process <- function(nsims, # Integer giving the number of curves 
     scores <- fpca$scores
     scores.df <- data.frame(scores)
     names(scores.df) <- paste0("SC",1:nbasis)
-    scores.sp <- SpatialPointsDataFrame(data_coords,scores.df)
+    scores.sp <- sp::SpatialPointsDataFrame(data_coords,scores.df)
     # Functional mean
     mu <- fpca$meanfd
     
-    # warning("0")
     ## Simulate scores ----
     cat("pre-warning\n")
     lapply(1:nbasis,FUN = function(i){
       formula.i <- as.formula(paste0("SC",i," ~ 1"))
-      # REVISAR: La simulación está arrojando NaN
-      krigeSimCE(formula.i,scores.sp,newdata = coords,
+      .krigeSimCE(formula.i,scores.sp,newdata = coords,
                  model = variograms[[i]],n = nsims) -> sims.i
       return(sims.i@data)
     }) -> sims_per_score
