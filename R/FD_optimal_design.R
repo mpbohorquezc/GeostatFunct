@@ -1,7 +1,7 @@
 FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
                               scalar = FALSE, nharm = NULL,
                               method = "lambda", grid = NULL,
-                              map = NULL, plt = F){
+                              map = NULL, plt = FALSE){
   # validation ----------------------------------------------
   
   if (missing(k))
@@ -131,7 +131,7 @@ FD_optimal_design <- function(k, s0, model, fixed_stations = NULL,
   new_stati <- matrix(result$par,ncol=2)
   
   # Put the final result into the grid
-  dist_tmp <- proxy::dist(new_stati,as.matrix(grid),diag = T)
+  dist_tmp <- proxy::dist(new_stati,as.matrix(grid),diag = TRUE)
   ids_tmp <- apply(as.matrix(dist_tmp),1,which.min)
   new_stati <- matrix(c(as.matrix(grid)[ids_tmp,]),ncol = 2)
   colnames(new_stati) <- c("x","y")

@@ -12,7 +12,7 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
     my <- min(KS$SFD[[1]]$coords[,2])
     My <- max(KS$SFD[[1]]$coords[,2])
     map <- sf::st_polygon(list(
-    matrix(c(mx,my,Mx,my,Mx,My,mx,My,mx,my),byrow = T,ncol = 2)),
+    matrix(c(mx,my,Mx,my,Mx,My,mx,My,mx,my),byrow = TRUE,ncol = 2)),
     )
   }
 
@@ -67,7 +67,7 @@ function(KS, map_path=NULL, window_time = NULL, method = "lambda", map_n = 5000,
       z = melt_s_2$Value,
       type = "heatmap",
       colorbar = list(title = "Prediction"),
-      reversescale = T,
+      reversescale = TRUE,
       zmin = zminl,
       zmax = zmaxl
     ),

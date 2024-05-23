@@ -1,5 +1,5 @@
 COKS_scores_lambdas <- 
-  function(SFD, newcoords, model, method = "scores", fill.all=T){
+  function(SFD, newcoords, model, method = "scores", fill.all=TRUE){
   #----------------------------------------------------------------------------
   #           VALIDANDO ARGUMENTOS *
   #----------------------------------------------------------------------------

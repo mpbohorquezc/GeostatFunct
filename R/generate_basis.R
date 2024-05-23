@@ -1,20 +1,3 @@
-
-# https://stackoverflow.com/questions/44894052/computing-the-nth-derivative-of-a-function
-.DD <- function(expr, names, order = 1, debug=FALSE) {
-  if (any(order>=1)) {  ## do we need to do any more work?
-    w <- which(order>=1)[1]  ## find a derivative to compute
-    if (debug) {
-      cat(names,order,w,"\n")
-    }
-    ## update order
-    order[w] <- order[w]-1
-    ## recurse ...
-    return(.DD(D(expr,names[w]), names, order, debug))
-  }
-  return(expr)
-}
-
-
 generate_basis <- function(basis = "Fourier",n_functions = 10,
                            L = NULL,fda_basis = NULL){
   
@@ -116,7 +99,7 @@ generate_basis <- function(basis = "Fourier",n_functions = 10,
     mi.fdPar <- fda::fdPar(fda_basis, Lfd_obj, lambda = lambda)
     mi.fd <- fda::smooth.basis(argvals = x_seq,
                           y = values, fdParobj = mi.fdPar)
-    GCV.bsp <- c(GCV.bsp,sum(mi.fd$gcv,na.rm=T))
+    GCV.bsp <- c(GCV.bsp,sum(mi.fd$gcv,na.rm=TRUE))
   }
   
   log_lam <- log_lambdas[which.min(GCV.bsp)]
