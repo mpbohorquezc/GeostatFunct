@@ -63,12 +63,13 @@ modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
 
 KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both",
 model = modelos)
-
+\donttest{
 ggmap_KS(KS_SFD_PM10_both,
          map_path = map,
          window_time = c(5108,5109,5110),
          method = "scores",
          zmin = 50,
          zmax = 120)
+         }
 }
 \keyword{colormap}

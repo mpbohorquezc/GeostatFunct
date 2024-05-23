@@ -61,9 +61,11 @@ modelos <- list(vgm(psill = 2634000, "Exp", range = 2103.25, nugget =  0),
 
 KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both",
 model = modelos)
+\donttest{
 ggplot_KS(KS_SFD_PM10_both,show.varpred = FALSE,
           main = "Plot 1 - Using Scores",
           main2 = "Plot 2 - Using Lambda",
           ylab = "PM10")
+          }
 }
 \keyword{Functional data}
