@@ -7,9 +7,7 @@ Creates functional ortogonal basis as fd object.
 This function returns the first nth elements of a functional basis as an fd object.
 }
 \usage{
-generate_basis <- function(basis = "Fourier",
-                           n_functions = 10,L = NULL,
-                           fda_basis = NULL)
+generate_basis(basis = "Fourier",n_functions = 10,L = NULL,fda_basis = NULL)
 }
 \arguments{
   \item{basis}{Name of the functional basis. Currently only \code{"Fourier"} or \code{"Legendre"} are supported.}
@@ -49,10 +47,6 @@ Samuel Sánchez Gutiérrez \email{ssanchezgu@unal.edu.co}.
 \note{
 Generating \eqn{n} Legendre basis functions requires to evaluate \eqn{\frac{n(n+1)}{2}} derivates, so its recomended to use values below 10.
 }
-
-\section{Warning}{
-}
-
 \seealso{\code{\link{sim_functional_process}}
 }
 \examples{
