@@ -1,4 +1,5 @@
 \name{coord}
+\docType{data}
 \alias{coord}
 \title{Coordinates of measurement stations Bogota, Colombia}
 \description{

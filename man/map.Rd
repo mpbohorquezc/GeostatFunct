@@ -1,4 +1,5 @@
 \name{map}
+\docType{data}
 \alias{map}
 \title{map of Bogota, Colombia}
 \description{

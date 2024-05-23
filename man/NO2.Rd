@@ -1,4 +1,5 @@
 \name{NO2}
+\docType{data}
 \alias{NO2}
 \title{Air quality data of Mexico}
 \description{
@@ -7,7 +8,4 @@
 \usage{data(COKMexico)}
 \format{data.frame of measurement 'NO2'}
 \source{Mexico}
-\references{
-Mexico
-}
 \keyword{datasets}

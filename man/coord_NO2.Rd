@@ -1,4 +1,5 @@
 \name{coord_NO2}
+\docType{data}
 \alias{coord_NO2}
 \title{Coordinates of air quality data of Mexico}
 \description{
@@ -7,7 +8,4 @@
 \usage{data(COKMexico)}
 \format{data.frame of coordinates 'coord_NO2'}
 \source{Mexico}
-\references{
-Mexico
-}
 \keyword{datasets}

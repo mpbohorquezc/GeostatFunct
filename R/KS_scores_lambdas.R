@@ -82,9 +82,6 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
 
   # Kriging -----------------------------------------------------------------
-  oldw <- getOption("warn")
-  options(warn = -1)
-
   #scores
   puntaje=SFD[[name]]$fpca$scores
   rownames(puntaje)=SFD[[name]]$coordsnames
@@ -164,8 +161,8 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     #kriging
     K=list()
     for (i in 1:ncol(puntajes)){
-      K[[i]] <- gstat::krige(puntajes[[i]]~1,puntajes,newcoords, model = model[[i]],
-                             beta = 0)
+      K[[i]] <- suppressWarnings(gstat::krige(puntajes[[i]]~1,puntajes,newcoords, model = model[[i]],
+                             beta = 0))
     }
 
     #prediction
@@ -203,6 +200,5 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     out <- list(SFD=SFD, KS_scores = out_scores,  model = model, name=name)
   }
   class(out)="KS_pred"
-  options(warn = oldw)
   return(out)
 }

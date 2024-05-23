@@ -83,11 +83,8 @@ crossval_loo = function(object,plot_show=TRUE){
       
       if(plot_show){
       
-        par(mfrow = c(1,1))
         plot(SFD_main[[1]]$data_fd[i], las=2)
-        par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
-        par(mfrow = c(1,1), new=FALSE)
         legend("topleft", legend = c("KS lambda", data_names[i]), col = c("red", "black"), lty = 1)
         readline(prompt = "Press [Enter] to continue...")
       }
@@ -117,12 +114,8 @@ crossval_loo = function(object,plot_show=TRUE){
       residual_norm_scores[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
       
       if(plot_show){
-      
-        par(mfrow = c(1,1))
         plot(SFD_main[[1]]$data_fd[i], las=2)
-        par(mfrow = c(1,1), new=TRUE)
         plot(predict_i_scores, ann=FALSE, axes=FALSE,col=3)
-        par(mfrow = c(1,1), new=FALSE)
         legend("topleft", legend = c("KS scores", data_names[i]), col = c("green", "black"), lty = 1)
         readline(prompt = "Press [Enter] to continue...")
       }
@@ -130,9 +123,8 @@ crossval_loo = function(object,plot_show=TRUE){
   }
   
   # output of mean residual norm ----------------------------------------------
-  cat("## Mean Residual Norm","\n")
-  cat("lambda method: ", mean(residual_norm_lambda),"<---\n")
-  print(summary(residual_norm_lambda))
-  cat("scores method: ", mean(residual_norm_scores),"<---\n")
-  print(summary(residual_norm_scores))
+  message("## Mean Residual Norm","\n")
+  message(paste0("lambda method: ", mean(residual_norm_lambda),"<---\n"))
+  message(paste0("scores method: ", mean(residual_norm_scores),"<---\n"))
+  return(list(lambda = residual_norm_lambda,scores = residual_norm_scores))
 }

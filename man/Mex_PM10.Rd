@@ -1,4 +1,5 @@
 \name{Mex_PM10}
+\docType{data}
 \alias{Mex_PM10}
 \title{Air quality data of Mexico}
 \description{
@@ -7,7 +8,4 @@
 \usage{data(COKMexico)}
 \format{data.frame of measurements 'Mex_PM10'}
 \source{Mexico}
-\references{
-Mexico
-}
 \keyword{datasets}

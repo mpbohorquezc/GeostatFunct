@@ -1,5 +1,5 @@
 print.OptimalSpatialDesign <- function(x, ...){
-  OSD = x
+  OSD <- x
   if( is.null(OSD$fixed_stations) ){
     n_fix <- 0
   }else{

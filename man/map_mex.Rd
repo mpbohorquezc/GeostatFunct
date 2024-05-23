@@ -1,4 +1,5 @@
 \name{map_mex}
+\docType{data}
 \alias{map_mex}
 \title{map of Mexico}
 \description{
