@@ -10,7 +10,7 @@ Given a variogram model and a set of points in which we want to predict certain 
 FD_optimal_design(k, s0, model, fixed_stations = NULL,
                    scalar = FALSE, nharm = NULL,
                    method = "lambda", grid = NULL,
-                   map = NULL, plt = F)
+                   map = NULL, plt = FALSE)
 }
 \arguments{
   \item{k}{The number of new stations that are going to be located.}

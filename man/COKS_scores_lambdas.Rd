@@ -8,7 +8,7 @@ Functional CoKriging
 Linear Spatial functional prediction. Two predictors are possible: scores or lambda.
 }
 \usage{
-COKS_scores_lambdas(SFD, newcoords, model, method = "scores", fill.all=T)
+COKS_scores_lambdas(SFD, newcoords, model, method = "scores", fill.all=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

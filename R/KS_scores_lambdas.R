@@ -113,7 +113,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
     omega <- matrix(0, nrow = nrow(matdis), ncol = ncol(matdis))
     for(i in 1:ncol(puntajes)){
 
-      omegas[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis, covariance = T)
+      omegas[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis, covariance = TRUE)
       omega = omega + omegas[[i]]
     }
 
@@ -123,7 +123,7 @@ function(SFD, newcoords, model, method = "lambda", name=NULL,fill.all=NULL){
 
     for(i in 1:ncol(puntajes)){
 
-      vectores_c[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis_pred, covariance = T)
+      vectores_c[[i]] = gstat::variogramLine( model[[i]], dist_vector = matdis_pred, covariance = TRUE)
       vector_c = vector_c + vectores_c[[i]]
     }
 

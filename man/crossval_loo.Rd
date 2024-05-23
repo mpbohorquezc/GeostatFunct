@@ -41,7 +41,7 @@ data(AirQualityBogota)
 #s_0 nonsampled location. It could be data.frame or matrix and one or more locations of interest
 newcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))
 #newcoorden=data.frame(X=110000,Y=126000)
-#newcoorden=matrix(c(110000.23,109000,109500,130000.81,129000,131000),nrow=3,ncol=2,byrow=T)
+#newcoorden=matrix(c(110000.23,109000,109500,130000.81,129000,131000),nrow=3,ncol=2,byrow=TRUE)
 
 # Building the SpatFD object
 SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", 

@@ -95,7 +95,7 @@
                        grid@cells.dim[1], 
                        grid@cells.dim[2])
   
-  gstat::variogramLine(vgmModel, dist_vector = D.ext.row1, covariance = T)
+  gstat::variogramLine(vgmModel, dist_vector = D.ext.row1, covariance = TRUE)
 }
 
 # simulate GRF with given covariance structure using fft
@@ -164,7 +164,6 @@
   apply(multiVarMatrix, 2, idPredFun)
 }
 
-### pubic function ###
 # @input: 
 # formula: definition of the dependent variable
 # data:    optional Spatial*DataFrame for conditional simulation
