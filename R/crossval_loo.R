@@ -47,11 +47,8 @@ crossval_loo = function(object,plot_show=TRUE){
       residual_norm_scores[i]=sqrt(fda::inprod(SFD_main[[1]]$data_fd[i]-predict_i_scores,SFD_main[[1]]$data_fd[i]-predict_i_scores,rng=c(1,nrow(data))))
       if(plot_show){
         plot(SFD_main[[1]]$data_fd[i], las=2)
-        par(new=TRUE)
         plot(predict_i_lambda, ann=FALSE, axes=FALSE,col=2)
-        par(new=TRUE)
         plot(predict_i_scores, ann=FALSE, axes=FALSE,col=3)
-        par(new=FALSE)
         legend("topleft", legend = c("KS lambda", "KS scores", data_names[i]), col = c("red","green" ,"black"), lty = 1)
         readline(prompt = "Press [Enter] to continue...")
         
