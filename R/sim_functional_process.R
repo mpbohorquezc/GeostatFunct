@@ -1,18 +1,5 @@
-# (Un)Conditional simulation
-
-
-sim_functional_process <- function(nsims, # Integer giving the number of curves to simulate
-                                   variograms, # gstat::gstatVariogram or list of them giving the variogram model for each score. If only one is provided, it will be recycled
-                                   nbasis, # Integer giving the number of basis functions on which the process is going to be projected.
-                                   coords, # sp::SpatialPoints or array coordinates of the curves that are going to be simulated.
-                                   data = NULL, # fda::fd object containing the observed curves for conditional simulation. If data is not provided, inconditional simulation is performed
-                                   data_coords = NULL, # sp::SpatialPoints or array coordinates of the observed data
-                                   basis = NULL, # Character giving the basis of functions (only for inconditional simulation) (nbasis must be provided)
-                                   # argvals = NULL, # Numerical vector grid of the domaind of the curves (only for inconditional simulation)
-                                   mu = NULL, # fda::fd object of the mean function of the process, default is zero. Only used in unconditional simulation
-                                   L = NULL # Limits of the symetric interval centered on zero that is the domain of the basis that is going to be created in unconditional simulation case
-                                   ){
-  
+sim_functional_process <- function(nsims,variograms,nbasis,coords,data = NULL,
+                                   data_coords = NULL,basis = NULL,mu = NULL,L = NULL){
   # Arguments validation ----
   
   ## nsims ----

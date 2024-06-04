@@ -95,7 +95,7 @@
                        grid@cells.dim[1], 
                        grid@cells.dim[2])
   
-  gstat::variogramLine(vgmModel, dist_vector = D.ext.row1, covariance = T)
+  gstat::variogramLine(vgmModel, dist_vector = D.ext.row1, covariance = TRUE)
 }
 
 # simulate GRF with given covariance structure using fft
@@ -164,7 +164,6 @@
   apply(multiVarMatrix, 2, idPredFun)
 }
 
-### pubic function ###
 # @input: 
 # formula: definition of the dependent variable
 # data:    optional Spatial*DataFrame for conditional simulation
@@ -232,5 +231,19 @@
   }
   
   sp::addAttrToGeom(newdata, as.data.frame(sims))
+}
+
+.DD <- function(expr, names, order = 1, debug=FALSE) {
+  if (any(order>=1)) {  ## do we need to do any more work?
+    w <- which(order>=1)[1]  ## find a derivative to compute
+    if (debug) {
+      cat(names,order,w,"\n")
+    }
+    ## update order
+    order[w] <- order[w]-1
+    ## recurse ...
+    return(.DD(D(expr,names[w]), names, order, debug))
+  }
+  return(expr)
 }
 

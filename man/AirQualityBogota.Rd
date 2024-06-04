@@ -1,4 +1,5 @@
 \name{AirQualityBogota}
+\docType{data}
 \alias{AirQualityBogota}
 \title{Air quality data of Bogota, Colombia}
 \description{

@@ -1,4 +1,5 @@
 \name{PM10}
+\docType{data}
 \alias{PM10}
 \title{PM10 of Bogota, Colombia}
 \description{

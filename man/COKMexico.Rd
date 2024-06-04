@@ -1,4 +1,5 @@
 \name{COKMexico}
+\docType{data}
 \alias{COKMexico}
 \title{Air quality data of Mexico}
 \description{
@@ -9,7 +10,4 @@
 \format{four data.frame of measurements 'Mex_PM10','NO2' and their coordinates 'coord_PM10' and
 'coord_NO2'. Also a map (map_mex) file of class SpatialPolygonDataFrame}
 \source{Mexico}
-\references{
-Mexico
-}
 \keyword{datasets}

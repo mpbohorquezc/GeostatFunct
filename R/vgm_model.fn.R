@@ -6,7 +6,7 @@
   points <- matrix(points,ncol=2)
 
   # Replace points by their nearest in the given grid
-  #D_toGrid <- proxy::dist(points,as.matrix(grid),diag = T)
+  #D_toGrid <- proxy::dist(points,as.matrix(grid),diag = TRUE)
   #closests <- apply(as.matrix(D_toGrid),1,which.min)
   #points <- as.matrix(grid)[closests,]
 
@@ -22,8 +22,8 @@
   targetPoints <- sp::SpatialPoints(s0)
 
   # distance matrix
-  dist_matrix <- as.matrix(proxy::dist(points,diag = T))
-  dist_s0 <- as.matrix(proxy::dist(points, s0,diag = T))
+  dist_matrix <- as.matrix(proxy::dist(points,diag = TRUE))
+  dist_s0 <- as.matrix(proxy::dist(points, s0,diag = TRUE))
 
   # ------------------ method lambda
 
@@ -31,13 +31,13 @@
 
     # Omega
     OMEGA <- lapply(model,function(m){
-      gstat::variogramLine(object = m, dist_vector = dist_matrix, covariance = T)
+      gstat::variogramLine(object = m, dist_vector = dist_matrix, covariance = TRUE)
     })
     omega <- Reduce('+',OMEGA)
 
     # Vector c (\varsigma)
     C_VEC <- lapply(model,function(m){
-      gstat::variogramLine(object = m, dist_vector = dist_s0, covariance = T)
+      gstat::variogramLine(object = m, dist_vector = dist_s0, covariance = TRUE)
     })
     c_vec <- Reduce('+',C_VEC)
 
