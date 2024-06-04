@@ -174,3 +174,28 @@ summary.COKS_pred <- function(object, ...){
       print(model[[i]])}
   }
 }
+
+summary.gfdata <- function(object,...) {
+  gfdata <- object
+  for (i in seq_along(gfdata)) {
+    data_list <- gfdata[[i]]$fpca
+    meanfd <- lapply(data_list, function(x) x$meanfd$coefs)
+    varprop <- lapply(data_list, function(x) x$varprop)
+    coor = gfdata[[i]]$coords
+    ev = lapply(data_list,function(x) x$values)
+    cat("\n","## Coordinates","\n")
+    print(rbind(utils::head(coor,4),"\n","..."))
+    cat("\n","## Eigenvalues","\n")
+    print(rbind(utils::head(data.frame(ev),4),
+                "..."))
+    cat("\n","## Mean coefficients:","\n")
+    print(rbind(utils::head(data.frame(meanfd), 4),
+                "...",
+                utils::tail(data.frame(meanfd),4)))
+    
+    cat("\n","## Proportion of explained variance by component","\n")
+    print(rbind(utils::head(data.frame(varprop))))
+    cat("\n","\n")
+  }
+}
+
