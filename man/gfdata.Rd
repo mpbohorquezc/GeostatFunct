@@ -21,15 +21,15 @@
   in the last column
   }
   \item{p}{Number of repetitions for each class}
-  \item{coords}{A matrix with spatial coordinates (x,y). 
-  }
   \item{basis}{Basis functions. "Fourier" or "Bsplines". By default, "Bsplines".
+  }
+  \item{coords}{A matrix with spatial coordinates (x,y). 
   }
   \item{nbasis}{The number of basis functions.
   }
+  \item{names}{Names for the data classes.}
   \item{lambda}{The value of the smoothing parameter.
   }
-  \item{names}{Names for the data classes.}
 }
 \details{The gfdata-objects storage the functional data, its parameters, the functional 
           principal component analysis results, and the spatial coordinates for 
