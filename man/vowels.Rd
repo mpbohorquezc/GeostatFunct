@@ -1,4 +1,5 @@
 \name{vowels}
+\docType{data}
 \alias{vowels}
 \title{Imaginary thinking of the five Spanish vowels}
 \description{
