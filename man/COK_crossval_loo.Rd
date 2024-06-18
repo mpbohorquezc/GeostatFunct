@@ -1,12 +1,12 @@
 \name{COK_crossval_loo}
 \alias{COK_crossval_loo}
 \title{
-Leave-One-Out Cross-Validation for Functional COKriging
+Leave-One-Out Cross-Validation for Functional cokriging
 }
 \description{
 This function performs leave-one-out cross-validation for functional cokriging. It systematically leaves out one 
 location at a time from the dataset, fits the model to the remaining data, and then makes a prediction for the left-out observation. 
-It is used to assess the predictive performance of the functional Cokriging model.
+It is used to assess the predictive performance of the functional cokriging model.
 }
 \usage{
 COK_crossval_loo(object, plot_show, var, show_all)

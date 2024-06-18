@@ -2,7 +2,7 @@
 \alias{COKS_scores_lambdas}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Functional CoKriging
+Functional cokriging
 }
 \description{
 Linear Spatial functional prediction. Two predictors are possible: scores or lambda.
@@ -68,7 +68,7 @@ newcoords <- data.frame(x = 509926,y = 2179149)
 COKS_scores_lambdas(SFD_PM10_NO2,newcoords,model1)
 }
 }
-\keyword{Cokriging}
+\keyword{cokriging}
 \keyword{Spatial functional prediction}
 \keyword{Linear model of coregionalization}
 \keyword{Multivariate functional random field}
