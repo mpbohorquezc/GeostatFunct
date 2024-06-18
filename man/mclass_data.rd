@@ -19,6 +19,7 @@
   and basis functions.
 }
 \examples{
+\donttest{
   data(vowels)
 
 #### Create parameters and names for the data.
@@ -29,6 +30,7 @@ s4.gfdata = gfdata(data=vowels,p=p,names=names_vowels,coords=vowels_coords,nbasi
 s4.sep=gfd_clasif_data(s4.gfdata, 0.8,seed = 2910)
 s4.train=s4.sep$train
 s4.test=s4.sep$test
-mean_mean <- mean.mean(s4.train)
+mean_mean <- mean_mean(s4.train)
 class_mean <- mclass_data(mean_mean,n.basis)
+}
 }

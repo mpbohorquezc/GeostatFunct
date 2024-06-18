@@ -1,11 +1,11 @@
-\name{coord}
+\name{vowels_coords}
 \docType{data}
-\alias{coord}
+\alias{vowels_coords}
 \title{Coordinates of electrodes from the vowels data set}
 \description{
   Coordinates of the electrodes from the vowels data set.
 }
-\usage{data(AirQualityBogota)}
+\usage{data(vowels)}
 \format{matrix of coordinates}
 \source{https://github.com/carlos-sarmientov/DATABASE-IMAGINED-VOWELS-1}
 \references{

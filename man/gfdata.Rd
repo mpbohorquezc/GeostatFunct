@@ -10,7 +10,7 @@
     dimension such as depth, instead of time.
 }
 \usage{
-  gfdata <- function(data, p, basis = "Bsplines", coords = NULL, nbasis = NULL, 
+  gfdata(data, p, basis = "Bsplines", coords = NULL, nbasis = NULL, 
                       names = NULL, lambda = 0)
 }
 \arguments{

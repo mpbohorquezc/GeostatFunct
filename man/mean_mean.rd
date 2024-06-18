@@ -1,8 +1,8 @@
-\name{mean.mean}
-\alias{mean.mean}
+\name{mean_mean}
+\alias{mean_mean}
 \title{Calculate Mean Functions for Each Class}
 \usage{
-  mean.mean(data.train.pca)
+  mean_mean(data.train.pca)
 }
 \arguments{
   \item{data.train.pca}{A list of PCA results from training data.}
@@ -24,5 +24,5 @@ s4.gfdata = gfdata(data=vowels,p=p,names=names_vowels,coords=vowels_coords,nbasi
 s4.sep=gfd_clasif_data(s4.gfdata, 0.8,seed = 2910)
 
 s4.train=s4.sep$train
-mean_mean <- mean.mean(s4.train)
+mean_mean <- mean_mean(s4.train)
 }

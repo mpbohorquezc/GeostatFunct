@@ -2,7 +2,7 @@ Package: SpatFD
 Type: Package
 Title: Functional Geostatistics: Univariate and Multivariate Functional Spatial Prediction
 Version: 0.0.1
-Date: 2024-05-10
+Date: 2024-06-18
 Authors@R: c(person(given = c("Martha","Patricia"),
        family = "Bohorquez Castañeda",
        role = c("aut","cre"), 

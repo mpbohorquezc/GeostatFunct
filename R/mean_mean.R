@@ -1,4 +1,4 @@
-mean.mean <- function(data.train.pca) {
+mean_mean <- function(data.train.pca) {
   mean.classes <- vector("list", length(data.train.pca))
   names(mean.classes) <- names(data.train.pca)
   
