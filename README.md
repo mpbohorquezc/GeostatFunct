@@ -1,13 +1,12 @@
 SpatFD <img src="man/figures/logo.png" width="170" height="193" align="right" />
 =======================
-Functional Geostatistics: Univariate and Multivariate Functional Spatial Prediction
+Functional Geostatistics: Univariate and Multivariate Functional Spatial Prediction, optimal sampling, simulation and classification.
 
 ![version](https://img.shields.io/badge/version-0.1.0-blue)
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-The R package 'SpatFD' carries out functional kriging, cokriging, optimal sampling and simulation for spatial prediction of functional data. The framework of spatial prediction, optimal sampling and simulation are extended from scalar to functional data. 'SpatFD' is based on the Karhunen-Loève expansion that allows to represent the observed functions in terms of its empirical functional principal components. Based on this approach, the functional auto-covariances and cross-covariances required for  spatial functional predictions and optimal sampling, are completely determined by the sum of the spatial auto-covariances and cross-covariances of the respective score components.  
-
-The package provides new classes of data and  functions for modeling spatial dependence structure among curves. The spatial prediction of curves at unsampled locations can be carried out using two types of predictors, and both of them report, the respective variances of the prediction error.  In addition, there is a function for the determination of spatial locations sampling configuration that ensures minimum variance of spatial functional prediction. There are also two functions for plotting predicted curves at each location and mapping the surface at each time point, respectively.
+Spatial analysis and modeling for univariate and multivariate spatially correlated functional data: 
+exploratory tools, kriging, cokriging, spatial optimal sampling, supervised classification and simulation. The theoretical framework of geostatistics is extended from scalar to functional data.  The package provides new classes of data and functions for modeling spatial dependence structure among curves and involving it in further analyses. The spatial prediction of curves at unsampled locations can be carried out using two types of functional predictors, and both of them minimize and report, the respective variances of the prediction error and the results of the Leave-One-Out Cross-Validation. In addition, there is a function for the determination of spatial locations sampling configuration by optimizing the spatial functional prediction. There are also two functions for plotting predicted curves at each location and mapping the surface at each time point, respectively. The supervised classification involves spatial correlation and includes its generalization to the case of repeated functional measures at each spatial location. The simulation of spatially correlated functional data, can be conditional or unconditional, and it is built under the assumption of Joint Gaussian Hilbert Spaces.
 
 ## Installation
 You can install the **development** version from [Github](https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics).
