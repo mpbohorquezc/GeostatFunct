@@ -1,0 +1,29 @@
+{
+  "index.qmd": {
+    "index.html": "625d58c6"
+  },
+  "about.qmd": {
+    "about.html": "d066bdde"
+  },
+  "kriging.qmd": {
+    "kriging.html": "d3bb1caf"
+  },
+  "airqualitybogota.qmd": {
+    "airqualitybogota.html": "0f805088"
+  },
+  "spatfd_object.qmd": {
+    "spatfd_object.html": "3d6820f9"
+  },
+  "vowels.qmd": {
+    "vowels.html": "5c19dadd"
+  },
+  "cokmexico.qmd": {
+    "cokmexico.html": "51af094b"
+  },
+  "gfdata.qmd": {
+    "gfdata.html": "eb32ab33"
+  },
+  "cokriging.qmd": {
+    "cokriging.html": "64a1b66f"
+  }
+}

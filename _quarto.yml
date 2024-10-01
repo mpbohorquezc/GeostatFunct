@@ -1,0 +1,49 @@
+project:
+  type: website
+
+website:
+  reader-mode: true
+  favicon: logo.png
+  title: "SpatFD"
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - href: index.qmd
+        text: Home
+      - text: 'About'
+        href: about.qmd
+      - section: "Objetos"
+        contents: 
+        - text: 'SpatFD'
+          href: spatfd_object.qmd
+        - text: 'gfdata'
+          href: gfdata.qmd
+      - section: "Datasets"
+        contents:
+          - text: 'AirQualityBogota'
+            href: airqualitybogota.qmd
+          - text: 'Vowels'
+            href: vowels.qmd
+          - text: 'CokMexico'
+            href: cokmexico.qmd
+      - section: "Kriging"
+        contents:
+          - kriging.qmd
+          - cokriging.qmd
+    tools:
+        - icon: github
+          menu:
+            - text: Source Code
+              href:  https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/tree/main
+            - text: Report a Bug
+              href:  https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/issues
+
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true
+
+editor: visual
+

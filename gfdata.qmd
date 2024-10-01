@@ -1,0 +1,65 @@
+---
+title: "gfdata"
+---
+
+## Descripción
+
+Los objetos de clase `gfdata` son una extensión de los objetos SpatFD para **mediciones repetidas**, combinan coordenadas espaciales con funciones o series temporales observadas en cada ubicación espacial. Aunque el término "serie temporal" es genérico, las observaciones también pueden estar distribuidas según la frecuencia, profundidad u otra dimensión espacial, en lugar de tiempo.
+
+## Argumentos
+
+-   **data**: Matriz que contiene los datos, donde cada columna corresponde a un sujeto, y las filas representan una secuencia de puntos de datos (ordenados según el tiempo, frecuencia, profundidad, etc.). La última columna debe incluir las clases para clasificación.
+
+-   **p**: Número de repeticiones para cada clase.
+
+-   **basis**: Tipo de funciones base a utilizar. Puede ser "Fourier" o "Bsplines" (predeterminado es "Bsplines").
+
+-   **coords**: Matriz con las coordenadas espaciales (x, y).
+
+-   **nbasis**: Número de funciones base.
+
+-   **names**: Nombres de las clases de datos.
+
+-   **lambda**: Valor del parámetro de suavizado.
+
+## Detalles
+
+Los objetos de clase `gfdata` almacenan los datos funcionales, sus parámetros, los resultados del análisis de componentes principales funcionales (PCA funcional), y las coordenadas espaciales para cada variable. Cada variable tiene su propio conjunto de datos funcionales, `data.frame` o matriz, y su correspondiente archivo de coordenadas espaciales.
+
+```{r, echo=FALSE}
+library(SpatFD)
+```
+
+```{r}
+
+data(vowels)
+
+# Definir parámetros y nombres para los datos
+p = 228
+nelec = 21
+nvow = 5
+names_vowels = c("a", "e", "i", "o", "u")
+n.basis = c(14, 13, 12, 13, 11)
+
+# Crear el objeto gfdata
+s4.gfdata = gfdata(data = vowels, p = p, names = names_vowels, coords = vowels_coords, nbasis = n.basis)
+
+```
+
+## Summary
+
+Para cada variable incluida en el objeto `gfdata`, esta función devuelve:
+
+-   **Head of data**: Muestra las primeras filas de los datos funcionales.
+
+-   **Coordinates**: Muestra las coordenadas espaciales asociadas a las observaciones.
+
+-   **Eigenvalues**: Valores propios obtenidos del análisis de componentes principales.
+
+-   **Mean coefficients**: Coeficientes medios de las funciones base.
+
+-   **Proportion of explained variance by each component**: Proporción de la varianza explicada por cada componente principal.
+
+```{r}
+#summary.gfdata(s4.gfdata)
+```

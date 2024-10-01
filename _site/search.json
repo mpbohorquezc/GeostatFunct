@@ -1,0 +1,302 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "SpatFD",
+    "section": "",
+    "text": "La geoestadística funcional es una extensión del marco teórico de la geoestadística tradicional, que permite el análisis y modelado de datos funcionales correlacionados espacialmente, tanto univariados como multivariados. Este enfoque incluye herramientas exploratorias, predicción espacial mediante kriging y cokriging, muestreo óptimo, clasificación supervisada y simulación. A través de este enfoque, se modela la estructura de dependencia espacial entre curvas, lo que permite realizar predicciones en ubicaciones no muestreadas utilizando predictores funcionales que minimizan las varianzas del error de predicción. Además, se ofrece la optimización de la configuración de las ubicaciones de muestreo para mejorar la predicción espacial funcional.\nLas herramientas disponibles también permiten la representación gráfica de las curvas predichas en cada ubicación y el mapeo de las superficies en cada punto temporal. La clasificación supervisada integra la correlación espacial, y se extiende a escenarios con medidas funcionales repetidas en cada localización. Finalmente, la simulación de datos funcionales correlacionados espacialmente puede ser tanto condicional como incondicional, y se fundamenta en el supuesto de espacios de Hilbert conjuntos gaussianos.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "SpatFD es un paquete en R diseñado para facilitar el análisis de datos espaciales con componentes funcionales. Proporciona herramientas para manejar datos funcionales espaciales, permitiendo a investigadores y analistas explorar, modelar y visualizar de manera eficiente la variabilidad y dependencias espaciales en conjuntos de datos complejos.\nNuestro paquete está pensado para soportar una amplia gama de aplicaciones, desde estudios ambientales hasta econometría, ofreciendo métodos adaptables a diversos dominios. Ya sea que estés trabajando con tendencias geoespaciales, dinámicas temporales o relaciones funcionales, SpatFD te brinda la flexibilidad y las herramientas necesarias para extraer conclusiones significativas.\nSpatFD ha sido desarrollado con un enfoque en la usabilidad y el rendimiento, asegurando que tanto usuarios novatos como experimentados de R puedan aprovechar sus capacidades para realizar investigaciones avanzadas en estadística espacial. Únete a nuestra creciente comunidad de usuarios y explora el potencial de los datos funcionales espaciales con SpatFD.",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "index.html#datos-funcionales",
+    "href": "index.html#datos-funcionales",
+    "title": "SpatFD",
+    "section": "Datos Funcionales",
+    "text": "Datos Funcionales\nImaginemos que estamos interesados en estudiar cómo varía la temperatura en diferentes ciudades del mundo durante un año completo. Para hacerlo, en lugar de tomar una sola medida de la temperatura, registramos el promedio mensual de la termperatura durante todo un año.\nEn lugar de analizar cada punto de temperatura de manera independiente, podemos ver la temperatura a lo largo del añi como una función continua del tiempo. Esta función nos describe cómo la temperatura cambia en cada instante del día, lo cual permite realizar análisis mucho más precisos.\n\n\n\nPZmaps, CC BY-SA 3.0, via Wikimedia Commons\n\n\nLos datos funcionales son los que en lugar de contemplar cada dato como una observación puntual, se consideran como funciones continuas observadas en un conjunto de puntos. Los datos funcionales permiten capturar mejor la complejidad de fenómenos que además de variar en el espacio, varían en dominios continuos como el tiempo o la altitud, además de facilitar la detección de tendencias o anomalías teniendo en cuenta múltiples dimensiones de variación.",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "kriging.html",
+    "href": "kriging.html",
+    "title": "Kriging",
+    "section": "",
+    "text": "Warning: package 'gstat' was built under R version 4.3.3\nEl Kriging es un método de interpolación basado en la teoría de procesos estocástocos que permite estimar los valores que toma una variable en lugares no muestreados a partir de la suposición de que las ubicaciones están correlacionadas espacialmente.",
+    "crumbs": [
+      "Kriging",
+      "Kriging"
+    ]
+  },
+  {
+    "objectID": "kriging.html#kriging-clásico",
+    "href": "kriging.html#kriging-clásico",
+    "title": "Kriging",
+    "section": "Kriging Clásico",
+    "text": "Kriging Clásico\nDado un conjunto de observaciones en diferentes localizaciones \\(s_1,s_2,\\cdots,s_n\\) busca predecir el valor de la variable de interés en una nueva ubicación \\(s_0\\)​ como una combinación ponderada de las observaciones:\n\\[\n\\hat{Z}(s_0) = \\sum_{i=1}^n \\lambda_iZ(s_i)\n\\]\nDonde \\(\\lambda_i\\) son los pesos asignados a cada observación, determinados en función de la covarianza espacial entre \\(s_0\\) y \\(s_i\\) determinado por un variograma."
+  },
+  {
+    "objectID": "kriging.html#kriging-funcional",
+    "href": "kriging.html#kriging-funcional",
+    "title": "Kriging",
+    "section": "Kriging Funcional",
+    "text": "Kriging Funcional\nEn el contexto funcional, las observaciones en cada ubicación espacial no son valores discretos sino funciones completas. Supongamos que tenemos un conjunto de funciones \\(X(s_1,t),X(s_2,t),\\cdots,X(s_n,t)\\) donde cada \\(X(s_i,t)\\) es una función que describe el comportamiento de la variable de interés a lo largo de un dominio continuo \\(t\\) (como el tiempo).\nEl kriging funcional extiende la idea del kriging clásico al predecir una función en una nueva ubicación \\(s_0\\) utilizando una combinación ponderada de las funciones observadas en las localizaciones \\(s_1,\\cdots,s_n\\). En ese orden de ideas, podemos formular el kriging funcional de la siguiente manera\n\\[\n\\hat{X}(s_0,t)=\\sum_{i=1}^n \\lambda_i(t)X(s_i,t)\n\\]\ndonde \\(\\lambda_i(t)\\) son las funciones de peso que dependen de la localización y del dominio funcional \\(t\\). Estas funciones de peso se determinan resolviendo un sistema de ecuaciones basado en la covariancia entre las funciones observadas y la función a predecir.\nCon el paquete SpatFD podemos crear un objeto SpatFD y definir los modelos de semivariogramas que vamos a emplear en el kriging. En este caso usaremos los datos AirQualityBogota y ajustaremos tres semivariogramas, uno wave, uno Mattern y por último un exponencial, la ubicación que queremos predecir se define en la variable newcoorden.\n\n# Load data and coordinates\ndata(AirQualityBogota)\n\n#s_0 nonsampled location. It could be data.frame or matrix and one or more locations of interest\nnewcoorden=data.frame(X=seq(93000,105000,len=100),Y=seq(97000,112000,len=100))\n\n# Building the SpatFD object\nSFD_PM10 &lt;- SpatFD(PM10, coords = coord[, -1], basis = \"Bsplines\", nbasis = 17,norder=5, lambda = 0.00002, nharm=3)\n\n\n# Semivariogram models for each spatial random field of scores\nmodelos &lt;- list(vgm(psill = 2199288.58, \"Wav\", range = 1484.57, nugget =  0),\n                vgm(psill = 62640.74, \"Mat\", range = 1979.43, nugget = 0,kappa=0.68),\n                vgm(psill =37098.25, \"Exp\", range = 6433.16, nugget =  0))\n\nExisten dos enfoques diferentes para realizar el kriging funcional, el método de scores y el método lambda.\n\nMétodo de Scores\nEn el método de scores, el análisis funcional se basa en una descomposición de las funciones observadas en un conjunto de componentes principales, generalmente a través de una descomposición en funciones base (como la descomposición en funciones ortogonales o en series de Fourier). Este método se descompone en dos etapas:\n\nDescomposición funcional: Se aplica una descomposición funcional de las observaciones para representar cada función como una combinación de componentes principales (bases funcionales) y sus correspondientes coeficientes o “scores”. Si las funciones \\(X(s_i,t)\\) observadas se pueden representar como:\n\n\\[\nX(s_i,t) = \\sum_{k=1}^K \\alpha_{ik}\\phi_k(t)\n\\]\ndonde \\(\\phi_k(t)\\) son las bases funcionales y \\(\\alpha_{ik}\\) son los scores de las componentes principales para cada localización \\(s_i\\). En lugar de predecir la función completa, este método se centra en predecir los scores en la ubicación no observada \\(s_0\\).\nPredicción de una nueva ubicación: El kriging se aplica sobre los scores obtenidos. Se predicen los scores de la nueva ubicación \\(s_0\\) para construir la función predicha \\(\\hat{X}(s_0,t)\\) como una combinación de las bases funcionales ponderadas por los scores predichos:\n\\[\n\\hat{X}(s_0,t) = \\sum_{k=1}^K \\alpha_{0k}\\phi_k(t)\n\\]\nLa función KS_scores_lambdas permite realizar el kriging usando este método al usar “scores” en la opción method\n\nKS_SFD_PM10_sc &lt;- KS_scores_lambdas(SFD_PM10, newcoorden, method = \"scores\", model = modelos)\n\nUsing first variable by default\n\n\nUsing fill.all = TRUE by default\n\n\n[using simple kriging]\n[using simple kriging]\n[using simple kriging]\n\n\nMétodo Lambda\nEste método utiliza una combinación de las funciones observadas, ponderadas por ciertos coeficientes o pesos, para estimar la función en la nueva ubicación, es decir, el kriging se lleva a cabo directamente sobre las funciones. El predictor \\(\\breve{\\chi}_{ s_0}(t)\\)\nestá dado por\n\\[\\breve{\\chi}_{s_0}(t)=\\sum\\limits_{i=1}^{n}\\lambda_i\\chi_{s_i}(t)\\]\nDeben encontrarse los pesos \\(\\lambda_i\\) que minimicen la diferencia entre la verdadera función en la ubicación no observada \\(s_0\\) y el predictor. Eso se expresa matemáticamente como:\n\\[\nmin||\\chi_{s_0}(t)-\\breve{\\chi}_{s_0}(t)||^2\n\\]\ndonde \\(\\chi_{s_0}(t)\\) es la verdadera función en la ubicación \\(s_0\\). La minimización de esta expresión se realiza en el sentido de la norma \\(L^2\\).\nLa función KS_scores_lambdas permite realizar el kriging usando este método al usar “lambda” en la opción method\n\nKS_SFD_PM10_l &lt;- KS_scores_lambdas(SFD_PM10, newcoorden ,method = \"lambda\", model = modelos)\n\nUsing first variable by default\n\n\nUsing fill.all = TRUE by default\n\n\n\nFinalmente, ambos métodos pueden ser aplicados usanto “both” como argumento en method.\n\nKS_SFD_PM10_both &lt;- KS_scores_lambdas(SFD_PM10, newcoorden, method = \"both\", model = modelos)\n\nUsing first variable by default\n\n\nUsing fill.all = TRUE by default\n\n\n[using simple kriging]\n[using simple kriging]\n[using simple kriging]",
+    "crumbs": [
+      "Kriging",
+      "Kriging"
+    ]
+  },
+  {
+    "objectID": "kriging.html#kriging-ordinario",
+    "href": "kriging.html#kriging-ordinario",
+    "title": "Kriging",
+    "section": "Kriging Ordinario",
+    "text": "Kriging Ordinario\nDado un conjunto de observaciones en diferentes localizaciones \\(s_1,s_2,\\cdots,s_n\\) busca predecir el valor de la variable de interés en una nueva ubicación \\(s_0\\)​ como una combinación ponderada de las observaciones:\n\\[\n\\hat{Z}(s_0) = \\sum_{i=1}^n \\lambda_iZ(s_i)\n\\]\nDonde \\(\\lambda_i\\) son los pesos asignados a cada observación, determinados en función de la covarianza espacial entre \\(s_0\\) y \\(s_i\\) determinado por un variograma.",
+    "crumbs": [
+      "Kriging",
+      "Kriging"
+    ]
+  },
+  {
+    "objectID": "spatfd_object.html",
+    "href": "spatfd_object.html",
+    "title": "Objetos SpatFD",
+    "section": "",
+    "text": "El objeto SpatFD crea objetos univariados y multivariados de clase SpatFD a partir de coordenadas espaciales, funciones o series temporales observadas en cada ubicación espacial. El término “series temporales” es genérico, ya que las observaciones pueden estar relacionadas con la frecuencia u otra dimensión espacial, como la profundidad, en lugar del tiempo.",
+    "crumbs": [
+      "Objetos",
+      "SpatFD"
+    ]
+  },
+  {
+    "objectID": "spatfd_object.html#argumentos",
+    "href": "spatfd_object.html#argumentos",
+    "title": "Objetos SpatFD",
+    "section": "Argumentos",
+    "text": "Argumentos\n\ndata: Los datos deben ser proporcionados en un data-frame o una matriz donde cada columna corresponde a una ubicación, y las filas son una secuencia de puntos de datos, ordenados según el tiempo, frecuencia, profundidad, etc. También puede ser un objeto fd del paquete fda.\ncoords: Un data-frame o matriz con coordenadas espaciales (x, y). El número de columnas en data debe coincidir con el número de filas en coords para cada variable.\nbasis: Funciones base. Puede ser “Fourier” o “Bsplines” (predeterminado: “Bsplines”).\nnbasis: El número de funciones base.\nlambda: Valor del parámetro de suavizado.\nnharm: Número de armónicos o funciones propias reportados en los resultados de Componentes Principales Funcionales.\nname: Se puede asignar un nuevo nombre a los datos.\nadd: Se pueden agregar otras variables para la predicción funcional multivariada espacial (cokriging funcional). No es necesario que todas las variables estén observadas en las mismas ubicaciones espaciales.\n…: Argumentos adicionales de fda como create.bspline.basis o create.fourier.basis.",
+    "crumbs": [
+      "Objetos",
+      "SpatFD"
+    ]
+  },
+  {
+    "objectID": "spatfd_object.html#detalles",
+    "href": "spatfd_object.html#detalles",
+    "title": "Objetos SpatFD",
+    "section": "Detalles",
+    "text": "Detalles\nLos objetos SpatFD almacenan los datos funcionales, sus parámetros, los resultados de análisis de componentes principales funcionales, y las coordenadas espaciales para cada variable. Cada variable tiene su propio conjunto de datos funcionales, data-frame o matriz, y archivo de coordenadas espaciales.",
+    "crumbs": [
+      "Objetos",
+      "SpatFD"
+    ]
+  },
+  {
+    "objectID": "spatfd_object.html#valor",
+    "href": "spatfd_object.html#valor",
+    "title": "Objetos SpatFD",
+    "section": "Valor",
+    "text": "Valor\nPara cada variable: Se proporcionan los datos funcionales y los componentes principales funcionales vinculados con las coordenadas espaciales.",
+    "crumbs": [
+      "Objetos",
+      "SpatFD"
+    ]
+  },
+  {
+    "objectID": "spatfd_object.html#notas",
+    "href": "spatfd_object.html#notas",
+    "title": "Objetos SpatFD",
+    "section": "Notas",
+    "text": "Notas\n\nAunque no hay un límite para el número de variables en el cokriging funcional, la verdadera limitación está en los requisitos para encontrar un modelo de covarianza multivariada válido. Se recomienda aplicar el principio de parsimonia.\nLas ubicaciones deben estar en la misma región de interés para que tenga sentido incluirlas en el mismo modelo de predicción. Sin embargo, cada variable puede estar observada en diferentes ubicaciones espaciales y tener un número diferente de observaciones.\n\n\nForma de uso\n\n# Cargar datos\ndata(AirQualityBogota)\n\n# Crear un objeto univariado usando 2 nharm\nSFD_PM10 &lt;- SpatFD(PM10, coords = coord[,2:3], basis = \"Bsplines\", nbasis = 91,\nlambda = 0.00002, nharm = 2)\n\n\nstr(SFD_PM10)\n\nList of 1\n $ PM10:List of 7\n  ..$ data         :'data.frame':   8761 obs. of  10 variables:\n  .. ..$ Bosque       : int [1:8761] 29 32 32 24 29 31 24 26 25 36 ...\n  .. ..$ IDRD         : int [1:8761] 53 48 25 36 17 7 9 12 12 13 ...\n  .. ..$ Carvajal_Sony: int [1:8761] 72 69 61 30 42 44 30 39 53 49 ...\n  .. ..$ Guaymaral    : int [1:8761] 74 55 58 51 41 39 46 60 54 41 ...\n  .. ..$ Suba_Corpas  : int [1:8761] 53 52 45 45 38 40 44 67 51 41 ...\n  .. ..$ Fontibon     : int [1:8761] 65 49 35 40 26 23 21 29 32 30 ...\n  .. ..$ PteAranda    : int [1:8761] 91 70 45 43 33 11 15 28 24 31 ...\n  .. ..$ MAVDT        : int [1:8761] 31 32 32 29 21 21 25 29 26 32 ...\n  .. ..$ Kennedy      : int [1:8761] 135 94 68 53 47 45 49 59 62 71 ...\n  .. ..$ Tunal        : int [1:8761] 38 29 18 17 24 24 19 15 20 35 ...\n  ..$ coords       :'data.frame':   10 obs. of  2 variables:\n  .. ..$ X: num [1:10] 105076 99661 92104 103675 98239 ...\n  .. ..$ Y: num [1:10] 112526 106572 99968 120780 118365 ...\n  ..$ coordsnames  : chr [1:10] \"Bosque\" \"IDRD\" \"Carvajal_Sony\" \"Guaymaral\" ...\n  ..$ data_fd      :List of 3\n  .. ..$ coefs  : num [1:91, 1:10] 22.6 37.3 13.3 40.6 26.2 ...\n  .. .. ..- attr(*, \"dimnames\")=List of 2\n  .. .. .. ..$ : chr [1:91] \"bspl4.1\" \"bspl4.2\" \"bspl4.3\" \"bspl4.4\" ...\n  .. .. .. ..$ : chr [1:10] \"Bosque\" \"IDRD\" \"Carvajal_Sony\" \"Guaymaral\" ...\n  .. ..$ basis  :List of 10\n  .. .. ..$ call       : language basisfd(type = type, rangeval = rangeval, nbasis = nbasis, params = params,      dropind = dropind, quadvals = qu| __truncated__\n  .. .. ..$ type       : chr \"bspline\"\n  .. .. ..$ rangeval   : num [1:2] 1 8761\n  .. .. ..$ nbasis     : num 91\n  .. .. ..$ params     : num [1:87] 101 200 300 399 499 ...\n  .. .. ..$ dropind    : NULL\n  .. .. ..$ quadvals   : NULL\n  .. .. ..$ values     : list()\n  .. .. ..$ basisvalues: list()\n  .. .. ..$ names      : chr [1:91] \"bspl4.1\" \"bspl4.2\" \"bspl4.3\" \"bspl4.4\" ...\n  .. .. ..- attr(*, \"class\")= chr \"basisfd\"\n  .. ..$ fdnames:List of 3\n  .. .. ..$ time  : chr [1:8761] \"1\" \"2\" \"3\" \"4\" ...\n  .. .. ..$ reps  : chr [1:10] \"Bosque\" \"IDRD\" \"Carvajal_Sony\" \"Guaymaral\" ...\n  .. .. ..$ values: chr \"value\"\n  .. ..- attr(*, \"class\")= chr \"fd\"\n  ..$ fpca         :List of 5\n  .. ..$ harmonics:List of 3\n  .. .. ..$ coefs  : num [1:91, 1:2] 0.006843 0.006646 0.013123 0.000889 0.005331 ...\n  .. .. .. ..- attr(*, \"dimnames\")=List of 2\n  .. .. .. .. ..$ : chr [1:91] \"bspl4.1\" \"bspl4.2\" \"bspl4.3\" \"bspl4.4\" ...\n  .. .. .. .. ..$ : chr [1:2] \"PC1\" \"PC2\"\n  .. .. ..$ basis  :List of 10\n  .. .. .. ..$ call       : language basisfd(type = type, rangeval = rangeval, nbasis = nbasis, params = params,      dropind = dropind, quadvals = qu| __truncated__\n  .. .. .. ..$ type       : chr \"bspline\"\n  .. .. .. ..$ rangeval   : num [1:2] 1 8761\n  .. .. .. ..$ nbasis     : num 91\n  .. .. .. ..$ params     : num [1:87] 101 200 300 399 499 ...\n  .. .. .. ..$ dropind    : NULL\n  .. .. .. ..$ quadvals   : NULL\n  .. .. .. ..$ values     : list()\n  .. .. .. ..$ basisvalues: list()\n  .. .. .. ..$ names      : chr [1:91] \"bspl4.1\" \"bspl4.2\" \"bspl4.3\" \"bspl4.4\" ...\n  .. .. .. ..- attr(*, \"class\")= chr \"basisfd\"\n  .. .. ..$ fdnames:List of 3\n  .. .. .. ..$ : chr [1:91] \"bspl4.1\" \"bspl4.2\" \"bspl4.3\" \"bspl4.4\" ...\n  .. .. .. ..$ : chr [1:2] \"PC1\" \"PC2\"\n  .. .. .. ..$ : chr \"values\"\n  .. .. ..- attr(*, \"class\")= chr \"fd\"\n  .. ..$ values   : num [1:91] 2634394 107330 53673 42406 38477 ...\n  .. ..$ scores   : num [1:10, 1:2] -1448 -1888 3430 112 515 ...\n  .. ..$ varprop  : num [1:2] 0.9006 0.0367\n  .. ..$ meanfd   :List of 3\n  .. .. ..$ coefs  : num [1:91, 1] 28.1 47 43.8 40.4 34.9 ...\n  .. .. .. ..- attr(*, \"dimnames\")=List of 2\n  .. .. .. .. ..$ : NULL\n  .. .. .. .. ..$ : chr \"mean\"\n  .. .. ..$ basis  :List of 10\n  .. .. .. ..$ call       : language basisfd(type = type, rangeval = rangeval, nbasis = nbasis, params = params,      dropind = dropind, quadvals = qu| __truncated__\n  .. .. .. ..$ type       : chr \"bspline\"\n  .. .. .. ..$ rangeval   : num [1:2] 1 8761\n  .. .. .. ..$ nbasis     : num 91\n  .. .. .. ..$ params     : num [1:87] 101 200 300 399 499 ...\n  .. .. .. ..$ dropind    : NULL\n  .. .. .. ..$ quadvals   : NULL\n  .. .. .. ..$ values     : list()\n  .. .. .. ..$ basisvalues: list()\n  .. .. .. ..$ names      : chr [1:91] \"bspl4.1\" \"bspl4.2\" \"bspl4.3\" \"bspl4.4\" ...\n  .. .. .. ..- attr(*, \"class\")= chr \"basisfd\"\n  .. .. ..$ fdnames:List of 3\n  .. .. .. ..$ time  : chr [1:8761] \"1\" \"2\" \"3\" \"4\" ...\n  .. .. .. ..$ reps  : chr \"mean\"\n  .. .. .. ..$ values: chr \"mean value\"\n  .. .. ..- attr(*, \"class\")= chr \"fd\"\n  .. ..- attr(*, \"class\")= chr \"pca.fd\"\n  ..$ variable_name: chr \"PM10\"\n  ..$ call_args    :List of 9\n  .. ..$ data   :'data.frame':  8761 obs. of  10 variables:\n  .. .. ..$ Bosque       : int [1:8761] 29 32 32 24 29 31 24 26 25 36 ...\n  .. .. ..$ IDRD         : int [1:8761] 53 48 25 36 17 7 9 12 12 13 ...\n  .. .. ..$ Carvajal_Sony: int [1:8761] 72 69 61 30 42 44 30 39 53 49 ...\n  .. .. ..$ Guaymaral    : int [1:8761] 74 55 58 51 41 39 46 60 54 41 ...\n  .. .. ..$ Suba_Corpas  : int [1:8761] 53 52 45 45 38 40 44 67 51 41 ...\n  .. .. ..$ Fontibon     : int [1:8761] 65 49 35 40 26 23 21 29 32 30 ...\n  .. .. ..$ PteAranda    : int [1:8761] 91 70 45 43 33 11 15 28 24 31 ...\n  .. .. ..$ MAVDT        : int [1:8761] 31 32 32 29 21 21 25 29 26 32 ...\n  .. .. ..$ Kennedy      : int [1:8761] 135 94 68 53 47 45 49 59 62 71 ...\n  .. .. ..$ Tunal        : int [1:8761] 38 29 18 17 24 24 19 15 20 35 ...\n  .. ..$ coords :'data.frame':  10 obs. of  2 variables:\n  .. .. ..$ X: num [1:10] 105076 99661 92104 103675 98239 ...\n  .. .. ..$ Y: num [1:10] 112526 106572 99968 120780 118365 ...\n  .. ..$ basis  : chr \"Bsplines\"\n  .. ..$ nbasis : num 91\n  .. ..$ lambda : num 2e-05\n  .. ..$ nharm  : num 2\n  .. ..$ name   : NULL\n  .. ..$ add    : NULL\n  .. ..$ basisfd:List of 10\n  .. .. ..$ call       : language basisfd(type = type, rangeval = rangeval, nbasis = nbasis, params = params,      dropind = dropind, quadvals = qu| __truncated__\n  .. .. ..$ type       : chr \"bspline\"\n  .. .. ..$ rangeval   : num [1:2] 1 8761\n  .. .. ..$ nbasis     : num 91\n  .. .. ..$ params     : num [1:87] 101 200 300 399 499 ...\n  .. .. ..$ dropind    : NULL\n  .. .. ..$ quadvals   : NULL\n  .. .. ..$ values     : list()\n  .. .. ..$ basisvalues: list()\n  .. .. ..$ names      : chr [1:91] \"bspl4.1\" \"bspl4.2\" \"bspl4.3\" \"bspl4.4\" ...\n  .. .. ..- attr(*, \"class\")= chr \"basisfd\"\n - attr(*, \"class\")= chr \"SpatFD\"\n\n\nPara cada variable incluida en el objeto SpatFD, la función summary retorna:\n\nHead of data: Primeras filas de los datos asociados.\nCoordinates: Coordenadas espaciales correspondientes a cada ubicación.\nEigenvalues: Valores propios de la descomposición en componentes principales.\nMean coefficients: Coeficientes medios de la representación funcional.\nProportion of explained variance by each component: Proporción de varianza explicada por cada componente principal.\n\n\nsummary(SFD_PM10)\n\n#  PM10 \n## Data \n     Bosque IDRD Carvajal_Sony Guaymaral Suba_Corpas Fontibon PteAranda MAVDT\n1        29   53            72        74          53       65        91    31\n2        32   48            69        55          52       49        70    32\n3        32   25            61        58          45       35        45    32\n4        24   36            30        51          45       40        43    29\n5       ...  ...           ...       ...         ...      ...       ...   ...\n8758     50   88            99        27          41       66        56    61\n8759     40   73            99        27          43       36        71    43\n8760     52   37            84        92          57       39        58    44\n8761     46   45            87        65          60       49        38    40\n     Kennedy Tunal\n1        135    38\n2         94    29\n3         68    18\n4         53    17\n5        ...   ...\n8758      64    39\n8759      76    32\n8760      75    48\n8761      79    17\n\n ## Coordinates \n           X          Y\n1 105075.655 112526.216\n2 99661.2289 106572.463\n3 92103.6962 99967.8739\n4 103675.229 120779.813\n5        ...        ...\n\n ## Eigenvalues \n                ev\n1 2634394.04728212\n2 107329.989552922\n3 53673.3376594282\n4 42406.3364006517\n5              ...\n\n ## Mean coefficients \n               mean\n1  28.1142060830838\n2  46.9632482975211\n3  43.8359915678551\n4  40.4199430064293\n5               ...\n88 68.0581607089687\n89 65.8120473593034\n90 20.2318977856245\n91 74.2871948785061\n\n ## Proportion of explained variance by component \n     varprop\n1 0.90063221\n2 0.03669339",
+    "crumbs": [
+      "Objetos",
+      "SpatFD"
+    ]
+  },
+  {
+    "objectID": "airqualitybogota.html",
+    "href": "airqualitybogota.html",
+    "title": "AirQualityBogota",
+    "section": "",
+    "text": "El conjunto de datos AirQualityBogota contiene información sobre la calidad del aire en Bogotá, Colombia. Específicamente, incluye mediciones de material particulado 10 (PM10) recolectadas en 10 estaciones de monitoreo distribuidas por la ciudad. Al cargar los datos encontrará en el ambiente\n\ncoord: Un DataFrame con los nombres y coordenadas de cada una de las estaciones de monitoreo.\nmap: Un objeto del tipo sf que contiene el mapa de Bogotá.\nPM10: Contiene las observaciones de PM10 de cada estación.\n\n\n\nEl PM10 se refiere a partículas de materia en el aire con un diámetro de 10 micrómetros o menos. Estas partículas son lo suficientemente pequeñas como para ser inhaladas y pueden tener efectos negativos en la salud humana, especialmente en los sistemas respiratorio y cardiovascular.",
+    "crumbs": [
+      "Datasets",
+      "AirQualityBogota"
+    ]
+  },
+  {
+    "objectID": "airqualitybogota.html#descripción",
+    "href": "airqualitybogota.html#descripción",
+    "title": "AirQualityBogota",
+    "section": "",
+    "text": "El conjunto de datos AirQualityBogota contiene información sobre la calidad del aire en Bogotá, Colombia. Específicamente, incluye mediciones de material particulado 10 (PM10) recolectadas en 10 estaciones de monitoreo distribuidas por la ciudad. Al cargar los datos encontrará en el ambiente\n\ncoord: Un DataFrame con los nombres y coordenadas de cada una de las estaciones de monitoreo.\nmap: Un objeto del tipo sf que contiene el mapa de Bogotá.\nPM10: Contiene las observaciones de PM10 de cada estación.\n\n\n\nEl PM10 se refiere a partículas de materia en el aire con un diámetro de 10 micrómetros o menos. Estas partículas son lo suficientemente pequeñas como para ser inhaladas y pueden tener efectos negativos en la salud humana, especialmente en los sistemas respiratorio y cardiovascular.",
+    "crumbs": [
+      "Datasets",
+      "AirQualityBogota"
+    ]
+  },
+  {
+    "objectID": "airqualitybogota.html#uso",
+    "href": "airqualitybogota.html#uso",
+    "title": "AirQualityBogota",
+    "section": "Uso",
+    "text": "Uso\nPara cargar los datos en R, usa el siguiente comando:\n\n\nWarning: package 'sf' was built under R version 4.3.3\n\n\nLinking to GEOS 3.11.2, GDAL 3.8.2, PROJ 9.3.1; sf_use_s2() is TRUE\n\n\n\ndata(AirQualityBogota)\n\n\nstr(coord)\n\n'data.frame':   10 obs. of  3 variables:\n $ ESTACION: chr  \"Bsq\" \"IDRD\" \"Sony\" \"EscIng\" ...\n $ X       : num  105076 99661 92104 103675 98239 ...\n $ Y       : num  112526 106572 99968 120780 118365 ...\n\n\n\nstr(PM10)\n\n'data.frame':   8761 obs. of  10 variables:\n $ Bosque       : int  29 32 32 24 29 31 24 26 25 36 ...\n $ IDRD         : int  53 48 25 36 17 7 9 12 12 13 ...\n $ Carvajal_Sony: int  72 69 61 30 42 44 30 39 53 49 ...\n $ Guaymaral    : int  74 55 58 51 41 39 46 60 54 41 ...\n $ Suba_Corpas  : int  53 52 45 45 38 40 44 67 51 41 ...\n $ Fontibon     : int  65 49 35 40 26 23 21 29 32 30 ...\n $ PteAranda    : int  91 70 45 43 33 11 15 28 24 31 ...\n $ MAVDT        : int  31 32 32 29 21 21 25 29 26 32 ...\n $ Kennedy      : int  135 94 68 53 47 45 49 59 62 71 ...\n $ Tunal        : int  38 29 18 17 24 24 19 15 20 35 ...\n\n\n\nplot(map$geometry)",
+    "crumbs": [
+      "Datasets",
+      "AirQualityBogota"
+    ]
+  },
+  {
+    "objectID": "vowels.html",
+    "href": "vowels.html",
+    "title": "Vowels",
+    "section": "",
+    "text": "El conjunto de datos vowels contiene señales de electroencefalograma (EEG) tomadas de 21 electrodos, durante la actividad mental de imaginar las cinco vocales del idioma español. Este conjunto de datos se desarrolló para ser aplicado en una interfaz cerebro-computadora (BCI, por sus siglas en inglés) destinada al control de una prótesis de mano.\n\n\nUna BCI permite a las personas controlar dispositivos externos, como prótesis, usando únicamente señales cerebrales. En este caso, el conjunto de datos recoge la actividad cerebral relacionada con el pensamiento imaginario de las vocales, lo que se espera que ayude a entrenar modelos para la clasificación y control de una prótesis.\n\n\n\nBrain BCI, Adindva1, CC BY-SA 4.0",
+    "crumbs": [
+      "Datasets",
+      "Vowels"
+    ]
+  },
+  {
+    "objectID": "vowels.html#descripción",
+    "href": "vowels.html#descripción",
+    "title": "Vowels",
+    "section": "",
+    "text": "El conjunto de datos vowels contiene señales de electroencefalograma (EEG) tomadas de 21 electrodos, durante la actividad mental de imaginar las cinco vocales del idioma español. Este conjunto de datos se desarrolló para ser aplicado en una interfaz cerebro-computadora (BCI, por sus siglas en inglés) destinada al control de una prótesis de mano.\n\n\nUna BCI permite a las personas controlar dispositivos externos, como prótesis, usando únicamente señales cerebrales. En este caso, el conjunto de datos recoge la actividad cerebral relacionada con el pensamiento imaginario de las vocales, lo que se espera que ayude a entrenar modelos para la clasificación y control de una prótesis.\n\n\n\nBrain BCI, Adindva1, CC BY-SA 4.0",
+    "crumbs": [
+      "Datasets",
+      "Vowels"
+    ]
+  },
+  {
+    "objectID": "vowels.html#uso",
+    "href": "vowels.html#uso",
+    "title": "Vowels",
+    "section": "Uso",
+    "text": "Uso\nPara cargar los datos en R, usa el siguiente comando:\n\ndata(vowels)\n\nWarning in data(vowels): data set 'vowels' not found",
+    "crumbs": [
+      "Datasets",
+      "Vowels"
+    ]
+  },
+  {
+    "objectID": "cokmexico.html",
+    "href": "cokmexico.html",
+    "title": "Mex PM10",
+    "section": "",
+    "text": "El conjunto de datos COKMexico contiene información sobre la calidad del aire en 13 ubicaciones de México. Específicamente, incluye mediciones de material particulado 10 (PM10) y N02 recolectadas en 13 estaciones de monitoreo distribuidas por el país. Al cargar los datos encontrará en el ambiente.",
+    "crumbs": [
+      "Datasets",
+      "CokMexico"
+    ]
+  },
+  {
+    "objectID": "cokmexico.html#uso",
+    "href": "cokmexico.html#uso",
+    "title": "Mex PM10",
+    "section": "Uso",
+    "text": "Uso\nPara cargar los datos en R, usa el siguiente comando:\n\n\nWarning: package 'sf' was built under R version 4.3.3\n\n\nLinking to GEOS 3.11.2, GDAL 3.8.2, PROJ 9.3.1; sf_use_s2() is TRUE\n\n\n\ndata(COKMexico)\n\n\nstr(coord_NO2)\n\n'data.frame':   18 obs. of  2 variables:\n $ X: num  509226 473346 482180 469366 479189 ...\n $ Y: num  2171149 2164689 2152665 2141275 2180751 ...\n\n\n\nstr(coord_PM10)\n\n'data.frame':   13 obs. of  2 variables:\n $ X: num  509226 479189 474444 484020 487445 ...\n $ Y: num  2171149 2180751 2154232 2146380 2147815 ...\n\n\n\nstr(Mex_PM10)\n\n int [1:4344, 1:13] 84 110 140 131 151 181 147 139 118 74 ...\n - attr(*, \"dimnames\")=List of 2\n  ..$ : chr [1:4344] \"1\" \"2\" \"3\" \"4\" ...\n  ..$ : chr [1:13] \"ACO\" \"CUT\" \"FAC\" \"HGM\" ...\n\n\n\nstr(Mex_PM10)\n\n int [1:4344, 1:13] 84 110 140 131 151 181 147 139 118 74 ...\n - attr(*, \"dimnames\")=List of 2\n  ..$ : chr [1:4344] \"1\" \"2\" \"3\" \"4\" ...\n  ..$ : chr [1:13] \"ACO\" \"CUT\" \"FAC\" \"HGM\" ...\n\n\n\nstr(NO2)\n\n int [1:4292, 1:18] 21 21 21 18 16 12 12 10 9 10 ...\n - attr(*, \"dimnames\")=List of 2\n  ..$ : chr [1:4292] \"1\" \"2\" \"3\" \"4\" ...\n  ..$ : chr [1:18] \"ACO\" \"ATI\" \"CAM\" \"CUA\" ...\n\n\n\nplot(map_mex)",
+    "crumbs": [
+      "Datasets",
+      "CokMexico"
+    ]
+  },
+  {
+    "objectID": "gfdata.html",
+    "href": "gfdata.html",
+    "title": "gfdata",
+    "section": "",
+    "text": "Los objetos de clase gfdata son una extensión de los objetos SpatFD para mediciones repetidas, combinan coordenadas espaciales con funciones o series temporales observadas en cada ubicación espacial. Aunque el término “serie temporal” es genérico, las observaciones también pueden estar distribuidas según la frecuencia, profundidad u otra dimensión espacial, en lugar de tiempo.",
+    "crumbs": [
+      "Objetos",
+      "gfdata"
+    ]
+  },
+  {
+    "objectID": "gfdata.html#descripción",
+    "href": "gfdata.html#descripción",
+    "title": "gfdata",
+    "section": "",
+    "text": "Los objetos de clase gfdata son una extensión de los objetos SpatFD para mediciones repetidas, combinan coordenadas espaciales con funciones o series temporales observadas en cada ubicación espacial. Aunque el término “serie temporal” es genérico, las observaciones también pueden estar distribuidas según la frecuencia, profundidad u otra dimensión espacial, en lugar de tiempo.",
+    "crumbs": [
+      "Objetos",
+      "gfdata"
+    ]
+  },
+  {
+    "objectID": "gfdata.html#argumentos",
+    "href": "gfdata.html#argumentos",
+    "title": "gfdata",
+    "section": "Argumentos",
+    "text": "Argumentos\n\ndata: Matriz que contiene los datos, donde cada columna corresponde a un sujeto, y las filas representan una secuencia de puntos de datos (ordenados según el tiempo, frecuencia, profundidad, etc.). La última columna debe incluir las clases para clasificación.\np: Número de repeticiones para cada clase.\nbasis: Tipo de funciones base a utilizar. Puede ser “Fourier” o “Bsplines” (predeterminado es “Bsplines”).\ncoords: Matriz con las coordenadas espaciales (x, y).\nnbasis: Número de funciones base.\nnames: Nombres de las clases de datos.\nlambda: Valor del parámetro de suavizado.",
+    "crumbs": [
+      "Objetos",
+      "gfdata"
+    ]
+  },
+  {
+    "objectID": "gfdata.html#detalles",
+    "href": "gfdata.html#detalles",
+    "title": "gfdata",
+    "section": "Detalles",
+    "text": "Detalles\nLos objetos de clase gfdata almacenan los datos funcionales, sus parámetros, los resultados del análisis de componentes principales funcionales (PCA funcional), y las coordenadas espaciales para cada variable. Cada variable tiene su propio conjunto de datos funcionales, data.frame o matriz, y su correspondiente archivo de coordenadas espaciales.\n\ndata(vowels)\n\n# Definir parámetros y nombres para los datos\np = 228\nnelec = 21\nnvow = 5\nnames_vowels = c(\"a\", \"e\", \"i\", \"o\", \"u\")\nn.basis = c(14, 13, 12, 13, 11)\n\n# Crear el objeto gfdata\ns4.gfdata = gfdata(data = vowels, p = p, names = names_vowels, coords = vowels_coords, nbasis = n.basis)",
+    "crumbs": [
+      "Objetos",
+      "gfdata"
+    ]
+  },
+  {
+    "objectID": "gfdata.html#summary",
+    "href": "gfdata.html#summary",
+    "title": "gfdata",
+    "section": "Summary",
+    "text": "Summary\nPara cada variable incluida en el objeto gfdata, esta función devuelve:\n\nHead of data: Muestra las primeras filas de los datos funcionales.\nCoordinates: Muestra las coordenadas espaciales asociadas a las observaciones.\nEigenvalues: Valores propios obtenidos del análisis de componentes principales.\nMean coefficients: Coeficientes medios de las funciones base.\nProportion of explained variance by each component: Proporción de la varianza explicada por cada componente principal.\n\n\n#summary.gfdata(s4.gfdata)",
+    "crumbs": [
+      "Objetos",
+      "gfdata"
+    ]
+  },
+  {
+    "objectID": "about.html#referencias",
+    "href": "about.html#referencias",
+    "title": "About",
+    "section": "Referencias",
+    "text": "Referencias\n\nBohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial prediction of functional data. Statistical Methods & Applications, 25(1), 39-54.\nBohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).\nBohorquez M., Giraldo R. and Mateu J. (2021). Spatial prediction and optimal sampling of functional data in Geostatistical Functional Data Analysis: Theory and Methods. John Wiley Sons, Chichester, UK. ISBN: 978-1-119-38784-8. https://www.wiley.com/en-us/Geostatistical+Functional+Data+Analysis-p-9781119387848.",
+    "crumbs": [
+      "About"
+    ]
+  },
+  {
+    "objectID": "kriging.html#gráficamente",
+    "href": "kriging.html#gráficamente",
+    "title": "Kriging",
+    "section": "Gráficamente",
+    "text": "Gráficamente\nPodemos graficar las predicciones usando la función ggplot_KS\n\nggplot_KS(KS_SFD_PM10_both,show.varpred = FALSE,\n          main = \"Plot 1 - Using Scores\",\n          main2 = \"Plot 2 - Using Lambda\",\n          ylab = \"PM10\")\n\n[[1]]\n\n\n\n\n\n\n\n\n\n\n[[2]]\n\n\n\n\n\n\n\n\n\nAsí mismo, podemos graficar las predicciones suavizadas en tiempos específicos.\n\nggmap_KS(KS_SFD_PM10_both,\n         map_path = map,\n         window_time = c(2108),\n         method = \"lambda\",\n         zmin = 50,\n         zmax = 120)\n\nUsing fill.all = TRUE by default\n\n\n[[1]]",
+    "crumbs": [
+      "Kriging",
+      "Kriging"
+    ]
+  },
+  {
+    "objectID": "cokriging.html",
+    "href": "cokriging.html",
+    "title": "Cokriging",
+    "section": "",
+    "text": "El cokriging es una extensión del kriging que permite predecir una variable en una ubicación no muestreada utilizando no solo datos de esa misma variable, sino también información de otras variables relacionadas o covariables. Este método aprovecha la correlación espacial entre varias variables para mejorar la precisión de las predicciones.\nSupongamos que queremos hacer la predicción tomando en cuenta \\(p\\) variables de forma simultánea. Considerando \\(Z(s_i) = (Z_1(s_i),Z_2(s_i),\\cdots,Z_p(s_i))'\\) , el predictor para \\(Z_l(s_0), 1\\leq l\\leq p\\) basado en p, basado en las \\(p\\) variables tiene la forma\n\\[\nZ^*_l(s_0) = \\sum_{i=1}^n \\sum_{q=1}^p \\lambda_{qi}Z_q(s_i)\n\\]\nEl mejor predictor lineal insesgado de una variable en la ubicación \\(s_0\\) está dado por la minimización de\n\\[\nmax_{1\\leq l \\leq n}\\{Var[Z_l(s_0)-Z^*_l(s_0)]\\}\n\\]\nPor eficiencia computacional, puede decidirse minimizar\n\\[\n\\sum_{i=1}^nVar[Z_l(s_0)-Z^*_l(s_0)]\n\\]\nEn el paquete SpatFD se realiza cokriging sobre los scores elegidos para todas las variables funcionales involucradas. Las predicciones de scores se utilizan para construir el predictor funcional del cokriging.\n\ndata(COKMexico)\n# Definimos nuestro objeto SpatFD\nSFD_PM10_NO2 &lt;- SpatFD(Mex_PM10, coords = coord_PM10, basis = \"Fourier\", \nnbasis = 21, lambda = 0.000001, nharm = 2)\n# Agregamos las observaciones de NO2 al objeto que creamos antes por medio del argumento add\nSFD_PM10_NO2 &lt;- SpatFD(NO2, coords = coord_NO2, basis = \"Fourier\", \nnbasis = 27, lambda = 0.000001, nharm = 2,\n                      add = SFD_PM10_NO2)\n# Definimos los modelos de varianza de cada una de las variables\nmodel1 &lt;- gstat::vgm(647677.1,\"Gau\",23317.05)\nmodel1 &lt;- gstat::vgm(127633,\"Wav\",9408.63, add.to = model1)\n\n# Especificamos la ubicación no muestreada\nnewcoords &lt;- data.frame(x = 509926, y = 2179149)\n\nLa función COKS_scores_lambdas nos permite hacer el cokriging funcional\n\ncokrig = COKS_scores_lambdas(SFD_PM10_NO2, newcoords, model1)\n\nUsing fill.all = TRUE by default\n\n\nUsing method = 'lambda' by default\n\n\n\n\n\n\n\n\n\nLinear Model of Coregionalization found. Good.\n[using ordinary cokriging]\n\n\n\ncokrig$modelfit\n\ndata:\nPC1.1 : formula = puntajes[[1]][[1]]`~`1 ; data dim = 13 x 2\nPC2.1 : formula = puntajes[[1]][[2]]`~`1 ; data dim = 13 x 2\nPC1.2 : formula = puntajes[[2]][[1]]`~`1 ; data dim = 18 x 2\nPC2.2 : formula = puntajes[[2]][[2]]`~`1 ; data dim = 18 x 2\nvariograms:\n               model      psill    range\nPC1.1[1]         Gau 356886.232 23317.05\nPC1.1[2]         Wav 251618.187  9408.63\nPC2.1[1]         Gau 157275.294 23317.05\nPC2.1[2]         Wav  66770.748  9408.63\nPC1.2[1]         Gau 509628.594 23317.05\nPC1.2[2]         Wav  86045.557  9408.63\nPC2.2[1]         Gau   9178.223 23317.05\nPC2.2[2]         Wav  77729.767  9408.63\nPC1.1.PC2.1[1]   Gau  96771.742 23317.05\nPC1.1.PC2.1[2]   Wav -11290.879  9408.63\nPC1.1.PC1.2[1]   Gau 358697.498 23317.05\nPC1.1.PC1.2[2]   Wav  84592.302  9408.63\nPC2.1.PC1.2[1]   Gau -36478.239 23317.05\nPC2.1.PC1.2[2]   Wav  57029.144  9408.63\nPC1.1.PC2.2[1]   Gau  11668.546 23317.05\nPC1.1.PC2.2[2]   Wav 137897.759  9408.63\nPC2.1.PC2.2[1]   Gau  -1677.278 23317.05\nPC2.1.PC2.2[2]   Wav -12680.551  9408.63\nPC1.2.PC2.2[1]   Gau  16583.870 23317.05\nPC1.2.PC2.2[2]   Wav  40857.282  9408.63",
+    "crumbs": [
+      "Kriging",
+      "Cokriging"
+    ]
+  }
+]

@@ -1,0 +1,24 @@
+---
+title: 'About'
+image: logo.png
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: GitHub
+      href: "https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/tree/main"
+---
+
+SpatFD es un paquete en R diseñado para facilitar el análisis de datos espaciales con componentes funcionales. Proporciona herramientas para manejar datos funcionales espaciales, permitiendo a investigadores y analistas explorar, modelar y visualizar de manera eficiente la variabilidad y dependencias espaciales en conjuntos de datos complejos.
+
+Nuestro paquete está pensado para soportar una amplia gama de aplicaciones, desde estudios ambientales hasta econometría, ofreciendo métodos adaptables a diversos dominios. Ya sea que estés trabajando con tendencias geoespaciales, dinámicas temporales o relaciones funcionales, SpatFD te brinda la flexibilidad y las herramientas necesarias para extraer conclusiones significativas.
+
+SpatFD ha sido desarrollado con un enfoque en la usabilidad y el rendimiento, asegurando que tanto usuarios novatos como experimentados de R puedan aprovechar sus capacidades para realizar investigaciones avanzadas en estadística espacial. Únete a nuestra creciente comunidad de usuarios y explora el potencial de los datos funcionales espaciales con SpatFD.
+
+## Referencias
+
+-   Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Optimal sampling for spatial prediction of functional data. Statistical Methods & Applications, 25(1), 39-54.
+
+-   Bohorquez, M., Giraldo, R., & Mateu, J. (2016). Multivariate functional random fields: prediction and optimal sampling. Stochastic Environmental Research and Risk Assessment, 31, pages53–70 (2017).
+
+-   Bohorquez M., Giraldo R. and Mateu J. (2021). Spatial prediction and optimal sampling of functional data in Geostatistical Functional Data Analysis: Theory and Methods. John Wiley Sons, Chichester, UK. ISBN: 978-1-119-38784-8. <https://www.wiley.com/en-us/Geostatistical+Functional+Data+Analysis-p-9781119387848>.

@@ -1,0 +1,78 @@
+---
+title: "Objetos SpatFD"
+---
+
+El objeto SpatFD crea objetos univariados y multivariados de clase SpatFD a partir de coordenadas espaciales, funciones o series temporales observadas en cada ubicación espacial. El término "series temporales" es genérico, ya que las observaciones pueden estar relacionadas con la frecuencia u otra dimensión espacial, como la profundidad, en lugar del tiempo.
+
+## Argumentos
+
+-   **data**: Los datos deben ser proporcionados en un data-frame o una matriz donde cada columna corresponde a una ubicación, y las filas son una secuencia de puntos de datos, ordenados según el tiempo, frecuencia, profundidad, etc. También puede ser un objeto `fd` del paquete `fda`.
+
+-   **coords**: Un data-frame o matriz con coordenadas espaciales (x, y). El número de columnas en `data` debe coincidir con el número de filas en `coords` para cada variable.
+
+-   **basis**: Funciones base. Puede ser "Fourier" o "Bsplines" (predeterminado: "Bsplines").
+
+-   **nbasis**: El número de funciones base.
+
+-   **lambda**: Valor del parámetro de suavizado.
+
+-   **nharm**: Número de armónicos o funciones propias reportados en los resultados de Componentes Principales Funcionales.
+
+-   **name**: Se puede asignar un nuevo nombre a los datos.
+
+-   **add**: Se pueden agregar otras variables para la predicción funcional multivariada espacial (cokriging funcional). No es necesario que todas las variables estén observadas en las mismas ubicaciones espaciales.
+
+-   **...**: Argumentos adicionales de `fda` como `create.bspline.basis` o `create.fourier.basis`.
+
+## Detalles
+
+Los objetos `SpatFD` almacenan los datos funcionales, sus parámetros, los resultados de análisis de componentes principales funcionales, y las coordenadas espaciales para cada variable. Cada variable tiene su propio conjunto de datos funcionales, data-frame o matriz, y archivo de coordenadas espaciales.
+
+## Valor
+
+Para cada variable: Se proporcionan los datos funcionales y los componentes principales funcionales vinculados con las coordenadas espaciales.
+
+## Notas
+
+1.  Aunque no hay un límite para el número de variables en el cokriging funcional, la verdadera limitación está en los requisitos para encontrar un modelo de covarianza multivariada válido. Se recomienda aplicar el principio de parsimonia.
+
+2.  Las ubicaciones deben estar en la misma región de interés para que tenga sentido incluirlas en el mismo modelo de predicción. Sin embargo, cada variable puede estar observada en diferentes ubicaciones espaciales y tener un número diferente de observaciones.
+
+### Forma de uso
+
+```{r, echo =FALSE}
+library(SpatFD)
+
+```
+
+```{r}
+# Cargar datos
+data(AirQualityBogota)
+
+# Crear un objeto univariado usando 2 nharm
+SFD_PM10 <- SpatFD(PM10, coords = coord[,2:3], basis = "Bsplines", nbasis = 91,
+lambda = 0.00002, nharm = 2)
+
+
+```
+
+```{r}
+str(SFD_PM10)
+
+```
+
+Para cada variable incluida en el objeto `SpatFD`, la función `summary` retorna:
+
+-   **Head of data**: Primeras filas de los datos asociados.
+
+-   **Coordinates**: Coordenadas espaciales correspondientes a cada ubicación.
+
+-   **Eigenvalues**: Valores propios de la descomposición en componentes principales.
+
+-   **Mean coefficients**: Coeficientes medios de la representación funcional.
+
+-   **Proportion of explained variance by each component**: Proporción de varianza explicada por cada componente principal.
+
+```{r}
+summary(SFD_PM10)
+```

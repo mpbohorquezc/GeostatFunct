@@ -1,0 +1,21 @@
+---
+title: "Vowels"
+---
+
+## Descripción
+
+El conjunto de datos **vowels** contiene señales de electroencefalograma (EEG) tomadas de 21 electrodos, durante la actividad mental de imaginar las cinco vocales del idioma español. Este conjunto de datos se desarrolló para ser aplicado en una interfaz cerebro-computadora (BCI, por sus siglas en inglés) destinada al control de una prótesis de mano.
+
+### ¿Qué es una interfaz cerebro-computadora (BCI)?
+
+Una BCI permite a las personas controlar dispositivos externos, como prótesis, usando únicamente señales cerebrales. En este caso, el conjunto de datos recoge la actividad cerebral relacionada con el pensamiento imaginario de las vocales, lo que se espera que ayude a entrenar modelos para la clasificación y control de una prótesis.
+
+[![Brain BCI, Adindva1, CC BY-SA 4.0](img/bci.jpg)](https://upload.wikimedia.org/wikipedia/commons/1/12/Brain_BCI.jpg)
+
+## Uso
+
+Para cargar los datos en R, usa el siguiente comando:
+
+```{r}
+data(vowels)
+```
