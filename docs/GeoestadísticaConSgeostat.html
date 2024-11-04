@@ -1,0 +1,2505 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Geoestadística con sgeostat – SpatFD</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-df1093faab5f503be952d61f42813c2b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./GeoestadísticaConSgeostat.html">Geoestadística</a></li><li class="breadcrumb-item"><a href="./GeoestadísticaConSgeostat.html">Geoestadística con Sgeostat</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">SpatFD</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/tree/main">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/issues">
+            Report a Bug
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro_spatial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cuadernos de Estadística Espacial</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Geoestadística</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./GeoestadísticaConSgeostat.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Geoestadística con Sgeostat</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./GeoestadisticaUnivariadaConGeoR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Geoestadística Univariada con GeoR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Kriging_puntual.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kriging</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Modelos de Regresión Espacial</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Estadística Espacial Funcional</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Objetos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./spatfd_object.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">SpatFD</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./gfdata.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">gfdata</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Datasets</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./airqualitybogota.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AirQualityBogota</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vowels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vowels</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cokmexico.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CokMexico</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Kriging</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./kriging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Kriging</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cokriging.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cokriging</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cross_validation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Validación cruzada</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Diseño Óptimo</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./optimal_design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Diseño Óptimo</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Clasificación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clasificación</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#geoestadística-con-sgeostat" id="toc-geoestadística-con-sgeostat" class="nav-link active" data-scroll-target="#geoestadística-con-sgeostat">Geoestadística con <code>sgeostat</code></a>
+  <ul class="collapse">
+  <li><a href="#data-load" id="toc-data-load" class="nav-link" data-scroll-target="#data-load">Data Load</a></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link" data-scroll-target="#libraries">Libraries</a></li>
+  <li><a href="#including-plots" id="toc-including-plots" class="nav-link" data-scroll-target="#including-plots">Including Plots</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./GeoestadísticaConSgeostat.html">Geoestadística</a></li><li class="breadcrumb-item"><a href="./GeoestadísticaConSgeostat.html">Geoestadística con Sgeostat</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Geoestadística con sgeostat</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="geoestadística-con-sgeostat" class="level1">
+<h1>Geoestadística con <code>sgeostat</code></h1>
+<section id="data-load" class="level2">
+<h2 class="anchored" data-anchor-id="data-load">Data Load</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>aquifer<span class="ot">=</span><span class="fu">read.table</span>(<span class="st">"data/aquifer.txt"</span>,<span class="at">head=</span>T,<span class="at">dec=</span><span class="st">","</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(aquifer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Este     Norte Profundidad
+1  42.78275 127.62282        1464
+2 -27.39691  90.78732        2553
+3  -1.16289  84.89600        2158
+4 -18.61823  76.45199        2455
+5  96.46549  64.58058        1756
+6 108.56243  82.92325        1702</code></pre>
+</div>
+</div>
+</section>
+<section id="libraries" class="level2">
+<h2 class="anchored" data-anchor-id="libraries">Libraries</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scatterplot3d)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sgeostat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="including-plots" class="level2">
+<h2 class="anchored" data-anchor-id="including-plots">Including Plots</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>g1<span class="ot">=</span><span class="fu">ggplot</span>(aquifer, <span class="fu">aes</span>(Profundidad, Este)) <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Este"</span>) <span class="sc">+</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Profundidad"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>g2<span class="ot">=</span><span class="fu">ggplot</span>(aquifer, <span class="fu">aes</span>(Profundidad, Norte)) <span class="sc">+</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Norte"</span>) <span class="sc">+</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Profundidad"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>g3<span class="ot">=</span><span class="fu">ggplot</span>(aquifer, <span class="fu">aes</span>(Profundidad, Este<span class="sc">*</span>Norte)) <span class="sc">+</span> </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Interacción este,norte"</span>) <span class="sc">+</span> </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Profundidad"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot_grid(g1,g2,g3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#cor(aquifer)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scatterplot3d</span>(aquifer, <span class="at">highlight.3d=</span><span class="cn">TRUE</span>, <span class="at">col.axis=</span><span class="st">"blue"</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">col.grid=</span><span class="st">"lightblue"</span>, <span class="at">main=</span><span class="st">"Tendencia de Profundidad"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>reg1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Profundidad <span class="sc">~</span> Este <span class="sc">+</span> Norte, <span class="at">data =</span> aquifer)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>residuales1  <span class="ot">&lt;-</span>  <span class="fu">residuals</span>(reg1)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(reg1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(reg1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Profundidad
+          Df   Sum Sq  Mean Sq F value    Pr(&gt;F)    
+Este       1 19045642 19045642  460.95 &lt; 2.2e-16 ***
+Norte      1  8960172  8960172  216.86 &lt; 2.2e-16 ***
+Residuals 82  3388069    41318                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>reg2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Profundidad <span class="sc">~</span> Este<span class="sc">*</span>Norte, <span class="at">data =</span> aquifer)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>residuales2  <span class="ot">&lt;-</span>  <span class="fu">residuals</span>(reg2)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(reg2)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(reg2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Profundidad
+           Df   Sum Sq  Mean Sq F value    Pr(&gt;F)    
+Este        1 19045642 19045642  517.06 &lt; 2.2e-16 ***
+Norte       1  8960172  8960172  243.25 &lt; 2.2e-16 ***
+Este:Norte  1   404448   404448   10.98  0.001379 ** 
+Residuals  81  2983621    36835                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>reg3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Profundidad <span class="sc">~</span> Este<span class="sc">*</span>Norte<span class="sc">+</span><span class="fu">I</span>(Este<span class="sc">^</span><span class="dv">2</span>)<span class="sc">*</span><span class="fu">I</span>(Norte<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> aquifer)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>residuales3  <span class="ot">&lt;-</span>  <span class="fu">residuals</span>(reg3)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(reg3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(reg3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Profundidad
+                     Df   Sum Sq  Mean Sq  F value    Pr(&gt;F)    
+Este                  1 19045642 19045642 583.2335 &lt; 2.2e-16 ***
+Norte                 1  8960172  8960172 274.3868 &lt; 2.2e-16 ***
+I(Este^2)             1    55368    55368   1.6955 0.1967061    
+I(Norte^2)            1   152170   152170   4.6599 0.0339500 *  
+Este:Norte            1   451567   451567  13.8283 0.0003755 ***
+I(Este^2):I(Norte^2)  1   181854   181854   5.5689 0.0207829 *  
+Residuals            78  2547110    32655                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>aquifer<span class="ot">=</span><span class="fu">data.frame</span>(aquifer,<span class="at">resi=</span>residuales2)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>aquifer_points<span class="ot">=</span><span class="fu">point</span>(aquifer, <span class="at">x=</span><span class="st">"Este"</span>, <span class="at">y=</span><span class="st">"Norte"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>aquifer_pair<span class="ot">=</span><span class="fu">pair</span>(aquifer_points,<span class="at">num.lags=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>....................................................................................</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(aquifer_pair)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 5
+ $ from: num [1:3570] 1 1 1 1 1 1 1 1 1 1 ...
+ $ to  : num [1:3570] 2 3 4 5 6 7 8 9 10 11 ...
+ $ lags: Factor w/ 10 levels "1","2","3","4",..: 3 3 3 4 3 4 4 4 4 4 ...
+ $ dist: num [1:3570] 79.3 61.3 79.9 82.8 79.5 ...
+ $ bins: num [1:10] 13.6 40.7 67.8 94.9 122 ...
+ - attr(*, "type")= chr "isotropic"
+ - attr(*, "class")= chr "pair"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>aquifer.v<span class="ot">&lt;-</span><span class="fu">est.variogram</span>(aquifer_points,aquifer_pair,<span class="st">'resi'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>g4<span class="ot">=</span><span class="fu">ggplot</span>(aquifer, <span class="fu">aes</span>(resi, Este)) <span class="sc">+</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Este"</span>) <span class="sc">+</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"residuales2"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>g5<span class="ot">=</span><span class="fu">ggplot</span>(aquifer, <span class="fu">aes</span>(resi, Norte)) <span class="sc">+</span> </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Norte"</span>) <span class="sc">+</span> </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"residuales2"</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co">#plot_grid(g4,g5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>aquifer_points<span class="ot">=</span><span class="fu">point</span>(aquifer, <span class="at">x=</span><span class="st">"Este"</span>, <span class="at">y=</span><span class="st">"Norte"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#fit.trend(aquifer_points,at="Profundidad", np=2, plot.it=TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>g6<span class="ot">=</span><span class="fu">ggplot</span>(aquifer.v, <span class="fu">aes</span>(resi, Norte)) <span class="sc">+</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Norte"</span>) <span class="sc">+</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"residuales2"</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>g6<span class="ot">=</span><span class="fu">ggplot</span>(aquifer.v, <span class="fu">aes</span>(bins, classic)) <span class="sc">+</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Rezago espacial, h"</span>) <span class="sc">+</span> </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Estimador clásico del variograma"</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>g7<span class="ot">=</span><span class="fu">ggplot</span>(aquifer.v, <span class="fu">aes</span>(bins, robust)) <span class="sc">+</span> </span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Rezago espacial, h"</span>) <span class="sc">+</span> </span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Estimador robusto 1 del variograma"</span>)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>g8<span class="ot">=</span><span class="fu">ggplot</span>(aquifer.v, <span class="fu">aes</span>(bins, med)) <span class="sc">+</span> </span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Rezago espacial, h"</span>) <span class="sc">+</span> </span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Estimador robusto 2 del variograma"</span>)</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#plot_grid(g6,g7,g8,nrow=1,ncol=3)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#par(mfrow=c(1,3))</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(aquifer.v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   lags      bins   classic    robust       med   n
+1     1  13.55308  43779.20  44355.34  47948.45 285
+2     2  40.65923  71039.50  71176.29  73188.30 350
+3     3  67.76539  80041.91  85367.59  93223.52 492
+4     4  94.87154  67197.27  68067.40  73056.46 719
+5     5 121.97770  73572.25  68052.99  66133.91 612
+6     6 149.08385  57650.90  58608.95  58819.91 521
+7     7 176.19001  65498.82  62167.57  68112.31 356
+8     8 203.29616 130414.72 107613.55  77805.71 173
+9     9 230.40231 161738.13 134102.60 123952.77  43
+10   10 257.50847  35525.99  45217.14  58333.98  19</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(aquifer.v<span class="sc">$</span>robust)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(aquifer.v<span class="sc">$</span>med)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#points(aquifer.v$robust,col="red")</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#points(aquifer.v$med,"blue")</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>aquifer.vmodExp<span class="ot">&lt;-</span><span class="fu">fit.exponential</span>(aquifer.v,<span class="at">c0=</span><span class="dv">0</span>,<span class="at">ce=</span><span class="dv">40000</span>,<span class="at">ae=</span><span class="dv">20</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Initial parameter estimates:  0 40000 20 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 1 
+Gradient vector:  -4432.441 977.0988 -8.943538 
+New parameter estimates:  1e-06 40977.1 11.05646 
+
+rse.dif =  3232643827 (rse = 3232643827 )  ;  parm.dist =  977.1397 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 2 
+Gradient vector:  -26700.7 22493.46 -2.800242 
+New parameter estimates:  1e-06 63470.56 8.256219 
+
+rse.dif =  -17644208 (rse = 3.215e+09 )  ;  parm.dist =  22493.46 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 3 
+Gradient vector:  -11057.27 -15597.73 2.315183 
+New parameter estimates:  1e-06 47872.83 10.5714 
+
+rse.dif =  -3772568 (rse = 3211227051 )  ;  parm.dist =  15597.73 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 4 
+Gradient vector:  -27525.12 16431.58 -1.824505 
+New parameter estimates:  1e-06 64304.41 8.746897 
+
+rse.dif =  3032851 (rse = 3214259902 )  ;  parm.dist =  16431.58 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 5 
+Gradient vector:  -20442.22 -7053.019 1.144197 
+New parameter estimates:  1e-06 57251.39 9.891094 
+
+rse.dif =  -2468665 (rse = 3211791237 )  ;  parm.dist =  7053.019 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 6 
+Gradient vector:  -27557.41 7097.539 -0.7122805 
+New parameter estimates:  1e-06 64348.93 9.178813 
+
+rse.dif =  1486180 (rse = 3213277417 )  ;  parm.dist =  7097.539 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 7 
+Gradient vector:  -24787.06 -2758.919 0.3605893 
+New parameter estimates:  1e-06 61590.01 9.539403 
+
+rse.dif =  -951749.7 (rse = 3212325667 )  ;  parm.dist =  2758.919 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 8 
+Gradient vector:  -26691.4 1898.737 -0.1885371 
+New parameter estimates:  1e-06 63488.75 9.350866 
+
+rse.dif =  471370.4 (rse = 3212797038 )  ;  parm.dist =  1898.737 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 9 
+Gradient vector:  -25850.35 -838.0686 0.09276125 
+New parameter estimates:  1e-06 62650.68 9.443627 
+
+rse.dif =  -249219.6 (rse = 3212547818 )  ;  parm.dist =  838.0686 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 10 
+Gradient vector:  -26302.53 450.7265 -0.04631475 
+New parameter estimates:  1e-06 63101.41 9.397312 
+
+rse.dif =  121873.4 (rse = 3212669692 )  ;  parm.dist =  450.7265 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 11 
+Gradient vector:  -26086.54 -215.2624 0.02285916 
+New parameter estimates:  1e-06 62886.14 9.420171 
+
+rse.dif =  -61031.79 (rse = 3212608660 )  ;  parm.dist =  215.2624 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-12.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 12 
+Gradient vector:  -26195.52 108.6221 -0.01133309 
+New parameter estimates:  1e-06 62994.77 9.408838 
+
+rse.dif =  30077.83 (rse = 3212638738 )  ;  parm.dist =  108.6221 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-13.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 13 
+Gradient vector:  -26142.08 -53.26613 0.005604603 
+New parameter estimates:  1e-06 62941.5 9.414443 
+
+rse.dif =  -14922.96 (rse = 3212623815 )  ;  parm.dist =  53.26613 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-14.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 14 
+Gradient vector:  -26168.65 26.48517 -0.002774911 
+New parameter estimates:  1e-06 62967.99 9.411668 
+
+rse.dif =  7377.216 (rse = 3212631192 )  ;  parm.dist =  26.48517 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-15.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 15 
+Gradient vector:  -26155.53 -13.07801 0.001373075 
+New parameter estimates:  1e-06 62954.91 9.413041 
+
+rse.dif =  -3653.216 (rse = 3212627539 )  ;  parm.dist =  13.07801 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-16.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 16 
+Gradient vector:  -26162.03 6.479831 -0.0006796194 
+New parameter estimates:  1e-06 62961.39 9.412361 
+
+rse.dif =  1807.514 (rse = 3212629346 )  ;  parm.dist =  6.479831 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-17.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 17 
+Gradient vector:  -26158.82 -3.20516 0.0003363367 
+New parameter estimates:  1e-06 62958.18 9.412698 
+
+rse.dif =  -894.6895 (rse = 3212628451 )  ;  parm.dist =  3.20516 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-18.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 18 
+Gradient vector:  -26160.41 1.586717 -0.0001664615 
+New parameter estimates:  1e-06 62959.77 9.412531 
+
+rse.dif =  442.763 (rse = 3212628894 )  ;  parm.dist =  1.586717 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-19.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 19 
+Gradient vector:  -26159.62 -0.7851797 8.238305e-05 
+New parameter estimates:  1e-06 62958.98 9.412613 
+
+rse.dif =  -219.1369 (rse = 3212628675 )  ;  parm.dist =  0.7851797 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-20.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 20 
+Gradient vector:  -26160.01 0.3886224 -4.077271e-05 
+New parameter estimates:  1e-06 62959.37 9.412573 
+
+rse.dif =  108.4519 (rse = 3212628784 )  ;  parm.dist =  0.3886224 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-21.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 21 
+Gradient vector:  -26159.82 -0.192328 2.01789e-05 
+New parameter estimates:  1e-06 62959.18 9.412593 
+
+rse.dif =  -53.67477 (rse = 3212628730 )  ;  parm.dist =  0.192328 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-22.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 22 
+Gradient vector:  -26159.91 0.09518727 -9.986825e-06 
+New parameter estimates:  1e-06 62959.28 9.412583 
+
+rse.dif =  26.56425 (rse = 3212628756 )  ;  parm.dist =  0.09518727 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-23.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 23 
+Gradient vector:  -26159.86 -0.04710907 4.94261e-06 
+New parameter estimates:  1e-06 62959.23 9.412588 
+
+rse.dif =  -13.14703 (rse = 3212628743 )  ;  parm.dist =  0.04710907 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-24.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 24 
+Gradient vector:  -26159.89 0.023315 -2.446165e-06 
+New parameter estimates:  1e-06 62959.25 9.412585 
+
+rse.dif =  6.506634 (rse = 3212628750 )  ;  parm.dist =  0.023315 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-25.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 25 
+Gradient vector:  -26159.88 -0.01153889 1.21064e-06 
+New parameter estimates:  1e-06 62959.24 9.412587 
+
+rse.dif =  -3.220222 (rse = 3212628747 )  ;  parm.dist =  0.01153889 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-26.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 26 
+Gradient vector:  -26159.88 0.005710764 -5.991627e-07 
+New parameter estimates:  1e-06 62959.25 9.412586 
+
+rse.dif =  1.593734 (rse = 3212628748 )  ;  parm.dist =  0.005710764 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-27.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 27 
+Gradient vector:  -26159.88 -0.002826342 2.965346e-07 
+New parameter estimates:  1e-06 62959.24 9.412586 
+
+rse.dif =  -0.7887611 (rse = 3212628747 )  ;  parm.dist =  0.002826342 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-28.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 28 
+Gradient vector:  -26159.88 0.001398795 -1.467591e-07 
+New parameter estimates:  1e-06 62959.24 9.412586 
+
+rse.dif =  0.3903689 (rse = 3212628748 )  ;  parm.dist =  0.001398795 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-29.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 29 
+Gradient vector:  -26159.88 -0.0006922812 7.263288e-08 
+New parameter estimates:  1e-06 62959.24 9.412586 
+
+rse.dif =  -0.1932006 (rse = 3212628748 )  ;  parm.dist =  0.0006922812 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-30.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 30 
+Gradient vector:  -26159.88 0.000342624 -3.594748e-08 
+New parameter estimates:  1e-06 62959.24 9.412586 
+
+rse.dif =  0.09561825 (rse = 3212628748 )  ;  parm.dist =  0.000342624 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-22-31.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Convergence not achieved!</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>aquifer.vmodGau<span class="ot">&lt;-</span><span class="fu">fit.gaussian</span>(aquifer.v,<span class="at">c0=</span><span class="dv">0</span>,<span class="at">cg=</span><span class="dv">50000</span>,<span class="at">ag=</span><span class="dv">50</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Initial parameter estimates:  0 50000 50 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 1 
+Gradient vector:  19162.34 -33401.14 -11.41191 
+New parameter estimates:  19162.34 16598.86 38.58809 
+
+rse.dif =  3299750048 (rse = 3299750048 )  ;  parm.dist =  38507.55 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 2 
+Gradient vector:  -1294.927 2010.017 -18.77473 
+New parameter estimates:  17867.41 18608.87 19.81336 
+
+rse.dif =  -66430135 (rse = 3233319913 )  ;  parm.dist =  2391.1 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 3 
+Gradient vector:  3201.043 -2835.169 9.216254 
+New parameter estimates:  21068.46 15773.71 29.02961 
+
+rse.dif =  -24694350 (rse = 3208625564 )  ;  parm.dist =  4276.09 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 4 
+Gradient vector:  -4345.272 4292.413 -6.361973 
+New parameter estimates:  16723.18 20066.12 22.66764 
+
+rse.dif =  4004881 (rse = 3212630445 )  ;  parm.dist =  6107.884 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 5 
+Gradient vector:  53.88685 -4.270081 2.074271 
+New parameter estimates:  16777.07 20061.85 24.74191 
+
+rse.dif =  -3703977 (rse = 3208926468 )  ;  parm.dist =  54.09555 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 6 
+Gradient vector:  -391.4471 384.4526 -0.5571294 
+New parameter estimates:  16385.62 20446.3 24.18478 
+
+rse.dif =  588163 (rse = 3209514631 )  ;  parm.dist =  548.6666 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 7 
+Gradient vector:  29.55911 -27.0943 0.07968918 
+New parameter estimates:  16415.18 20419.21 24.26447 
+
+rse.dif =  -201438.9 (rse = 3209313192 )  ;  parm.dist =  40.09799 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 8 
+Gradient vector:  -6.581211 6.259206 -0.01207028 
+New parameter estimates:  16408.6 20425.47 24.2524 
+
+rse.dif =  26607.8 (rse = 3209339800 )  ;  parm.dist =  9.082408 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 9 
+Gradient vector:  0.9423146 -0.8928955 0.001794561 
+New parameter estimates:  16409.54 20424.57 24.25419 
+
+rse.dif =  -4077.43 (rse = 3209335722 )  ;  parm.dist =  1.298161 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 10 
+Gradient vector:  -0.1413215 0.1339887 -0.0002673761 
+New parameter estimates:  16409.4 20424.71 24.25393 
+
+rse.dif =  605.1536 (rse = 3209336327 )  ;  parm.dist =  0.194743 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 11 
+Gradient vector:  0.02102884 -0.01993597 3.982407e-05 
+New parameter estimates:  16409.42 20424.69 24.25397 
+
+rse.dif =  -90.18701 (rse = 3209336237 )  ;  parm.dist =  0.02897682 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-12.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 12 
+Gradient vector:  -0.003132718 0.00296995 -5.931842e-06 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  13.43229 (rse = 3209336251 )  ;  parm.dist =  0.004316777 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-13.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 13 
+Gradient vector:  0.0004666088 -0.0004423641 8.835486e-07 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  -2.000767 (rse = 3209336249 )  ;  parm.dist =  0.0006429701 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-14.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 14 
+Gradient vector:  -6.950171e-05 6.589045e-05 -1.316048e-07 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  0.2980142 (rse = 3209336249 )  ;  parm.dist =  9.577086e-05 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-15.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 15 
+Gradient vector:  1.035229e-05 -9.814388e-06 1.960254e-08 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  -0.04438925 (rse = 3209336249 )  ;  parm.dist =  1.426508e-05 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-16.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 16 
+Gradient vector:  -1.542e-06 1.46188e-06 -2.919839e-09 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  0.006612301 (rse = 3209336249 )  ;  parm.dist =  2.124821e-06 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-17.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 17 
+Gradient vector:  2.296994e-07 -2.177628e-07 4.349363e-10 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  -0.0009851456 (rse = 3209336249 )  ;  parm.dist =  3.165152e-07 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-18.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 18 
+Gradient vector:  -3.420782e-08 3.242781e-08 -6.477718e-11 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  0.0001473427 (rse = 3209336249 )  ;  parm.dist =  4.713621e-08 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-19.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 19 
+Gradient vector:  5.086605e-09 -4.821087e-09 9.637383e-12 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  -2.193451e-05 (rse = 3209336249 )  ;  parm.dist =  7.007276e-09 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-20.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 20 
+Gradient vector:  -7.583935e-10 7.161523e-10 -1.439258e-12 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  2.861023e-06 (rse = 3209336249 )  ;  parm.dist =  1.042223e-09 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-21.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 21 
+Gradient vector:  1.019258e-10 -9.775917e-11 1.99309e-13 
+New parameter estimates:  16409.42 20424.69 24.25396 
+
+rse.dif =  -4.768372e-07 (rse = 3209336249 )  ;  parm.dist =  1.415077e-10 
+
+Convergence achieved by sums of squares.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-23-22.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Final parameter estimates:  16409.42 20424.69 24.25396 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>aquifer.vmodWave<span class="ot">&lt;-</span><span class="fu">fit.wave</span>(aquifer.v,<span class="at">c0=</span><span class="dv">0</span>,<span class="at">cw=</span><span class="dv">40000</span>,<span class="at">aw=</span><span class="dv">10</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">30</span>,<span class="at">weighted=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Initial parameter estimates:  0 40000 10 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 1 
+Gradient vector:  18650.32 -21981.27 -0.7942028 
+New parameter estimates:  18650.32 18018.73 9.205797 
+
+rse.dif =  3409704989 (rse = 3409704989 )  ;  parm.dist =  28827.26 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 2 
+Gradient vector:  812.9227 -1109.399 -1.187299 
+New parameter estimates:  19463.25 16909.33 8.018498 
+
+rse.dif =  -289093760 (rse = 3120611230 )  ;  parm.dist =  1375.358 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 3 
+Gradient vector:  -6990.158 6973.566 0.9858099 
+New parameter estimates:  12473.09 23882.9 9.004308 
+
+rse.dif =  24044562 (rse = 3144655792 )  ;  parm.dist =  9873.851 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 4 
+Gradient vector:  7025.438 -6960.473 -1.260353 
+New parameter estimates:  19498.53 16922.43 7.743955 
+
+rse.dif =  -56767551 (rse = 3087888241 )  ;  parm.dist =  9889.639 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 5 
+Gradient vector:  -9210.154 9213.61 1.066674 
+New parameter estimates:  10288.37 26136.04 8.810629 
+
+rse.dif =  175986924 (rse = 3263875165 )  ;  parm.dist =  13027.57 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 6 
+Gradient vector:  11994.7 -11983.26 -2.255679 
+New parameter estimates:  22283.07 14152.77 6.55495 
+
+rse.dif =  -196728543 (rse = 3067146622 )  ;  parm.dist =  16954.98 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 7 
+Gradient vector:  -14060.45 14195.04 -1.578095 
+New parameter estimates:  8222.625 28347.81 4.976855 
+
+rse.dif =  147278852 (rse = 3214425474 )  ;  parm.dist =  19979.87 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 8 
+Gradient vector:  -15826.64 16212.91 0.3854677 
+New parameter estimates:  1e-06 44560.72 5.362323 
+
+rse.dif =  -46983778 (rse = 3167441696 )  ;  parm.dist =  18178.84 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 9 
+Gradient vector:  13145.08 -21444.98 -0.8756698 
+New parameter estimates:  13145.08 23115.75 4.486653 
+
+rse.dif =  -757940879 (rse = 2409500817 )  ;  parm.dist =  25153.13 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 10 
+Gradient vector:  -9434763 9682459 25.73116 
+New parameter estimates:  1e-06 9705575 30.21781 
+
+rse.dif =  1636307005 (rse = 4045807822 )  ;  parm.dist =  9682468 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 11 
+Gradient vector:  20962.2 -9688482 0.02156687 
+New parameter estimates:  20962.2 17093.21 30.23938 
+
+rse.dif =  83628062 (rse = 4129435883 )  ;  parm.dist =  9688504 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-12.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 12 
+Gradient vector:  7173.136 -8587.116 1.22582 
+New parameter estimates:  28135.34 8506.099 31.4652 
+
+rse.dif =  -628497356 (rse = 3500938527 )  ;  parm.dist =  11188.94 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-13.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 13 
+Gradient vector:  2974.651 -2890.861 -4.19572 
+New parameter estimates:  31109.99 5615.237 27.26947 
+
+rse.dif =  -192443200 (rse = 3308495327 )  ;  parm.dist =  4147.969 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-14.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 14 
+Gradient vector:  -2399.351 1443.698 15.69929 
+New parameter estimates:  28710.64 7058.936 42.96876 
+
+rse.dif =  147479203 (rse = 3455974530 )  ;  parm.dist =  2800.25 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-15.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 15 
+Gradient vector:  4786.661 2165.107 -43.14322 
+New parameter estimates:  33497.3 9224.042 1e-06 
+
+rse.dif =  -686128323 (rse = 2769846206 )  ;  parm.dist =  5253.728 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 16 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-16.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  -7188.309 -5.926894e-07 0 
+New parameter estimates:  26308.99 9224.042 1e-06 
+
+rse.dif =  686457465 (rse = 3456303671 )  ;  parm.dist =  7188.309 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 17 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-17.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  -5.339328e-06 -5.926894e-07 0 
+New parameter estimates:  26308.99 9224.042 1e-06 
+
+rse.dif =  0.4889331 (rse = 3456303672 )  ;  parm.dist =  5.372122e-06 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 18 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-18.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  5.926852e-07 -5.926894e-07 0 
+New parameter estimates:  26308.99 9224.042 1e-06 
+
+rse.dif =  1.907349e-06 (rse = 3456303672 )  ;  parm.dist =  8.381857e-07 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 19 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-19.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  5.926931e-07 -5.926894e-07 0 
+New parameter estimates:  26308.99 9224.042 1e-06 
+
+rse.dif =  -9.536743e-07 (rse = 3456303672 )  ;  parm.dist =  8.381908e-07 
+
+Convergence achieved by sums of squares.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-24-20.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Final parameter estimates:  26308.99 9224.042 1e-06 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="dv">65000</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>(<span class="dv">14</span><span class="sc">/</span>x)<span class="sc">*</span><span class="fu">sin</span>(x<span class="sc">/</span><span class="dv">14</span>)),<span class="dv">0</span>,<span class="dv">300</span>,<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">200000</span>))</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(aquifer.v<span class="sc">$</span>bins,aquifer.v<span class="sc">$</span>classic,<span class="at">col=</span><span class="dv">3</span>)</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(aquifer.v<span class="sc">$</span>bins,aquifer.v<span class="sc">$</span>classic,aquifer.v<span class="sc">$</span>n,<span class="at">col=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="dv">200000</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">exp</span>(<span class="sc">-</span>x<span class="sc">/</span><span class="dv">170</span>)),<span class="dv">0</span>,<span class="dv">300</span>)</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(aquifer.v<span class="sc">$</span>bins,aquifer.v<span class="sc">$</span>classic,<span class="at">col=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="dv">65000</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span>(<span class="dv">14</span><span class="sc">/</span>x)<span class="sc">*</span><span class="fu">sin</span>(x<span class="sc">/</span><span class="dv">14</span>)),<span class="dv">0</span>,<span class="dv">300</span>,<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">200000</span>))</span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(aquifer.v<span class="sc">$</span>bins,aquifer.v<span class="sc">$</span>classic,<span class="at">col=</span><span class="dv">3</span>)</span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(aquifer.v<span class="sc">$</span>bins,aquifer.v<span class="sc">$</span>classic,aquifer.v<span class="sc">$</span>n,<span class="at">col=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>aquifer.vmodExp<span class="ot">&lt;-</span><span class="fu">fit.exponential</span>(aquifer.v,<span class="at">c0=</span><span class="dv">0</span>,<span class="at">ce=</span><span class="dv">200000</span>,<span class="at">ae=</span><span class="dv">170</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">30</span>,<span class="at">weighted=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Initial parameter estimates:  0 2e+05 170 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 1 
+Gradient vector:  16365.66 -238859.4 -103.7436 
+New parameter estimates:  16365.66 1e-06 66.25643 
+
+rse.dif =  3826411368 (rse = 3826411368 )  ;  parm.dist =  200668.5 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 2 
+Gradient vector:  7737.246 16547.95 166070861252 
+New parameter estimates:  24102.91 16547.95 166070861318 
+
+rse.dif =  -767474321 (rse = 3058937047 )  ;  parm.dist =  166070861252 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 3 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  3355.03 1.242479e+13 0 
+New parameter estimates:  27457.94 1.242479e+13 166070861318 
+
+rse.dif =  -120011141 (rse = 2938925906 )  ;  parm.dist =  1.242479e+13 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 4 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  423.3165 -663474885968 0 
+New parameter estimates:  27881.25 1.176131e+13 166070861318 
+
+rse.dif =  11801483 (rse = 2950727388 )  ;  parm.dist =  663474885968 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 5 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  3.873181 -6320523090 0 
+New parameter estimates:  27885.12 1.175499e+13 166070861318 
+
+rse.dif =  128956.4 (rse = 2950856345 )  ;  parm.dist =  6320523090 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 6 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  0.02266712 -36921321 0 
+New parameter estimates:  27885.15 1.175495e+13 166070861318 
+
+rse.dif =  752.3639 (rse = 2950857097 )  ;  parm.dist =  36921321 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 7 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  0.0001316946 -214507.3 0 
+New parameter estimates:  27885.15 1.175495e+13 166070861318 
+
+rse.dif =  4.371067 (rse = 2950857102 )  ;  parm.dist =  214507.3 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 8 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  7.650992e-07 -1246.212 0 
+New parameter estimates:  27885.15 1.175495e+13 166070861318 
+
+rse.dif =  0.02539396 (rse = 2950857102 )  ;  parm.dist =  1246.213 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 9 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  4.447233e-09 -7.24441 0 
+New parameter estimates:  27885.15 1.175495e+13 166070861318 
+
+rse.dif =  0.0001473427 (rse = 2950857102 )  ;  parm.dist =  7.244141 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iteration: 10 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lsfit(xmat, y, wt = w, intercept = FALSE): 'X' matrix was collinear</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient vector:  2.31966e-11 -0.03646515 0 
+New parameter estimates:  27885.15 1.175495e+13 166070861318 
+
+rse.dif =  9.536743e-07 (rse = 2950857102 )  ;  parm.dist =  0.03710938 
+
+Convergence achieved by sums of squares.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-28-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Final parameter estimates:  27885.15 1.175495e+13 166070861318 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>aquifer.vmodwave<span class="ot">&lt;-</span><span class="fu">fit.wave</span>(aquifer.v,<span class="at">c0=</span><span class="dv">4000</span>,<span class="at">cw=</span><span class="dv">30000</span>,<span class="at">aw=</span><span class="dv">15</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">0</span>,<span class="at">weighted=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Convergence not achieved!</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>aquifer.vmodExp_0<span class="ot">&lt;-</span><span class="fu">fit.exponential</span>(aquifer.v,<span class="at">c0=</span><span class="dv">0</span>,<span class="at">ce=</span><span class="dv">200000</span>,<span class="at">ae=</span><span class="dv">170</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">0</span>,<span class="at">weighted=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Convergence not achieved!</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>aquifer.vmodwave_0<span class="ot">&lt;-</span><span class="fu">fit.wave</span>(aquifer.v,<span class="at">c0=</span><span class="dv">4000</span>,<span class="at">cw=</span><span class="dv">30000</span>,<span class="at">aw=</span><span class="dv">15</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">0</span>,<span class="at">weighted=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Convergence not achieved!</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>aquifer.spherical<span class="ot">&lt;-</span><span class="fu">fit.spherical</span>(aquifer.v,<span class="at">c0=</span><span class="dv">0</span>,<span class="at">cs=</span><span class="dv">35000</span>,<span class="at">as=</span><span class="dv">70</span>,<span class="at">plot.it=</span><span class="cn">TRUE</span>,<span class="at">iterations=</span><span class="dv">0</span>,<span class="at">weighted=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Convergence not achieved!</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggplot(aquifer.v, aes(bins, classic)) + </span></span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  geom_point() + </span></span>
+<span id="cb156-3"><a href="#cb156-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  geom_line() +</span></span>
+<span id="cb156-4"><a href="#cb156-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  xlab("Rezago espacial, h") + </span></span>
+<span id="cb156-5"><a href="#cb156-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  ylab("Estimador clásico del variograma")+</span></span>
+<span id="cb156-6"><a href="#cb156-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  xlim(0, 300) +</span></span>
+<span id="cb156-7"><a href="#cb156-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  geom_function(aes(color = "Exponencial"),</span></span>
+<span id="cb156-8"><a href="#cb156-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    fun =~4000+150000*(1-exp(-.x/100)) </span></span>
+<span id="cb156-9"><a href="#cb156-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    ) +</span></span>
+<span id="cb156-10"><a href="#cb156-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  geom_function(aes(color = "Seno cardinal"),</span></span>
+<span id="cb156-11"><a href="#cb156-11" aria-hidden="true" tabindex="-1"></a><span class="co">#    fun =~4000+30000*(1-((15/.x)*sin(.x/15)))             </span></span>
+<span id="cb156-12"><a href="#cb156-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    ) + xlab("Rezago espacial") + ylab("Modelos teóricos de #semivariogramas") </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>Kriging_aquifer <span class="ot">&lt;-</span> <span class="fu">point</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(<span class="at">x=</span><span class="dv">10</span>,<span class="at">y=</span><span class="dv">80</span>)))</span>
+<span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a>Kriging_aquifer <span class="ot">&lt;-</span> <span class="fu">krige</span>(Kriging_aquifer, aquifer_points, <span class="st">'resi'</span>, aquifer.vmodExp_0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Using all points.
+  Preparing the kriging system matrix...
+  Inverting the matrix...
+  Predicting.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a>Kriging_aquifer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Point object: x 
+
+   Locations: 1
+
+   Attributes:
+      x
+      y
+      do
+      zhat
+      sigma2hat</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb161"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb161-1"><a href="#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Kriging_aquifer$sigma2hat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a>Kriging_aquifer <span class="ot">&lt;-</span> <span class="fu">point</span>(<span class="fu">data.frame</span>(<span class="fu">list</span>(<span class="at">x=</span><span class="dv">10</span>,<span class="at">y=</span><span class="dv">80</span>)))</span>
+<span id="cb162-2"><a href="#cb162-2" aria-hidden="true" tabindex="-1"></a>Kriging_aquifer <span class="ot">&lt;-</span> <span class="fu">krige</span>(Kriging_aquifer, aquifer_points, <span class="st">'resi'</span>, aquifer.vmodwave_0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Using all points.
+  Preparing the kriging system matrix...
+  Inverting the matrix...
+  Predicting.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>Kriging_aquifer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Point object: x 
+
+   Locations: 1
+
+   Attributes:
+      x
+      y
+      do
+      zhat
+      sigma2hat</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb166"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Kriging_aquifer$zhat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb167"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a href="#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Kriging_aquifer$sigma2hat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb168"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb168-1"><a href="#cb168-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x=</span><span class="fu">seq</span>(<span class="fu">min</span>(aquifer<span class="sc">$</span>Este),<span class="fu">max</span>(aquifer<span class="sc">$</span>Este),<span class="at">by=</span><span class="dv">20</span>),<span class="at">y=</span><span class="fu">seq</span>(<span class="fu">min</span>(aquifer<span class="sc">$</span>Norte),<span class="fu">max</span>(aquifer<span class="sc">$</span>Norte),<span class="at">by=</span><span class="dv">10</span>))</span>
+<span id="cb168-2"><a href="#cb168-2" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>xr <span class="ot">&lt;-</span> <span class="fu">range</span>(grid<span class="sc">$</span>x)</span>
+<span id="cb168-3"><a href="#cb168-3" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>xs <span class="ot">&lt;-</span> grid<span class="sc">$</span>xr[<span class="dv">2</span>] <span class="sc">-</span> grid<span class="sc">$</span>xr[<span class="dv">1</span>]</span>
+<span id="cb168-4"><a href="#cb168-4" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>yr <span class="ot">&lt;-</span> <span class="fu">range</span>(grid<span class="sc">$</span>y)</span>
+<span id="cb168-5"><a href="#cb168-5" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>ys <span class="ot">&lt;-</span> grid<span class="sc">$</span>yr[<span class="dv">2</span>] <span class="sc">-</span> grid<span class="sc">$</span>yr[<span class="dv">1</span>]</span>
+<span id="cb168-6"><a href="#cb168-6" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>max <span class="ot">&lt;-</span> <span class="fu">max</span>(grid<span class="sc">$</span>xs, grid<span class="sc">$</span>ys)</span>
+<span id="cb168-7"><a href="#cb168-7" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>xy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(<span class="fu">c</span>(<span class="fu">matrix</span>(grid<span class="sc">$</span>x, <span class="fu">length</span>(grid<span class="sc">$</span>x), <span class="fu">length</span>(grid<span class="sc">$</span>y))),</span>
+<span id="cb168-8"><a href="#cb168-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fu">matrix</span>(grid<span class="sc">$</span>y, <span class="fu">length</span>(grid<span class="sc">$</span>x), <span class="fu">length</span>(grid<span class="sc">$</span>y), <span class="at">byrow=</span><span class="cn">TRUE</span>))))</span>
+<span id="cb168-9"><a href="#cb168-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(grid<span class="sc">$</span>xy) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>)</span>
+<span id="cb168-10"><a href="#cb168-10" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>point <span class="ot">&lt;-</span> <span class="fu">point</span>(grid<span class="sc">$</span>xy)</span>
+<span id="cb168-11"><a href="#cb168-11" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>krige <span class="ot">&lt;-</span> <span class="fu">krige</span>(grid<span class="sc">$</span>point,aquifer_points,<span class="st">'resi'</span>,aquifer.vmodwave_0,<span class="at">maxdist=</span><span class="dv">180</span>,<span class="at">extrap=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Using points within 180 units of prediction points.
+  Predicting..........................................................................................................................................................................................................................................</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb170"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb170-1"><a href="#cb170-1" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb170-2"><a href="#cb170-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">pty=</span><span class="st">"s"</span>)</span>
+<span id="cb170-3"><a href="#cb170-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(grid<span class="sc">$</span>xy, <span class="at">type=</span><span class="st">"n"</span>, <span class="at">xlim=</span><span class="fu">c</span>(grid<span class="sc">$</span>xr[<span class="dv">1</span>], grid<span class="sc">$</span>xr[<span class="dv">1</span>]<span class="sc">+</span>grid<span class="sc">$</span>max),<span class="at">ylim=</span><span class="fu">c</span>(grid<span class="sc">$</span>yr[<span class="dv">1</span>], grid<span class="sc">$</span>yr[<span class="dv">1</span>]<span class="sc">+</span>grid<span class="sc">$</span>max))</span>
+<span id="cb170-4"><a href="#cb170-4" aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(grid<span class="sc">$</span>x,grid<span class="sc">$</span>y,<span class="fu">matrix</span>(grid<span class="sc">$</span>krige<span class="sc">$</span>zhat,<span class="fu">length</span>(grid<span class="sc">$</span>x),<span class="fu">length</span>(grid<span class="sc">$</span>y)),<span class="at">add=</span><span class="cn">TRUE</span>)</span>
+<span id="cb170-5"><a href="#cb170-5" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(grid<span class="sc">$</span>x,grid<span class="sc">$</span>y,<span class="fu">matrix</span>(grid<span class="sc">$</span>krige<span class="sc">$</span>zhat,<span class="fu">length</span>(grid<span class="sc">$</span>x),<span class="fu">length</span>(grid<span class="sc">$</span>y)),<span class="at">add=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GeoestadísticaConSgeostat_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a href="#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="fu">x11</span>()</span>
+<span id="cb171-2"><a href="#cb171-2" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">no.readonly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb171-3"><a href="#cb171-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">pty=</span><span class="st">"s"</span>)</span>
+<span id="cb171-4"><a href="#cb171-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(grid<span class="sc">$</span>xy, <span class="at">type=</span><span class="st">"n"</span>, <span class="at">xlim=</span><span class="fu">c</span>(grid<span class="sc">$</span>xr[<span class="dv">1</span>], grid<span class="sc">$</span>xr[<span class="dv">1</span>]<span class="sc">+</span>grid<span class="sc">$</span>max),<span class="at">ylim=</span><span class="fu">c</span>(grid<span class="sc">$</span>yr[<span class="dv">1</span>], grid<span class="sc">$</span>yr[<span class="dv">1</span>]<span class="sc">+</span>grid<span class="sc">$</span>max))</span>
+<span id="cb171-5"><a href="#cb171-5" aria-hidden="true" tabindex="-1"></a><span class="fu">image</span>(grid<span class="sc">$</span>x,grid<span class="sc">$</span>y,<span class="fu">matrix</span>(grid<span class="sc">$</span>krige<span class="sc">$</span>sigma2hat,<span class="fu">length</span>(grid<span class="sc">$</span>x),<span class="fu">length</span>(grid<span class="sc">$</span>y)), <span class="at">add=</span><span class="cn">TRUE</span>)</span>
+<span id="cb171-6"><a href="#cb171-6" aria-hidden="true" tabindex="-1"></a><span class="fu">contour</span>(grid<span class="sc">$</span>x,grid<span class="sc">$</span>y,<span class="fu">matrix</span>(grid<span class="sc">$</span>krige<span class="sc">$</span>sigma2hat,<span class="fu">length</span>(grid<span class="sc">$</span>x),<span class="fu">length</span>(grid<span class="sc">$</span>y)),<span class="at">add=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
