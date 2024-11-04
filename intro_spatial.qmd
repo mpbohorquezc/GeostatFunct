@@ -1,0 +1,33 @@
+---
+title: "Cudernos de Estadística Espacial"
+format: html
+editor: visual
+---
+
+
+# Introducción
+
+En los siguientes cuadernos encontrará ejemplos con código sobre estadística espacial. Para poder correr todos los ejemplos clone el repositorio de la siguiente forma. Debe tener instalado previamente `git` en su computador.
+
+```         
+git clone https://github.com/mpbohorquezc/Clases-EE-UN.git
+```
+
+Si esta corriendo sobre Ubuntu o Mint es importante tener algunos compiladores previamente instalados para poder instanciar algunas de las librerías. En general con los siguientes comandos podría correr cualquiera de los cuadernos sin problema
+
+```         
+sudo apt-get install r-base-dev
+sudo apt install liblapack-dev libopenblas-dev
+```
+
+Si alguna dependencia hace falta algunos repositorios los puede descargar e instalar a manera de archivo .tar.gz o se encuentran simplemente en los repositorios del CRAN.
+
+## Indice
+
+-   [1. Introducción](https://mpbohorquezc.github.io/Clases-EE-UN/index.html)
+
+-   [2. Geoestadística con `sgeostat`](https://mpbohorquezc.github.io/Clases-EE-UN/geoestadística-con-sgeostat.html)
+
+-   [3. Geoestadística Univariada con `geoR`](https://mpbohorquezc.github.io/Clases-EE-UN/geoestadística-univariada-con-geor.html)
+
+-   [4. Otros Tipos de Kriging](https://mpbohorquezc.github.io/Clases-EE-UN/otros-tipos-de-kriging.html)

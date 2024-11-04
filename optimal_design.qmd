@@ -1,0 +1,84 @@
+---
+title: "Diseño Óptimo"
+format: html
+editor: visual
+---
+
+## Introducción
+
+La función `FD_optimal_design` permite determinar el diseño espacial óptimo para la recolección de datos funcionales o escalares, basado en un modelo de variograma y un conjunto de puntos donde se desea realizar predicciones. Este diseño es crucial para optimizar la información obtenida en estudios espaciales.
+
+## Uso
+
+``` r
+FD_optimal_design(k, s0, model, fixed_stations = NULL,
+                   scalar = FALSE, nharm = NULL,
+                   method = "lambda", grid = NULL,
+                   map = NULL, plt = FALSE)
+```
+
+## Argumentos
+
+-   **k**: Número de nuevas estaciones a ubicar.
+-   **s0**: Un objeto de tipo `matrix`, `array`, `data.frame` o `SpatialPoints` que contiene las coordenadas de los puntos donde se desea realizar la predicción óptima.
+-   **model**: Un objeto `VariogramModel` del paquete `gstat` o una lista de modelos si se utilizarán diferentes modelos para cada armónico.
+-   **fixed_stations**: Coordenadas de estaciones ya existentes que no se eliminarán. Puede ser de clase `matrix`, `array`, `data.frame`, `SpatialPoints` o `NULL` si no hay estaciones fijas.
+-   **scalar**: Booleano que indica si la optimización es para datos funcionales (`FALSE`) o escalares (`TRUE`). Si es `TRUE`, `nharm` se establece en 1.
+-   **nharm**: Número de armónicos de los componentes principales funcionales a utilizar en la predicción.
+-   **method**: Método de kriging funcional que se utilizará, disponible "lambda" y "scores".
+-   **grid**: Coordenadas donde se pueden ubicar las nuevas estaciones, debe ser de tipo `matrix`, `array`, `data.frame`, `SpatialPoints`.
+-   **map**: Objeto espacial del paquete `sp` donde se ubicarán las nuevas estaciones. También se usará para crear la gráfica.
+-   **plt**: Booleano que indica si se debe generar una gráfica con `ggplot2`.
+
+## Detalles
+
+La función utiliza métodos presentados por Bohorquez et al. (2016) para encontrar la mejor combinación de diseño según la varianza del error de predicción de kriging funcional. Se implementan dos métodos de kriging funcional:
+
+-   **Método "lambda"**: Utiliza FPCA y kriging simple.
+-   **Método "scores"**: Aplica kriging simple a cada armónico y minimiza la varianza total de las predicciones.
+
+## Valor de Retorno
+
+La función devuelve un objeto de clase `OptimalSpatialDesign` que incluye:
+
+-   **new_stations**: Coordenadas de las nuevas estaciones.
+-   **fixed_stations**: Coordenadas de las estaciones fijas.
+-   **plot**: Gráfica generada con `ggplot2`.
+
+## Ejemplo
+
+``` r
+library(gstat)
+s0 <- cbind(2 * runif(100), runif(100))  # coordenadas aleatorias
+fixed_stations <- cbind(2 * runif(4), runif(4))
+x_grid <- seq(0, 2, length = 30)
+y_grid <- seq(0, 1, length = 30)
+grid <- cbind(rep(x_grid, each = 30), rep(y_grid, 30))
+model <- vgm(psill = 5.665312,
+              model = "Exc",
+              range = 8000,
+              kappa = 1.62,
+              add.to = vgm(psill = 0.893,
+                           model = "Nug",
+                           range = 0,
+                           kappa = 0))
+
+OSD <- FD_optimal_design(k = 10, s0 = s0, model = model,
+                         grid = grid, nharm = 2, plt = TRUE,
+                         fixed_stations = fixed_stations)
+
+# Resultados
+OSD$new_stations
+OSD$fixed_stations
+OSD$plot
+class(OSD)
+```
+
+::: callout-note
+El método 'lambda' tiende a ser más rápido que el método 'scores'.
+:::
+
+::: callout-warning
+Cuando el método es 'lambda', el valor minimizado no es la varianza, sino el negativo de una expresión específica en la referencia mencionada
+:::
+

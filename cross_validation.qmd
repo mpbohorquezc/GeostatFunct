@@ -1,0 +1,73 @@
+---
+title: "Validación Cruzada"
+format: html
+editor: visual
+---
+
+
+## Descripción
+
+Esta función realiza la validación cruzada leave-one-out para kriging funcional y cokriging. Deja sistemáticamente una observación fuera del conjunto de datos, ajusta el modelo a los datos restantes y luego realiza una predicción para la observación que se ha dejado fuera. Se utiliza para evaluar el rendimiento predictivo del modelo de kriging funcional.
+
+## Uso
+
+```r
+crossval_loo(object, plot_show)
+```
+
+## Argumentos
+
+- **object**: Un objeto de clase `KS_pred` obtenido con la función `KS_scores_lambdas`.
+
+- **plot_show**: Un valor lógico. Si es `TRUE`, la función generará y mostrará un gráfico de los resultados de la validación cruzada. Si es `FALSE`, no se mostrará ningún gráfico. El valor predeterminado es `TRUE`.
+
+## Valor
+
+La función devuelve un objeto que contiene los resultados de la validación cruzada leave-one-out. Incluye:
+
+- **performance_metrics**: Estadísticas resumidas que describen el rendimiento predictivo general, como el error cuadrático medio.
+
+- **plots**: Generación de gráficos que muestran los resultados de la validación cruzada, controlados por el parámetro `plot_show`. Si `plot_show` es `TRUE`, esto contendrá los gráficos; de lo contrario, estará vacío.
+
+
+## Ejemplos
+
+```r
+# Código de ejemplo que demuestra cómo usar la función crossval_loo
+library(SpatFD)
+library(gstat)
+
+# Cargar datos y coordenadas
+data(AirQualityBogota)
+
+# s_0 ubicación no muestreada. Puede ser un data.frame o matriz con una o más ubicaciones de interés
+newcoorden = data.frame(X = seq(93000, 105000, len = 100), Y = seq(97000, 112000, len = 100))
+# newcoorden = data.frame(X=110000,Y=126000)
+# newcoorden = matrix(c(110000.23, 109000, 109500, 130000.81, 129000, 131000), nrow = 3, ncol = 2, byrow = TRUE)
+
+# Construir el objeto SpatFD
+SFD_PM10 <- SpatFD(PM10, coords = coord[, -1], basis = "Bsplines", 
+                   nbasis = 17, norder = 5, lambda = 0.00002, nharm = 3)
+
+# Modelos de semivariograma para cada campo aleatorio espacial de puntuaciones
+modelos <- list(vgm(psill = 2199288.58, "Wav", range = 1484.57, nugget = 0),
+                vgm(psill = 62640.74, "Mat", range = 1979.43, nugget = 0, kappa = 0.68),
+                vgm(psill = 37098.25, "Exp", range = 6433.16, nugget = 0))
+
+# Kriging funcional. Predicción espacial funcional en cada ubicación de interés
+# method = "lambda"
+# Cálculo de lambda_i
+KS_SFD_PM10_l <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "lambda", 
+                                    model = modelos)
+# method = "scores"
+# Kriging simple de puntuaciones
+KS_SFD_PM10_sc <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "scores", model = modelos)
+# method = "both"
+KS_SFD_PM10_both <- KS_scores_lambdas(SFD_PM10, newcoorden, method = "both", model = modelos)
+
+# Validación Cruzada 
+crossval_loo(KS_SFD_PM10_l)
+crossval_loo(KS_SFD_PM10_sc)
+crossval_loo(KS_SFD_PM10_both)
+```
+

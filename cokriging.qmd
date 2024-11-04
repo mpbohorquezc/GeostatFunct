@@ -55,6 +55,5 @@ cokrig = COKS_scores_lambdas(SFD_PM10_NO2, newcoords, model1)
 ```
 
 ```{r}
-cokrig$modelfit
-
+#cokrig$modelfit
 ```

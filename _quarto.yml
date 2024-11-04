@@ -9,35 +9,59 @@ website:
     style: "docked"
     search: true
     contents:
-      - href: index.qmd
-        text: Home
-      - text: 'About'
-        href: about.qmd
+      - href: intro_spatial.qmd
+        text: Cuadernos de Estadística Espacial
+      - section: "Geoestadística"
+        contents:
+          - href: GeoestadísticaConSgeostat.qmd
+            text: Geoestadística con Sgeostat
+          - href: GeoestadisticaUnivariadaConGeoR.qmd
+            text: Geoestadística Univariada con GeoR
+          - href: Kriging_puntual.qmd
+            text: Kriging
+      - section: "Modelos de Regresión Espacial"
+        # contents:
+        #  - href: modelos_regresion.qmd
+          #  text: Modelos de Regresión Espacial
+          # - href: leukemia.qmd
+          #   text: Modelado Espaciald de Leucemia
+      - section: "Estadística Espacial Funcional"
+        contents:
+          - href: index.qmd
+            text: Home
+          - href: about.qmd
+            text: About
       - section: "Objetos"
-        contents: 
-        - text: 'SpatFD'
-          href: spatfd_object.qmd
-        - text: 'gfdata'
-          href: gfdata.qmd
+        contents:
+          - href: spatfd_object.qmd
+            text: SpatFD
+          - href: gfdata.qmd
+            text: gfdata
       - section: "Datasets"
         contents:
-          - text: 'AirQualityBogota'
-            href: airqualitybogota.qmd
-          - text: 'Vowels'
-            href: vowels.qmd
-          - text: 'CokMexico'
-            href: cokmexico.qmd
+          - href: airqualitybogota.qmd
+            text: AirQualityBogota
+          - href: vowels.qmd
+            text: Vowels
+          - href: cokmexico.qmd
+            text: CokMexico
       - section: "Kriging"
         contents:
-          - kriging.qmd
-          - cokriging.qmd
+          - href: kriging.qmd
+            text: Kriging
+          - href: cokriging.qmd
+            text: Cokriging
+      - section: "Diseño Óptimo"
+        contents:
+          - href: optimal_design.qmd
+            text: Diseño Óptimo
     tools:
-        - icon: github
-          menu:
-            - text: Source Code
-              href:  https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/tree/main
-            - text: Report a Bug
-              href:  https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/issues
+      - icon: github
+        menu:
+          - text: Source Code
+            href: https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/tree/main
+          - text: Report a Bug
+            href: https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/issues
 
 format:
   html:
@@ -46,4 +70,3 @@ format:
     toc: true
 
 editor: visual
-

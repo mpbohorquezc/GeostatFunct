@@ -1,8 +1,8 @@
 {
-  "hash": "3982854c97e8af8035a21d625e34a27d",
+  "hash": "520d5137551b6b7317cbb11b909f3e52",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle: \"docs_spatfd\"\n---\n\n\nThis is a Quarto website.\n\nTo learn more about Quarto websites visit <https://quarto.org/docs/websites>.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n1 + 1\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n",
+    "markdown": "---\ntitle: \"Cuadernos Estadística Espacial\"\nauthor: 'Martha Bohorquez'\ndate: \"2023-I\"\nsite: bookdown::bookdown_site\n---\n\n\n# Introducción\n\nEn los siguientes cuadernos encontrará ejemplos con código sobre estadística espacial. Para poder correr todos los ejemplos clone el repositorio de la siguiente forma. Debe tener instalado previamente `git` en su computador.\n\n```         \ngit clone https://github.com/mpbohorquezc/Clases-EE-UN.git\n```\n\nSi esta corriendo sobre Ubuntu o Mint es importante tener algunos compiladores previamente instalados para poder instanciar algunas de las librerías. En general con los siguientes comandos podría correr cualquiera de los cuadernos sin problema\n\n```         \nsudo apt-get install r-base-dev\nsudo apt install liblapack-dev libopenblas-dev\n```\n\nSi alguna dependencia hace falta algunos repositorios los puede descargar e instalar a manera de archivo .tar.gz o se encuentran simplemente en los repositorios del CRAN.\n\n## Indice\n\n-   [1. Introducción](https://mpbohorquezc.github.io/Clases-EE-UN/index.html)\n\n-   [2. Geoestadística con `sgeostat`](https://mpbohorquezc.github.io/Clases-EE-UN/geoestadística-con-sgeostat.html)\n\n-   [3. Geoestadística Univariada con `geoR`](https://mpbohorquezc.github.io/Clases-EE-UN/geoestadística-univariada-con-geor.html)\n\n-   [4. Otros Tipos de Kriging](https://mpbohorquezc.github.io/Clases-EE-UN/otros-tipos-de-kriging.html)\n",
     "supporting": [],
     "filters": [
       "rmarkdown/pagebreak.lua"

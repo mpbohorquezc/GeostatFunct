@@ -25,5 +25,32 @@
   },
   "cokriging.qmd": {
     "cokriging.html": "64a1b66f"
+  },
+  "index.Rmd": {
+    "index.html": "a4743879"
+  },
+  "intro_spatial.Rmd": {
+    "intro_spatial.html": "0c98d69a"
+  },
+  "intro_spatial.qmd": {
+    "intro_spatial.html": "732e2881"
+  },
+  "GeoestadísticaConSgeostat.qmd": {
+    "GeoestadísticaConSgeostat.html": "6cd4ab13"
+  },
+  "GeoestadisticaUnivariadaConGeoR.qmd": {
+    "GeoestadisticaUnivariadaConGeoR.html": "8a7896c9"
+  },
+  "Kriging_puntual.qmd": {
+    "Kriging_puntual.html": "81501004"
+  },
+  "optimal_design.qmd": {
+    "optimal_design.html": "ee90edd1"
+  },
+  "cross_validation.qmd": {
+    "cross_validation.html": "f5721464"
+  },
+  "classification.qmd": {
+    "classification.html": "40cdcebe"
   }
 }

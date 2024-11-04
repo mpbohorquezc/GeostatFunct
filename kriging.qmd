@@ -113,20 +113,19 @@ Podemos graficar las predicciones usando la función ggplot_KS
 
 ```{r}
 
-ggplot_KS(KS_SFD_PM10_both,show.varpred = FALSE,
-          main = "Plot 1 - Using Scores",
-          main2 = "Plot 2 - Using Lambda",
-          ylab = "PM10")
+#ggplot_KS(KS_SFD_PM10_both,show.varpred = FALSE,
+ #         main = "Plot 1 - Using Scores",
+  #        main2 = "Plot 2 - Using Lambda",
+   #       ylab = "PM10")
           
 ```
 
 Así mismo, podemos graficar las predicciones suavizadas en tiempos específicos.
 
 ```{r}
-ggmap_KS(KS_SFD_PM10_both,
-         map_path = map,
-         window_time = c(2108),
-         method = "lambda",
-         zmin = 50,
-         zmax = 120)
+#ggmap_KS(KS_SFD_PM10_both,
+ #        map_path = map,
+  #       window_time = c(2108),
+   #      method = "lambda",
+    #     zmin = 50,
 ```
