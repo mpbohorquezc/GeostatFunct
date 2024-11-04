@@ -6,7 +6,7 @@ editor: visual
 
 # Kriging
 
-Kriging es una técnica de interpolación espacial que permite estimar valores desconocidos en una superficie a partir de los valores conocidos en ubicaciones cercanas. Es especialmente útil para datos de alta densidad y para datos con estructuras espaciales complejas. En este cuaderno, vamos a explorar los diferentes tipos de Kriging y cómo implementarlos en R.
+Kriging es una técnica de interpolación espacial que permite predecir valores desconocidos en una superficie a partir de los valores conocidos en ubicaciones cercanas. Es especialmente útil para datos de alta densidad y para datos con estructuras espaciales complejas. En este cuaderno, vamos a explorar los diferentes tipos de Kriging y cómo implementarlos en R.
 
 Antes de comenzar, asegúrate de tener instalados los siguientes paquetes de R: "gstat", "sp", "raster" y "ggplot2". Si no los tienes, puedes instalarlos mediante el siguiente código:
 
@@ -35,13 +35,13 @@ proj4string(data) <- CRS("+proj=utm +zone=33 +datum=WGS84")
 
 ## Introducción Kriging
 
-Kriging es una técnica de interpolación espacial que se basa en la teoría de la estadística espacial. La idea fundamental detrás de Kriging es que la estimación del valor desconocido en una ubicación dada se hace como una combinación lineal ponderada de los valores conocidos en las ubicaciones vecinas. Los pesos de esta combinación se determinan utilizando la información de covarianza entre los puntos en el espacio. Esta técnica se utiliza comúnmente en estadística espacial, geología, minería, geofísica, oceanografía y otros campos que involucran la toma de medidas en lugares dispersos en el espacio.
+Kriging es un método de predicción espacial para variables que varían continuamente en el espacio. La idea fundamental detrás de Kriging es que la predicción de un valor desconocido en una ubicación dada se hace como una combinación lineal ponderada de los valores observados en las ubicaciones vecinas. Los pesos de esta combinación se determinan utilizando la información de la covarianza entre el lugar a predecir y las ubicaciones observadas en el espacio. Esta técnica se utiliza comúnmente en estadística espacial, geología, minería, geofísica, oceanografía y otros campos que involucran la toma de medidas en lugares dispersos en el espacio.
 
 El nombre "Kriging" proviene del geólogo Danie G. Krige, quien fue el primero en aplicar esta técnica para la exploración de minerales en Sudáfrica en la década de 1950
 
 ## Kriging Simple
 
-En esta sección se explica el método de kriging simple, que es una técnica de interpolación espacial que utiliza una función de tendencia conocida y un modelo de variograma ajustado a los datos. El objetivo es estimar el valor de una variable Z en una ubicación s0 a partir de los valores observados en n ubicaciones si cercanas. El kriging simple asume que la variable Z se puede descomponer como:
+En esta sección se explica el método de kriging simple, que es una técnica de interpolación espacial que utiliza una función de tendencia conocida y un modelo de variograma ajustado a los datos. El objetivo es predecir el valor de una variable $Z$ en una ubicación $s_0$ a partir de los valores observados en n ubicaciones si cercanas. El kriging simple asume que la variable $Z$ se puede descomponer como:
 
 $$Z(s) = μ(s) + ε(s),$$
 
@@ -49,11 +49,11 @@ donde $μ(s)$ es la función de tendencia conocida y $ε(s)$ es un proceso espac
 
 $$p(Z,s_0) = μ(s_0) + ∑_{i=1}^n λ_i (Z(s_i) - μ(s_i)),$$
 
-donde los pesos $λ_i$ se obtienen resolviendo el sistema de ecuaciones:
+donde las ponderaciones $λ_i$ se obtienen resolviendo el sistema de ecuaciones:
 
 $$∑_{j=1}^n λ_j C(s_i,s_j) - C(s_i,s_0) = 0, \  i = 1,...,n.$$
 
-El kriging simple minimiza el error cuadrático medio entre el valor estimado y el verdadero, que se denomina varianza kriging y se calcula como:
+El kriging simple se encuentra minimizando la varianza del error de predicción, esto es, la varianza dela diferencia entre el predictor y el valor verdadero de la variable y que está dado por:
 
 $$σ^2 KS(s_0) = C(s_0,s_0) - ∑_{i=1}^n ∑_{j=1}^n λ_i λ_j C(s_i,s_j).$$
 
