@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Modelos de regresión espacial – SpatFD</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9d258ee88d27ea315e6ccaead3bf18d8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
+      SpatFD
+      </li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">SpatFD</a> 
+        <div class="sidebar-tools-main">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/tree/main">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://github.com/mpbohorquezc/SpatFD-Functional-Geostatistics/issues">
+            Report a Bug
+            </a>
+          </li>
+      </ul>
+    </div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#estudio-de-mercadeo" id="toc-estudio-de-mercadeo" class="nav-link active" data-scroll-target="#estudio-de-mercadeo">Estudio de Mercadeo</a></li>
+  <li><a href="#preparación" id="toc-preparación" class="nav-link" data-scroll-target="#preparación">Preparación</a>
+  <ul class="collapse">
+  <li><a href="#paquetes" id="toc-paquetes" class="nav-link" data-scroll-target="#paquetes">Paquetes</a></li>
+  <li><a href="#cruce-de-información-y-arreglo-de-coordenadas" id="toc-cruce-de-información-y-arreglo-de-coordenadas" class="nav-link" data-scroll-target="#cruce-de-información-y-arreglo-de-coordenadas">Cruce de información y arreglo de coordenadas</a></li>
+  </ul></li>
+  <li><a href="#mapa-de-valores-observados" id="toc-mapa-de-valores-observados" class="nav-link" data-scroll-target="#mapa-de-valores-observados">Mapa de valores observados</a></li>
+  <li><a href="#matriz-de-vecindades" id="toc-matriz-de-vecindades" class="nav-link" data-scroll-target="#matriz-de-vecindades">Matriz de vecindades</a>
+  <ul class="collapse">
+  <li><a href="#tipos-de-matrices-de-vecindad" id="toc-tipos-de-matrices-de-vecindad" class="nav-link" data-scroll-target="#tipos-de-matrices-de-vecindad">Tipos de Matrices de Vecindad</a></li>
+  </ul></li>
+  <li><a href="#pruebas-de-autocorrelación" id="toc-pruebas-de-autocorrelación" class="nav-link" data-scroll-target="#pruebas-de-autocorrelación">Pruebas de Autocorrelación</a>
+  <ul class="collapse">
+  <li><a href="#índice-de-moran" id="toc-índice-de-moran" class="nav-link" data-scroll-target="#índice-de-moran">Índice de Moran</a></li>
+  <li><a href="#local-g" id="toc-local-g" class="nav-link" data-scroll-target="#local-g">Local G</a></li>
+  </ul></li>
+  <li><a href="#regresión-espacial" id="toc-regresión-espacial" class="nav-link" data-scroll-target="#regresión-espacial">Regresión Espacial</a>
+  <ul class="collapse">
+  <li><a href="#slx-spatial-lag-of-x" id="toc-slx-spatial-lag-of-x" class="nav-link" data-scroll-target="#slx-spatial-lag-of-x"><strong>SLX (Spatial Lag of X)</strong></a></li>
+  <li><a href="#modelo-lag-sar---spatial-autoregressive" id="toc-modelo-lag-sar---spatial-autoregressive" class="nav-link" data-scroll-target="#modelo-lag-sar---spatial-autoregressive"><strong>Modelo Lag (SAR - Spatial Autoregressive)</strong></a></li>
+  <li><a href="#modelo-de-error-espacial-sem---spatial-error-model" id="toc-modelo-de-error-espacial-sem---spatial-error-model" class="nav-link" data-scroll-target="#modelo-de-error-espacial-sem---spatial-error-model"><strong>Modelo de Error Espacial (SEM - Spatial Error Model)</strong></a></li>
+  <li><a href="#modelo-de-durbin-espacial-con-error-sdem---spatial-durbin-error-model" id="toc-modelo-de-durbin-espacial-con-error-sdem---spatial-durbin-error-model" class="nav-link" data-scroll-target="#modelo-de-durbin-espacial-con-error-sdem---spatial-durbin-error-model"><strong>Modelo de Durbin Espacial con Error (SDEM - Spatial Durbin Error Model)</strong></a></li>
+  <li><a href="#modelo-durbin-espacial-sdm---spatial-durbin-model" id="toc-modelo-durbin-espacial-sdm---spatial-durbin-model" class="nav-link" data-scroll-target="#modelo-durbin-espacial-sdm---spatial-durbin-model"><strong>Modelo Durbin Espacial (SDM - Spatial Durbin Model)</strong></a></li>
+  <li><a href="#modelo-manski-manski-model" id="toc-modelo-manski-manski-model" class="nav-link" data-scroll-target="#modelo-manski-manski-model"><strong>Modelo Manski (Manski Model)</strong></a></li>
+  <li><a href="#modelo-sarar-kelejian-prucha-cliff-ord-sac" id="toc-modelo-sarar-kelejian-prucha-cliff-ord-sac" class="nav-link" data-scroll-target="#modelo-sarar-kelejian-prucha-cliff-ord-sac"><strong>Modelo SARAR (Kelejian-Prucha, Cliff-Ord, SAC)</strong></a></li>
+  <li><a href="#cálculo-de-variables-significativas" id="toc-cálculo-de-variables-significativas" class="nav-link" data-scroll-target="#cálculo-de-variables-significativas">Cálculo de variables significativas</a></li>
+  <li><a href="#mapa-estimado" id="toc-mapa-estimado" class="nav-link" data-scroll-target="#mapa-estimado">Mapa estimado</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Modelos de regresión espacial</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="estudio-de-mercadeo" class="level2">
+<h2 class="anchored" data-anchor-id="estudio-de-mercadeo">Estudio de Mercadeo</h2>
+<p>En este apartado se comparan varios tipos de modelos de regresión espacial para ver con cuál se obtiene el mejor ajuste. Se consideran modelos autoregresivos y de medias móviles así como su combinación.</p>
+</section>
+<section id="preparación" class="level2">
+<h2 class="anchored" data-anchor-id="preparación">Preparación</h2>
+<section id="paquetes" class="level3">
+<h3 class="anchored" data-anchor-id="paquetes">Paquetes</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)    <span class="co"># Graphics library</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)         <span class="co"># Spatial data types and handling</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.12.2, GDAL 3.9.3, PROJ 9.4.1; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mapview)    <span class="co"># Visualize spatial data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)      <span class="co"># Diagnosing spatial dependence</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: spData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>To access larger datasets in this package, install the spDataLarge
+package with: `install.packages('spDataLarge',
+repos='https://nowosad.github.io/drat/', type='source')`</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spatialreg) <span class="co"># Spatial lag and spatial error model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: Matrix</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'spatialreg'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:spdep':
+
+    get.ClusterOption, get.coresOption, get.mcOption,
+    get.VerboseOption, get.ZeroPolicyOption, set.ClusterOption,
+    set.coresOption, set.mcOption, set.VerboseOption,
+    set.ZeroPolicyOption</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sp)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GISTools)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spdep)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'psych'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:car':
+
+    logit</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:ggplot2':
+
+    %+%, alpha</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoClass)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: ade4</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'ade4'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:spdep':
+
+    mstree</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: ggrepel</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: xtable</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: scatterplot3d</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(<span class="st">"GWmodel"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: GWmodel</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: robustbase</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: Rcpp</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome to GWmodel version 2.4-2.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: viridisLite</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"mapsRinteractive"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggspatial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>En este paso, se cargan los datos principales desde un archivo Excel (BASE.xlsx) y se leen las fronteras geográficas de Colombia por departamentos usando un archivo shapefile. Los datos espaciales en formato shapefile son cargados con la función st_read de la librería sf.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura de Datos</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>BASE <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/BASE.xlsx"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Lectura del Shape de Colombia por Departamentos</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>Colombia <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/Geodatabase Colombia"</span>, </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">layer =</span> <span class="st">"departamentos"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `departamentos' from data source 
+  `D:\SpatFD-Functional-Geostatistics\data\Geodatabase Colombia' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 33 features and 6 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 166883.7 ymin: 23827.08 xmax: 1804084 ymax: 1984107
+CRS:           NA</code></pre>
+</div>
+</div>
+</section>
+<section id="cruce-de-información-y-arreglo-de-coordenadas" class="level3">
+<h3 class="anchored" data-anchor-id="cruce-de-información-y-arreglo-de-coordenadas">Cruce de información y arreglo de coordenadas</h3>
+<p>Realizamos un cruce de los datos de los departamentos de Colombia con los datos de mercado. Además, se transforma el sistema de coordenadas geográficas de los datos al sistema UTM (Universal Transverse Mercator) para mejorar la precisión en los cálculos espaciales. Esto es especialmente relevante en análisis de distancias y vecindades.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Insumo <span class="ot">=</span> <span class="fu">merge</span>(Colombia, BASE, <span class="at">by.x=</span><span class="st">"COD_DANE"</span>, <span class="at">by.y=</span><span class="st">"Cod"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>Insumo <span class="ot">=</span> <span class="fu">subset</span>(Insumo[<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">31</span>,<span class="dv">33</span>),])</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión a Coordenadas UTM</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>Crs.geo <span class="ot">&lt;-</span> <span class="st">"+proj=tmerc +lat_0=4.599047222222222 +lon_0=-74.08091666666667 +k=1 +x_0=1000000 +y_0=1000000 +ellps=intl +towgs84=307,304,-318,0,0,0,0 +units=m +no_defs"</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(Insumo) <span class="ot">&lt;-</span> Crs.geo</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>Insumo.utm <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(Insumo, <span class="at">crs =</span> <span class="dv">3724</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="mapa-de-valores-observados" class="level2">
+<h2 class="anchored" data-anchor-id="mapa-de-valores-observados">Mapa de valores observados</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  Mapa de Valores Observados</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#dev.new() #windows()</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Insumo) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> CAP_BAC)) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option=</span><span class="st">'viridis'</span>) <span class="sc">+</span>  <span class="co"># Escala de colores para la variable</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Valores Locales"</span>) <span class="sc">+</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Valores Observados para las captaciones del banco agrario</span><span class="sc">\n</span><span class="st">en Colombia, cuarto trimestre 2020"</span>) <span class="sc">+</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Añadir la leyenda personalizada</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Añadir escala</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_scale</span>(<span class="at">location =</span> <span class="st">"bl"</span>, <span class="at">width_hint =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotation_north_arrow</span>(<span class="at">location =</span> <span class="st">"tr"</span>, <span class="at">which_north =</span> <span class="st">"true"</span>, <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"cm"</span>), <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"cm"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regresion_espacial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="matriz-de-vecindades" class="level2">
+<h2 class="anchored" data-anchor-id="matriz-de-vecindades">Matriz de vecindades</h2>
+<p>En el análisis espacial, las matrices de vecindad son estructuras que definen las relaciones espaciales entre las unidades de observación. En este caso, cada departamento de Colombia tiene una “vecindad” que se define por su proximidad a otros departamentos.</p>
+<p>Centroides de las Áreas: Primero, calculamos los centroides de cada uno de los polígonos (departamentos) usando <code>st_centroid()</code>. Los centroides son los puntos centrales de los polígonos, lo que nos permite calcular distancias entre ellos.</p>
+<p>Matriz de Distancias: Usamos <code>st_distance()</code> para calcular la matriz de distancias entre los centroides de los departamentos. Esto nos da una medida de la cercanía geográfica entre las unidades.</p>
+<p>Matriz de Vecindades (Insumo.nb): Se utiliza la función <code>poly2nb()</code> del paquete spdep para crear una lista de vecinos basada en la geometría de los departamentos. El parámetro <code>queen = TRUE</code> asegura que un departamento se considere vecino de otro si comparten una frontera común o un vértice.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Centroides de las Áreas</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>Centroids <span class="ot">&lt;-</span> <span class="fu">st_centroid</span>(Insumo.utm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: st_centroid assumes attributes are constant over geometries</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de Distancias entre los Centroides</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>Wdist <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(Centroids)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz W de vecindades</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>Insumo.nb <span class="ot">&lt;-</span> <span class="fu">poly2nb</span>(Insumo.utm, <span class="at">queen =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in poly2nb(Insumo.utm, queen = TRUE): some observations have no neighbours;
+if this seems unexpected, try increasing the snap argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in poly2nb(Insumo.utm, queen = TRUE): neighbour object has 2 sub-graphs;
+if this sub-graph count seems unexpected, try increasing the snap argument.</code></pre>
+</div>
+</div>
+<section id="tipos-de-matrices-de-vecindad" class="level3">
+<h3 class="anchored" data-anchor-id="tipos-de-matrices-de-vecindad">Tipos de Matrices de Vecindad</h3>
+<p>Las matrices de vecindad pueden definirse de diferentes maneras. Aquí se muestran algunas opciones comunes:</p>
+<p>Matriz binaria de vecindad: Una matriz donde los valores son 1 si los departamentos son vecinos (según la geometría), y 0 si no lo son. Esto es útil para análisis como los modelos de regresión espacial, donde la vecindad puede influir en la variable dependiente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Departamentos <span class="ot">&lt;-</span> Insumo<span class="sc">$</span>Departamento</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(Insumo.nb)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>MatW <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n, <span class="at">dimnames =</span> <span class="fu">list</span>(Departamentos, Departamentos))</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  vecinos <span class="ot">&lt;-</span> Insumo.nb[[i]]</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  MatW[i, vecinos] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Matrices de vecindad ponderadas: Existen varios tipos de ponderación para las matrices de vecindad, que reflejan diferentes grados de proximidad entre los departamentos. Estas ponderaciones pueden basarse en distancias o en relaciones de contigüidad. Los estilos más comunes son:
+<ul>
+<li>Estilo “B” (Binary): Simplemente indica si dos departamentos son vecinos o no (como la matriz binaria).</li>
+<li>Estilo “C” (Contiguity): Se utiliza cuando los vecinos comparten una frontera común.</li>
+<li>Estilo “W” (Weights): Utiliza una matriz de pesos basada en distancias, donde los vecinos más cercanos tienen mayor peso.</li>
+<li>Estilo “U”(Unweighted): En este estilo, los vecinos se definen de forma binaria (con un valor de 1 si hay vecindad y 0 si no la hay), pero a diferencia de otros estilos, no se toma en cuenta el tipo de vecindad exacta (como si comparten frontera o vértice).</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#---</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># MATRIZ DE VECINDADES (W)</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Opcional: convierte la lista de vecinos en una matriz binaria de vecindades si se necesita</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>Departamentos <span class="ot">&lt;-</span> Insumo<span class="sc">$</span>Departamento</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(Insumo.nb)</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>MatW <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n, <span class="at">dimnames =</span> <span class="fu">list</span>(Departamentos, Departamentos))</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  vecinos <span class="ot">&lt;-</span> Insumo.nb[[i]]</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  MatW[i, vecinos] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternativamente, usa diferentes estilos de ponderación</span></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>Insumo.lw <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Insumo.nb, <span class="at">zero.policy =</span> <span class="cn">TRUE</span> )</span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>Insumo.lwb <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Insumo.nb, <span class="at">style =</span> <span class="st">"B"</span>,<span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>Insumo.lwc <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Insumo.nb, <span class="at">style =</span> <span class="st">"C"</span>,<span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>Insumo.lwu <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Insumo.nb, <span class="at">style =</span> <span class="st">"U"</span>,<span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>Insumo.lww <span class="ot">&lt;-</span> <span class="fu">nb2listw</span>(Insumo.nb, <span class="at">style =</span> <span class="st">"W"</span>,<span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="pruebas-de-autocorrelación" class="level2">
+<h2 class="anchored" data-anchor-id="pruebas-de-autocorrelación">Pruebas de Autocorrelación</h2>
+<section id="índice-de-moran" class="level3">
+<h3 class="anchored" data-anchor-id="índice-de-moran">Índice de Moran</h3>
+<p>El índice de Moran es una medida global utilizada para cuantificar la autocorrelación espacial en un conjunto de datos geoespaciales. Este índice evalúa si los valores de una variable en una región tienden a estar agrupados en áreas vecinas o, por el contrario, dispersos. Se calcula comparando el valor de la variable en cada unidad espacial con los valores en sus vecinas, ponderados por la distancia o vecindad. El índice varía entre -1 y 1: un valor cercano a 1 indica que los valores de la variable están positivamente autocorrelacionados, es decir, las unidades cercanas tienen valores similares; un valor cercano a -1 sugiere autocorrelación negativa, donde las unidades cercanas tienen valores opuestos; y un valor cercano a 0 implica ausencia de autocorrelación espacial, lo que significa que los valores están distribuidos aleatoriamente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(Insumo<span class="sc">$</span>CAP_BAC, Insumo.lw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  Insumo$CAP_BAC  
+weights: Insumo.lw  
+n reduced by no-neighbour observations  
+
+Moran I statistic standard deviate = 1.8248, p-value = 0.03401
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+      0.140449554      -0.033333333       0.009069006 </code></pre>
+</div>
+</div>
+<p>El resultado del test de Moran que se presenta indica lo siguiente:</p>
+<p>Moran I statistic: En este caso, el valor de 0.1404 sugiere una autocorrelación espacial positiva débil, lo que implica que los valores cercanos de la variable CAP_BAC podrían presentar una ligera tendencia a estar agrupados.</p>
+<p>Expectation (Esperanza): La esperanza teórica del índice de Moran bajo la hipótesis nula es -0.0333. Este valor refleja la media esperada del índice de Moran si no existiera autocorrelación espacial (es decir, si los valores de la variable se distribuyeran aleatoriamente).</p>
+<p>Variance (Varianza): La varianza de la estadística de Moran es 0.0091. La varianza describe la dispersión de los valores observados del índice de Moran respecto a su valor esperado bajo la hipótesis nula.</p>
+<p>Moran I statistic standard deviate: La desviación estándar de la estadística de Moran es 1.8248. p-value: El valor p es 0.03401. Esto indica que la probabilidad de observar una estadística de Moran igual o más extrema que la observada bajo la hipótesis nula (sin autocorrelación espacial) es de aproximadamente 3.4%. Dado que este valor p es menor que el umbral común de 0.05, podemos rechazar la hipótesis nula de que no hay autocorrelación espacial significativa y concluir que hay evidencia estadística de autocorrelación espacial positiva en los datos de la variable CAP_BAC.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.plot</span>(Insumo<span class="sc">$</span>CAP_BAC, </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>           Insumo.lw, </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">labels=</span><span class="fu">as.character</span>(Insumo<span class="sc">$</span>Departamento), </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">xlab=</span><span class="st">"Captaciones BAC"</span>, </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">ylab=</span><span class="st">"Captaciones BAC rezagado"</span>, </span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">las=</span><span class="dv">1</span>, </span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">pch=</span><span class="dv">16</span>, </span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">cex=</span><span class="fl">0.5</span>)</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>, </span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"I de Moran: 0.1530"</span>, <span class="st">"Valor P:      0.02262"</span>), </span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">cex=</span><span class="dv">1</span>,</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">bg=</span><span class="st">'lightgreen'</span>)</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Dispersograma de Moran para las captaciones del banco agrario en </span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a><span class="st">los Departamentos de Colombia, cuarto trimestre 2020"</span>, <span class="at">cex.main=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regresion_espacial_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="local-g" class="level3">
+<h3 class="anchored" data-anchor-id="local-g">Local G</h3>
+<p>El Local G es un índice de autocorrelación espacial que complementa el índice de Moran al permitir la identificación de patrones locales de agrupamiento o dispersión en los datos. Mientras que el índice de Moran proporciona una medida global de la autocorrelación espacial, el Local G permite detectar si ciertas áreas específicas presentan una concentración significativa de valores similares (o diferentes). Este índice se calcula para cada unidad espacial, tomando en cuenta los valores en sus vecinas más cercanas. Los valores de Local G más altos indican áreas de alta concentración de valores similares, mientras que los valores negativos o bajos indican zonas de baja concentración o patrones de dispersión. Es útil para identificar clústeres locales de alta o baja intensidad, lo que permite un análisis más detallado de las estructuras espaciales en los datos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>nearng <span class="ot">=</span> <span class="fu">dnearneigh</span>(<span class="fu">st_coordinates</span>(Insumo.utm)[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="dv">0</span>, <span class="dv">550</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>Insumo.lw.g <span class="ot">=</span> <span class="fu">nb2listw</span>(nearng, <span class="at">style=</span><span class="st">"B"</span>, <span class="at">zero.policy =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><code>dnearneigh</code>: Esta función calcula las vecindades entre los elementos espaciales según una distancia determinada. En este caso, se utiliza st_coordinates(Insumo.utm)[, 1:2] para obtener las coordenadas de los departamentos en el sistema de referencia espacial UTM, y se establecen dos parámetros: 0 (distancia mínima) y 550 (distancia máxima) para definir qué unidades espaciales están cerca entre sí.</li>
+<li><code>nb2listw</code>: Convierte la vecindad obtenida (nearng) en una lista de pesos espaciales, donde style=“B” indica que la matriz de vecindad será binaria (vecinos cercanos reciben un valor de 1, y los demás reciben 0). Además, zero.policy = T indica que se manejan correctamente los casos en los que algunas unidades no tienen vecinos (se asigna un valor de 0).</li>
+<li><code>localG</code>: Esta función calcula el índice Local G para la variable CAP_BAC, utilizando la matriz de vecindad definida anteriormente. El resultado muestra el valor de Local G para cada unidad espacial (departamento), lo que permite identificar los clústeres locales de valores similares en CAP_BAC.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Local G</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>localG <span class="ot">=</span> <span class="fu">localG</span>(Insumo<span class="sc">$</span>CAP_BAC, Insumo.lw); localG</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  0.155681557 -0.712138366  1.156581529  0.223053281  1.225680585
+ [6]  1.780856038 -0.731942275 -0.060298220 -0.295608194  0.657477592
+[11]  2.277561982  0.871102293  2.294286018 -0.656017332 -0.999281109
+[16]  1.681892858  0.023724727  1.074391458 -0.147838109  0.353880133
+[21]  1.377877204 -0.579569282  0.003748916 -0.484612682  0.115533100
+[26]  0.331016021 -0.382174908          NaN -0.691581293 -1.040470926
+[31] -1.026671692 -1.054907095
+attr(,"internals")
+               Gi      E(Gi)        V(Gi)        Z(Gi) Pr(z != E(Gi))
+ [1,] 0.034341489 0.03225806 0.0001790941  0.155681557     0.87628404
+ [2,] 0.013326210 0.03225806 0.0007067366 -0.712138366     0.47637910
+ [3,] 0.051335768 0.03225806 0.0002720819  1.156581529     0.24744337
+ [4,] 0.035157388 0.03225806 0.0001689570  0.223053281     0.82349404
+ [5,] 0.047456292 0.03225806 0.0001537557  1.225680585     0.22031890
+ [6,] 0.060877660 0.03225806 0.0002582673  1.780856038     0.07493597
+ [7,] 0.021853899 0.03225806 0.0002020509 -0.731942275     0.46420380
+ [8,] 0.031367743 0.03225806 0.0002180140 -0.060298220     0.95191812
+ [9,] 0.027504594 0.03225806 0.0002585763 -0.295608194     0.76752932
+[10,] 0.046354798 0.03225806 0.0004597006  0.657477592     0.51087387
+[11,] 0.063046196 0.03225806 0.0001827369  2.277561982     0.02275269
+[12,] 0.050790538 0.03225806 0.0004526145  0.871102293     0.38369830
+[13,] 0.065765757 0.03225806 0.0002133015  2.294286018     0.02177408
+[14,] 0.014971771 0.03225806 0.0006943415 -0.656017332     0.51181297
+[15,] 0.014214548 0.03225806 0.0003260371 -0.999281109     0.31765853
+[16,] 0.052551797 0.03225806 0.0001455885  1.681892858     0.09258962
+[17,] 0.032909872 0.03225806 0.0007548078  0.023724727     0.98107218
+[18,] 0.055869899 0.03225806 0.0004829858  1.074391458     0.28264727
+[19,] 0.029120083 0.03225806 0.0004505345 -0.147838109     0.88247053
+[20,] 0.037283549 0.03225806 0.0002016710  0.353880133     0.72342872
+[21,] 0.055190592 0.03225806 0.0002770019  1.377877204     0.16824120
+[22,] 0.016800765 0.03225806 0.0007113061 -0.579569282     0.56220511
+[23,] 0.032308100 0.03225806 0.0001781310  0.003748916     0.99700880
+[24,] 0.024333024 0.03225806 0.0002674320 -0.484612682     0.62795112
+[25,] 0.034715170 0.03225806 0.0004523084  0.115533100     0.90802259
+[26,] 0.037589783 0.03225806 0.0002594396  0.331016021     0.74063238
+[27,] 0.025280301 0.03225806 0.0003333559 -0.382174908     0.70233163
+[28,] 0.000000000 0.00000000 0.0000000000          NaN            NaN
+[29,] 0.014222756 0.03225806 0.0006800810 -0.691581293     0.48920031
+[30,] 0.004592077 0.03225806 0.0007070212 -1.040470926     0.29812117
+[31,] 0.013839331 0.03225806 0.0003218521 -1.026671692     0.30457508
+[32,] 0.015701595 0.03225806 0.0002463242 -1.054907095     0.29146782
+attr(,"cluster")
+ [1] High Low  High Low  High Low  Low  High Low  Low  High Low  High Low  Low 
+[16] Low  High High Low  Low  High Low  High High Low  Low  Low  Low  Low  Low 
+[31] Low  Low 
+Levels: Low High
+attr(,"gstari")
+[1] FALSE
+attr(,"call")
+localG(x = Insumo$CAP_BAC, listw = Insumo.lw)
+attr(,"class")
+[1] "localG"</code></pre>
+</div>
+</div>
+<p>Simulación Monte Carlo: Para evaluar la significancia de los resultados obtenidos con el índice Local G, se realizan 1000 simulaciones donde se barajan aleatoriamente los valores de CAP_BAC y se vuelve a calcular el índice Local G para cada permutación. Esto permite comparar los valores observados de Local G con una distribución aleatoria. <strong>sweep(sim.G, 2, localG, “&gt;=”)</strong>: Compara los valores de localGobservados con los valores simulados. Elsweepcompara cada valor desim.Gcon el valor correspondiente delocalG` para cada unidad espacial. Si el valor simulado es mayor o igual que el valor observado, se cuenta como un 1, lo que indica que el valor simulado es al menos tan grande como el observado. colSums(…)+1: Suma cuántos de los valores simulados son mayores o iguales a los valores observados de Local G, añadiendo 1 para evitar valores p de 0. (nrow(sim.G)+1): Se normaliza por el número total de simulaciones (1000), de manera que se obtiene un valor p para cada unidad espacial, indicando la probabilidad de obtener un valor de Local G tan extremo como el observado bajo la distribución aleatoria.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulaci?n montecarlo</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>sim.G <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>,<span class="dv">1000</span>,<span class="dv">32</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>) sim.G[i,] <span class="ot">=</span> <span class="fu">localG</span>(<span class="fu">sample</span>(Insumo<span class="sc">$</span>CAP_BAC),Insumo.lw)</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>mc.pvalor.G <span class="ot">=</span> (<span class="fu">colSums</span>(<span class="fu">sweep</span>(sim.G,<span class="dv">2</span>,localG,<span class="st">"&gt;="</span>))<span class="sc">+</span><span class="dv">1</span>)<span class="sc">/</span>(<span class="fu">nrow</span>(sim.G)<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>mc.pvalor.G</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 0.34165834 0.75824176 0.11788212 0.37062937 0.13886114 0.07392607
+ [7] 0.73726274 0.48051948 0.52747253 0.19380619 0.02097902 0.15784216
+[13] 0.02197802 0.72827173 0.88211788 0.06793207 0.35364635 0.14585415
+[19] 0.45054945 0.30469530 0.12187812 0.65734266 0.41558442 0.59640360
+[25] 0.31368631 0.28771229 0.59840160         NA 0.76023976 0.98901099
+[31] 0.90609391 0.88811189</code></pre>
+</div>
+</div>
+<p>Los valores p calculados (mc.pvalor.G) indican la significancia estadística de los patrones espaciales observados. Un valor p bajo (generalmente menor que 0.05) sugiere que la autocorrelación espacial observada en un departamento es significativamente diferente de la aleatoriedad, lo que indica un clúster local de alta o baja concentración de valores. Los departamentos con valores p bajos pueden considerarse como áreas con patrones espaciales significativos, lo cual es útil para identificar zonas con características especiales en la variable de interés. #### Mapas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>localG<span class="ot">=</span> <span class="fu">as.numeric</span>(localG)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Mapa de G</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Insumo.utm) <span class="sc">+</span> </span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> localG)) <span class="sc">+</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"G Getis Ord Local para las captaciones del banco agrario en Colombia, cuarto trimestre 2020"</span>) <span class="sc">+</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regresion_espacial_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mapa de p-valor</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Insumo.utm) <span class="sc">+</span> </span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> mc.pvalor.G)) <span class="sc">+</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"P-Valor de G Getis Ord Local para las captaciones del banco agrario en Colombia, cuarto trimestre 2020"</span>) <span class="sc">+</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regresion_espacial_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="regresión-espacial" class="level2">
+<h2 class="anchored" data-anchor-id="regresión-espacial">Regresión Espacial</h2>
+<p>Los modelos de regresión espacial son fundamentales para capturar la dependencia espacial entre observaciones, un fenómeno común en datos geoespaciales. ### <strong>OLS</strong> <span class="math display">\[y=\mathbf{X}\beta+\varepsilon\]</span> El modelo OLS es la regresión lineal clásica, donde <span class="math inline">\(y\)</span> es la variable dependiente, <span class="math inline">\(\mathbf{X}\)</span> es la matriz de covariables, <span class="math inline">\(\beta\)</span> son los coeficientes a estimar y <span class="math inline">\(\varepsilon\)</span> es el término de error. Este modelo no captura ninguna dependencia espacial en los errores, lo que puede ser una limitación cuando hay correlación espacial entre las observaciones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>reg.eq1<span class="ot">=</span>CAP_BAC <span class="sc">~</span> PIB <span class="sc">+</span> NBI <span class="sc">+</span> CAP_BOG<span class="sc">+</span>CAP_BC <span class="sc">+</span> CAP_OCC <span class="sc">+</span> CAP_CS<span class="sc">+</span> Población</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>reg1<span class="ot">=</span><span class="fu">lm</span>(reg.eq1,<span class="at">data=</span>Insumo)                                     <span class="co">#OLS            y=XB+e,    </span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = reg.eq1, data = Insumo)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-285.63  -79.51  -10.25   45.42  402.00 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)  1.313e+02  7.573e+01   1.734   0.0958 .
+PIB          3.930e-03  3.321e-03   1.183   0.2482  
+NBI         -1.278e+00  1.878e+00  -0.680   0.5028  
+CAP_BOG     -6.148e-02  5.542e-02  -1.109   0.2783  
+CAP_BC       2.751e-03  5.994e-03   0.459   0.6504  
+CAP_OCC     -4.705e-02  2.152e-02  -2.186   0.0388 *
+CAP_CS       4.444e-01  3.203e-01   1.388   0.1780  
+Población    1.521e-05  6.709e-05   0.227   0.8226  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 142.7 on 24 degrees of freedom
+Multiple R-squared:  0.8798,    Adjusted R-squared:  0.8447 
+F-statistic: 25.09 on 7 and 24 DF,  p-value: 1.43e-09</code></pre>
+</div>
+</div>
+<section id="slx-spatial-lag-of-x" class="level3">
+<h3 class="anchored" data-anchor-id="slx-spatial-lag-of-x"><strong>SLX (Spatial Lag of X)</strong></h3>
+<p><span class="math display">\[y=\mathbf{X\beta}+\mathbf{WX\theta}+\varepsilon\]</span> El modelo SLX (Spatial Lag of X) extiende el OLS al incluir el “lag” espacial de las variables explicativas <span class="math inline">\((\mathbf{WX\theta})\)</span>, donde <span class="math inline">\(\mathbf{W}\)</span> es la matriz de vecindad y <span class="math inline">\(\mathbf{\theta}\)</span> es el vector de coeficientes correspondientes a las variables explicativas laggeadas. Este modelo captura la influencia de los valores de las covariables de los vecinos en la variable dependiente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>reg2<span class="ot">=</span><span class="fu">lmSLX</span>(reg.eq1,<span class="at">data=</span>Insumo, Insumo.lw,, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)                       <span class="co">#SLX            y=XB+WxT+e</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = formula(paste("y ~ ", paste(colnames(x)[-1], collapse = "+"))), 
+    data = as.data.frame(x), weights = weights)
+
+Coefficients:
+               Estimate    Std. Error  t value     Pr(&gt;|t|)  
+(Intercept)     1.057e+02   1.456e+02   7.260e-01   4.777e-01
+PIB             3.620e-03   4.007e-03   9.033e-01   3.790e-01
+NBI            -9.757e-02   2.781e+00  -3.508e-02   9.724e-01
+CAP_BOG        -8.925e-03   7.998e-02  -1.116e-01   9.125e-01
+CAP_BC         -4.774e-03   9.727e-03  -4.908e-01   6.298e-01
+CAP_OCC        -6.427e-02   3.416e-02  -1.882e+00   7.711e-02
+CAP_CS          1.336e-01   4.529e-01   2.950e-01   7.716e-01
+Población       1.052e-04   1.162e-04   9.057e-01   3.777e-01
+lag.PIB         3.786e-03   9.844e-03   3.847e-01   7.053e-01
+lag.NBI        -1.050e+00   4.323e+00  -2.429e-01   8.110e-01
+lag.CAP_BOG    -1.822e-01   1.654e-01  -1.101e+00   2.861e-01
+lag.CAP_BC      2.917e-03   1.550e-02   1.882e-01   8.529e-01
+lag.CAP_OCC    -1.146e-02   5.798e-02  -1.976e-01   8.457e-01
+lag.CAP_CS      9.438e-01   9.882e-01   9.552e-01   3.529e-01
+lag.Población  -1.448e-04   1.795e-04  -8.065e-01   4.311e-01</code></pre>
+</div>
+</div>
+<p>Claro, aquí tienes todo el contenido en formato Markdown para que puedas copiarlo y pegarlo:</p>
+</section>
+<section id="modelo-lag-sar---spatial-autoregressive" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-lag-sar---spatial-autoregressive"><strong>Modelo Lag (SAR - Spatial Autoregressive)</strong></h3>
+<p><span class="math display">\[
+y = \mathbf{X\beta} + \mathbf{\rho W y} + u \quad \text{y} \quad u = \lambda W u + \varepsilon
+\]</span></p>
+<p>El modelo <strong>SAR (Spatial Autoregressive)</strong> incluye un término de “lag” en la variable dependiente (<span class="math inline">\(\mathbf{W y}\)</span>), donde ( <span class="math inline">\(\mathbf{rho}\)</span>) es el coeficiente asociado al lag espacial. Este modelo captura la dependencia espacial en los valores de la variable dependiente entre vecinos. El término de error ( <span class="math inline">\(u\)</span>) también está modelado como un proceso autoregresivo espacial (es decir, ( <span class="math inline">\(u = \lambda W u + \varepsilon\)</span> )), lo que significa que el error de una observación también depende de los errores de sus vecinos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>reg3 <span class="ot">=</span> <span class="fu">lagsarlm</span>(reg.eq1, <span class="at">data =</span> Insumo, Insumo.lw, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lagsarlm(reg.eq1, data = Insumo, Insumo.lw, zero.policy = TRUE): inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 5.86692e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:lagsarlm(formula = reg.eq1, data = Insumo, listw = Insumo.lw, 
+    zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-214.497  -61.665  -15.071   34.870  395.222 
+
+Type: lag 
+Regions with no neighbours included:
+ 28 
+Coefficients: (numerical Hessian approximate standard errors) 
+               Estimate  Std. Error z value Pr(&gt;|z|)
+(Intercept)  6.8199e+01  7.2159e+01  0.9451  0.34459
+PIB          3.1708e-03  2.7729e-03  1.1435  0.25283
+NBI         -1.0169e+00  1.5539e+00 -0.6544  0.51284
+CAP_BOG     -4.7766e-02  4.6328e-02 -1.0310  0.30253
+CAP_BC       4.7788e-03  5.0817e-03  0.9404  0.34702
+CAP_OCC     -3.5245e-02  1.8997e-02 -1.8553  0.06355
+CAP_CS       3.6931e-01  2.6724e-01  1.3820  0.16699
+Población    1.0303e-05  5.5724e-05  0.1849  0.85331
+
+Rho: 0.2533, LR test value: 2.8104, p-value: 0.093656
+Approximate (numerical Hessian) standard error: 0.14574
+    z-value: 1.738, p-value: 0.082208
+Wald statistic: 3.0207, p-value: 0.082208
+
+Log likelihood: -198.1508 for lag model
+ML residual variance (sigma squared): 13793, (sigma: 117.44)
+Number of observations: 32 
+Number of parameters estimated: 10 
+AIC: 416.3, (AIC for lm: 417.11)</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-de-error-espacial-sem---spatial-error-model" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-de-error-espacial-sem---spatial-error-model"><strong>Modelo de Error Espacial (SEM - Spatial Error Model)</strong></h3>
+<p><span class="math display">\[y = X\beta + \varepsilon \quad \text{y} \quad \varepsilon = \lambda W \varepsilon + u\]</span></p>
+<p>El <strong>Modelo de Error Espacial (SEM)</strong> incluye una corrección para la dependencia espacial en los errores ($ $), donde ( <span class="math inline">\(\lambda\)</span> ) es el coeficiente que mide la fuerza de la correlación espacial en los errores. El modelo SEM no incluye un “lag” espacial en la variable dependiente, sino que captura la dependencia espacial en el término de error.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>reg4 <span class="ot">=</span> <span class="fu">errorsarlm</span>(reg.eq1, <span class="at">data =</span> Insumo, Insumo.lw, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in errorsarlm(reg.eq1, data = Insumo, Insumo.lw, zero.policy = TRUE): inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 9.31736e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:errorsarlm(formula = reg.eq1, data = Insumo, listw = Insumo.lw, 
+    zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-218.740  -53.251  -12.473   40.884  430.689 
+
+Type: error 
+Regions with no neighbours included:
+ 28 
+Coefficients: (asymptotic standard errors) 
+               Estimate  Std. Error z value Pr(&gt;|z|)
+(Intercept)  8.1541e+01  6.6482e+01  1.2265 0.220010
+PIB          3.4910e-03  2.6338e-03  1.3254 0.185024
+NBI         -5.7398e-01  1.5259e+00 -0.3762 0.706802
+CAP_BOG     -2.2704e-02  4.9984e-02 -0.4542 0.649667
+CAP_BC       1.5961e-05  5.3543e-03  0.0030 0.997622
+CAP_OCC     -5.2267e-02  1.9001e-02 -2.7508 0.005945
+CAP_CS       2.3351e-01  2.8637e-01  0.8154 0.414840
+Población    5.7012e-05  6.5438e-05  0.8712 0.383627
+
+Lambda: 0.52347, LR test value: 4.2435, p-value: 0.0394
+Approximate (numerical Hessian) standard error: 0.20488
+    z-value: 2.5551, p-value: 0.010617
+Wald statistic: 6.5283, p-value: 0.010617
+
+Log likelihood: -197.4342 for error model
+ML residual variance (sigma squared): 12472, (sigma: 111.68)
+Number of observations: 32 
+Number of parameters estimated: 10 
+AIC: 414.87, (AIC for lm: 417.11)</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-de-durbin-espacial-con-error-sdem---spatial-durbin-error-model" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-de-durbin-espacial-con-error-sdem---spatial-durbin-error-model"><strong>Modelo de Durbin Espacial con Error (SDEM - Spatial Durbin Error Model)</strong></h3>
+<p><span class="math display">\[y = X\beta + W X \theta + u \quad \text{y} \quad u = \lambda W u + \varepsilon\]</span></p>
+<p>El <strong>Modelo de Durbin Espacial con Error (SDEM)</strong> es una combinación del modelo de error espacial y el modelo de regresión espacial Durbin. En este modelo, no solo se incluye un término de “lag” espacial para la variable dependiente, sino también para las variables explicativas. El término de error (<span class="math inline">\(u\)</span>) sigue un proceso autoregresivo espacial. Este modelo captura tanto la dependencia espacial en las variables dependientes como en las explicativas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>reg5 <span class="ot">=</span> <span class="fu">errorsarlm</span>(reg.eq1, <span class="at">data =</span> Insumo, Insumo.lw, <span class="at">etype =</span> <span class="st">"emixed"</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in errorsarlm(reg.eq1, data = Insumo, Insumo.lw, etype = "emixed", : inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 9.13061e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:errorsarlm(formula = reg.eq1, data = Insumo, listw = Insumo.lw, 
+    etype = "emixed", zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-211.810  -47.834  -11.501   56.293  377.775 
+
+Type: error 
+Regions with no neighbours included:
+ 28 
+Coefficients: (asymptotic standard errors) 
+                 Estimate  Std. Error z value Pr(&gt;|z|)
+(Intercept)    2.8964e+01  1.0590e+02  0.2735   0.7845
+PIB            4.4110e-03  2.8308e-03  1.5582   0.1192
+NBI            3.5633e-01  1.8031e+00  0.1976   0.8433
+CAP_BOG       -3.8107e-02  5.4243e-02 -0.7025   0.4824
+CAP_BC        -1.6123e-03  6.6418e-03 -0.2427   0.8082
+CAP_OCC       -5.3413e-02  2.3321e-02 -2.2903   0.0220
+CAP_CS         2.8575e-01  3.0596e-01  0.9339   0.3503
+Población      5.3045e-05  7.7522e-05  0.6843   0.4938
+lag.PIB        4.1782e-03  7.6459e-03  0.5465   0.5847
+lag.NBI       -5.8691e-01  3.1145e+00 -0.1884   0.8505
+lag.CAP_BOG   -1.0933e-01  1.1822e-01 -0.9248   0.3551
+lag.CAP_BC    -5.3450e-03  1.0944e-02 -0.4884   0.6253
+lag.CAP_OCC   -1.7609e-02  4.3079e-02 -0.4088   0.6827
+lag.CAP_CS     5.0040e-01  7.0948e-01  0.7053   0.4806
+lag.Población -5.1562e-05  1.2903e-04 -0.3996   0.6894
+
+Lambda: 0.46671, LR test value: 2.1801, p-value: 0.13981
+Approximate (numerical Hessian) standard error: 0.27542
+    z-value: 1.6945, p-value: 0.090164
+Wald statistic: 2.8714, p-value: 0.090164
+
+Log likelihood: -196.0596 for error model
+ML residual variance (sigma squared): 11631, (sigma: 107.85)
+Number of observations: 32 
+Number of parameters estimated: 17 
+AIC: 426.12, (AIC for lm: 426.3)</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-durbin-espacial-sdm---spatial-durbin-model" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-durbin-espacial-sdm---spatial-durbin-model"><strong>Modelo Durbin Espacial (SDM - Spatial Durbin Model)</strong></h3>
+<p><span class="math display">\[y = X\beta + W y \rho + W X \theta + \varepsilon\]</span></p>
+<p>El <strong>Modelo Durbin Espacial (SDM)</strong> es una extensión del modelo SAR que incluye tanto un “lag” espacial de la variable dependiente como un “lag” espacial de las variables explicativas. Este modelo permite que las variables explicativas influyan tanto directamente como a través de sus efectos espaciales en la variable dependiente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>reg6 <span class="ot">=</span> <span class="fu">lagsarlm</span>(reg.eq1, <span class="at">data =</span> Insumo, Insumo.lw, <span class="at">type =</span> <span class="st">"mixed"</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in lagsarlm(reg.eq1, data = Insumo, Insumo.lw, type = "mixed", zero.policy = TRUE): inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 4.58189e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg6)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:lagsarlm(formula = reg.eq1, data = Insumo, listw = Insumo.lw, 
+    type = "mixed", zero.policy = TRUE)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-203.5501  -57.4964   -9.1121   49.0668  377.8941 
+
+Type: mixed 
+Regions with no neighbours included:
+ 28 
+Coefficients: (numerical Hessian approximate standard errors) 
+                 Estimate  Std. Error z value Pr(&gt;|z|)
+(Intercept)    5.6710e+01  1.0611e+02  0.5344  0.59304
+PIB            3.8566e-03  2.7986e-03  1.3781  0.16819
+NBI            1.4678e-01  2.1429e+00  0.0685  0.94539
+CAP_BOG       -1.4527e-02  5.7942e-02 -0.2507  0.80203
+CAP_BC        -2.9294e-03  6.8930e-03 -0.4250  0.67085
+CAP_OCC       -5.8433e-02  2.3689e-02 -2.4666  0.01364
+CAP_CS         1.6655e-01  3.2580e-01  0.5112  0.60922
+Población      7.9995e-05  8.3984e-05  0.9525  0.34084
+lag.PIB        1.1073e-03  6.6845e-03  0.1657  0.86843
+lag.NBI       -1.1460e+00  3.1540e+00 -0.3634  0.71633
+lag.CAP_BOG   -1.1343e-01  1.1758e-01 -0.9647  0.33469
+lag.CAP_BC    -1.2808e-04  1.0278e-02 -0.0125  0.99006
+lag.CAP_OCC    7.3867e-03  4.4739e-02  0.1651  0.86886
+lag.CAP_CS     5.3185e-01  6.9614e-01  0.7640  0.44487
+lag.Población -9.8368e-05  1.3609e-04 -0.7228  0.46979
+
+Rho: 0.38762, LR test value: 2.4703, p-value: 0.11602
+Approximate (numerical Hessian) standard error: 0.22804
+    z-value: 1.6998, p-value: 0.089166
+Wald statistic: 2.8894, p-value: 0.089166
+
+Log likelihood: -195.9145 for mixed model
+ML residual variance (sigma squared): 11739, (sigma: 108.34)
+Number of observations: 32 
+Number of parameters estimated: 17 
+AIC: 425.83, (AIC for lm: 426.3)</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-manski-manski-model" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-manski-manski-model"><strong>Modelo Manski (Manski Model)</strong></h3>
+<p><span class="math display">\[y = \rho W y + X \beta + W X \theta + u \quad \text{y} \quad u = \lambda W u + \varepsilon\]</span></p>
+<p>El <strong>Modelo Manski</strong> es similar al modelo SDM, pero tiene una estructura más compleja en cuanto a la autocorrelación espacial de los errores. Este modelo incluye tanto el “lag” espacial de la variable dependiente, como los “lags” espaciales de las variables explicativas. La diferencia principal con el modelo SDM es el tratamiento más complejo de los términos de error.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>reg7 <span class="ot">=</span> <span class="fu">sacsarlm</span>(reg.eq1, <span class="at">data =</span> Insumo, Insumo.lw, <span class="at">type =</span> <span class="st">"sacmixed"</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in sacsarlm(reg.eq1, data = Insumo, Insumo.lw, type = "sacmixed", : inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 4.61347e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg7)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:sacsarlm(formula = reg.eq1, data = Insumo, listw = Insumo.lw, 
+    type = "sacmixed", zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-204.541  -53.811  -12.538   51.980  382.238 
+
+Type: sacmixed 
+Coefficients: (numerical Hessian approximate standard errors) 
+                 Estimate  Std. Error z value Pr(&gt;|z|)
+(Intercept)    4.8808e+01  1.1502e+02  0.4243  0.67131
+PIB            4.0090e-03  2.8803e-03  1.3919  0.16396
+NBI            2.1612e-01  1.9200e+00  0.1126  0.91038
+CAP_BOG       -2.2486e-02  6.9157e-02 -0.3251  0.74507
+CAP_BC        -2.3158e-03  7.5058e-03 -0.3085  0.75768
+CAP_OCC       -5.6496e-02  2.5908e-02 -2.1806  0.02921
+CAP_CS         2.0887e-01  3.8203e-01  0.5467  0.58456
+Población      6.9346e-05  9.6780e-05  0.7165  0.47366
+lag.PIB        1.5704e-03  7.9396e-03  0.1978  0.84321
+lag.NBI       -9.9232e-01  3.1209e+00 -0.3180  0.75051
+lag.CAP_BOG   -1.1048e-01  1.2387e-01 -0.8919  0.37243
+lag.CAP_BC    -1.5701e-03  1.3233e-02 -0.1187  0.90555
+lag.CAP_OCC    2.5166e-03  5.0022e-02  0.0503  0.95988
+lag.CAP_CS     5.1478e-01  7.4300e-01  0.6928  0.48841
+lag.Población -8.2594e-05  1.4845e-04 -0.5564  0.57796
+
+Rho: 0.31266
+Approximate (numerical Hessian) standard error: 0.50048
+    z-value: 0.62472, p-value: 0.53215
+Lambda: 0.13054
+Approximate (numerical Hessian) standard error: 0.71242
+    z-value: 0.18324, p-value: 0.85461
+
+LR test value: 7.3157, p-value: 0.60429
+
+Log likelihood: -195.8981 for sacmixed model
+ML residual variance (sigma squared): 11840, (sigma: 108.81)
+Number of observations: 32 
+Number of parameters estimated: 18 
+AIC: 427.8, (AIC for lm: 417.11)</code></pre>
+</div>
+</div>
+</section>
+<section id="modelo-sarar-kelejian-prucha-cliff-ord-sac" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-sarar-kelejian-prucha-cliff-ord-sac"><strong>Modelo SARAR (Kelejian-Prucha, Cliff-Ord, SAC)</strong></h3>
+<p><span class="math display">\[y = X\beta + \rho W y + u \quad \text{y} \quad u = \lambda W u + \varepsilon\]</span></p>
+<p>El <strong>Modelo SARAR</strong> (también conocido como modelo Kelejian-Prucha o Cliff-Ord) es un modelo que combina características del modelo SAR y SEM. Este modelo tiene un término de “lag” espacial en la variable dependiente y un término de error espacial autoregresivo, lo que permite capturar tanto la dependencia espacial en la variable dependiente como en el error.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>reg8 <span class="ot">=</span> <span class="fu">sacsarlm</span>(reg.eq1, <span class="at">data =</span> Insumo, Insumo.lw, <span class="at">type =</span> <span class="st">"sac"</span>, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in sacsarlm(reg.eq1, data = Insumo, Insumo.lw, type = "sac", zero.policy = TRUE): inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 8.70662e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(reg8)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:sacsarlm(formula = reg.eq1, data = Insumo, listw = Insumo.lw, 
+    type = "sac", zero.policy = TRUE)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-205.1587  -56.7315   -9.4429   31.9574  422.6304 
+
+Type: sac 
+Coefficients: (numerical Hessian approximate standard errors) 
+               Estimate  Std. Error z value Pr(&gt;|z|)
+(Intercept)  6.4572e+01  7.2349e+01  0.8925  0.37212
+PIB          3.2940e-03  2.6769e-03  1.2305  0.21850
+NBI         -6.2802e-01  1.5495e+00 -0.4053  0.68526
+CAP_BOG     -3.2650e-02  5.1324e-02 -0.6361  0.52468
+CAP_BC       2.2998e-03  6.0593e-03  0.3795  0.70428
+CAP_OCC     -4.4343e-02  2.1685e-02 -2.0449  0.04086
+CAP_CS       2.8775e-01  2.9320e-01  0.9814  0.32638
+Población    3.8417e-05  6.7901e-05  0.5658  0.57155
+
+Rho: 0.13272
+Approximate (numerical Hessian) standard error: 0.18411
+    z-value: 0.72086, p-value: 0.471
+Lambda: 0.40988
+Approximate (numerical Hessian) standard error: 0.27523
+    z-value: 1.4892, p-value: 0.13643
+
+LR test value: 4.7255, p-value: 0.094163
+
+Log likelihood: -197.1932 for sac model
+ML residual variance (sigma squared): 12607, (sigma: 112.28)
+Number of observations: 32 
+Number of parameters estimated: 11 
+AIC: 416.39, (AIC for lm: 417.11)</code></pre>
+</div>
+</div>
+</section>
+<section id="cálculo-de-variables-significativas" class="level3">
+<h3 class="anchored" data-anchor-id="cálculo-de-variables-significativas">Cálculo de variables significativas</h3>
+<p>Pueden calcularse las variables significativas de cada modelo de regresión, proporcionando los coeficientes estimados y los valores p asociados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculo de variables significativas</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>reg.eq2<span class="ot">=</span>CAP_BAC <span class="sc">~</span> PIB <span class="sc">+</span> CAP_BOG<span class="sc">+</span>CAP_BC <span class="sc">+</span> CAP_OCC <span class="sc">+</span> CAP_CS<span class="sc">+</span> Población</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>reg4<span class="ot">=</span><span class="fu">errorsarlm</span>(reg.eq2,<span class="at">data=</span>Insumo, Insumo.lw, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in errorsarlm(reg.eq2, data = Insumo, Insumo.lw, zero.policy = TRUE): inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 9.34261e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">=</span> summary</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">s</span>(reg4)<span class="co">#Lag Error (SEM)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:errorsarlm(formula = reg.eq2, data = Insumo, listw = Insumo.lw, 
+    zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-211.532  -51.640  -10.342   43.439  434.624 
+
+Type: error 
+Regions with no neighbours included:
+ 28 
+Coefficients: (asymptotic standard errors) 
+               Estimate  Std. Error z value Pr(&gt;|z|)
+(Intercept)  6.5053e+01  5.2382e+01  1.2419 0.214276
+PIB          3.7321e-03  2.5473e-03  1.4651 0.142880
+CAP_BOG     -2.6478e-02  4.8603e-02 -0.5448 0.585908
+CAP_BC       2.1298e-05  5.3721e-03  0.0040 0.996837
+CAP_OCC     -5.2253e-02  1.9059e-02 -2.7417 0.006113
+CAP_CS       2.5082e-01  2.8122e-01  0.8919 0.372449
+Población    5.3526e-05  6.4802e-05  0.8260 0.408807
+
+Lambda: 0.53453, LR test value: 4.7167, p-value: 0.029871
+Approximate (numerical Hessian) standard error: 0.19933
+    z-value: 2.6816, p-value: 0.007327
+Wald statistic: 7.191, p-value: 0.007327
+
+Log likelihood: -197.5033 for error model
+ML residual variance (sigma squared): 12482, (sigma: 111.72)
+Number of observations: 32 
+Number of parameters estimated: 9 
+AIC: 413.01, (AIC for lm: 415.72)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>reg.eq3<span class="ot">=</span>CAP_BAC <span class="sc">~</span> PIB <span class="sc">+</span> CAP_BOG <span class="sc">+</span> CAP_OCC <span class="sc">+</span> CAP_CS<span class="sc">+</span> Población</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>reg4<span class="ot">=</span><span class="fu">errorsarlm</span>(reg.eq3,<span class="at">data=</span>Insumo, Insumo.lw, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in errorsarlm(reg.eq3, data = Insumo, Insumo.lw, zero.policy = TRUE): inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 9.39308e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">s</span>(reg4)<span class="co">#Lag Error (SEM)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:errorsarlm(formula = reg.eq3, data = Insumo, listw = Insumo.lw, 
+    zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-211.604  -51.658  -10.314   43.452  434.644 
+
+Type: error 
+Regions with no neighbours included:
+ 28 
+Coefficients: (asymptotic standard errors) 
+               Estimate  Std. Error z value  Pr(&gt;|z|)
+(Intercept)  6.4949e+01  4.6184e+01  1.4063 0.1596331
+PIB          3.7353e-03  2.4024e-03  1.5548 0.1199876
+CAP_BOG     -2.6340e-02  3.5604e-02 -0.7398 0.4594136
+CAP_OCC     -5.2300e-02  1.4786e-02 -3.5372 0.0004044
+CAP_CS       2.5002e-01  2.0469e-01  1.2215 0.2219007
+Población    5.3668e-05  5.4615e-05  0.9827 0.3257723
+
+Lambda: 0.53464, LR test value: 4.9211, p-value: 0.02653
+Approximate (numerical Hessian) standard error: 0.19966
+    z-value: 2.6777, p-value: 0.0074134
+Wald statistic: 7.17, p-value: 0.0074134
+
+Log likelihood: -197.5033 for error model
+ML residual variance (sigma squared): 12482, (sigma: 111.72)
+Number of observations: 32 
+Number of parameters estimated: 8 
+AIC: 411.01, (AIC for lm: 413.93)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>reg.eq4<span class="ot">=</span>CAP_BAC <span class="sc">~</span> PIB <span class="sc">+</span> CAP_OCC <span class="sc">+</span> CAP_CS<span class="sc">+</span> Población</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>reg4<span class="ot">=</span><span class="fu">errorsarlm</span>(reg.eq4,<span class="at">data=</span>Insumo, Insumo.lw, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in errorsarlm(reg.eq4, data = Insumo, Insumo.lw, zero.policy = TRUE): inversion of asymptotic covariance matrix failed for tol.solve = 2.22044604925031e-16 
+  número de condición recíproco = 9.49253e-18 - using numerical Hessian.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">s</span>(reg4)<span class="co">#Lag Error (SEM)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:errorsarlm(formula = reg.eq4, data = Insumo, listw = Insumo.lw, 
+    zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-197.278  -57.885  -10.374   35.522  448.779 
+
+Type: error 
+Regions with no neighbours included:
+ 28 
+Coefficients: (asymptotic standard errors) 
+               Estimate  Std. Error z value  Pr(&gt;|z|)
+(Intercept)  6.5631e+01  4.8473e+01  1.3540 0.1757428
+PIB          3.5303e-03  2.3971e-03  1.4727 0.1408221
+CAP_OCC     -5.0850e-02  1.4681e-02 -3.4638 0.0005327
+CAP_CS       1.0179e-01  3.7538e-02  2.7115 0.0066982
+Población    6.3364e-05  5.3434e-05  1.1858 0.2356933
+
+Lambda: 0.57217, LR test value: 7.0658, p-value: 0.0078569
+Approximate (numerical Hessian) standard error: 0.17965
+    z-value: 3.185, p-value: 0.0014477
+Wald statistic: 10.144, p-value: 0.0014477
+
+Log likelihood: -197.7534 for error model
+ML residual variance (sigma squared): 12518, (sigma: 111.88)
+Number of observations: 32 
+Number of parameters estimated: 7 
+AIC: 409.51, (AIC for lm: 414.57)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>reg.eq5<span class="ot">=</span>CAP_BAC <span class="sc">~</span> PIB <span class="sc">+</span> CAP_OCC <span class="sc">+</span> CAP_CS</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>reg4<span class="ot">=</span><span class="fu">errorsarlm</span>(reg.eq5,<span class="at">data=</span>Insumo, Insumo.lw, <span class="at">zero.policy =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="fu">s</span>(reg4)<span class="co">#Lag Error (SEM)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:errorsarlm(formula = reg.eq5, data = Insumo, listw = Insumo.lw, 
+    zero.policy = TRUE)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-184.748  -63.304  -12.444   40.679  448.841 
+
+Type: error 
+Regions with no neighbours included:
+ 28 
+Coefficients: (asymptotic standard errors) 
+               Estimate  Std. Error z value  Pr(&gt;|z|)
+(Intercept) 88.65061930 44.45631621  1.9941  0.046140
+PIB          0.00617514  0.00092824  6.6525 2.881e-11
+CAP_OCC     -0.04719334  0.01471065 -3.2081  0.001336
+CAP_CS       0.07187945  0.02876778  2.4986  0.012468
+
+Lambda: 0.55051, LR test value: 6.002, p-value: 0.014289
+Asymptotic standard error: 0.17223
+    z-value: 3.1964, p-value: 0.0013917
+Wald statistic: 10.217, p-value: 0.0013917
+
+Log likelihood: -198.4352 for error model
+ML residual variance (sigma squared): 13162, (sigma: 114.72)
+Number of observations: 32 
+Number of parameters estimated: 6 
+AIC: 408.87, (AIC for lm: 412.87)</code></pre>
+</div>
+</div>
+</section>
+<section id="mapa-estimado" class="level3">
+<h3 class="anchored" data-anchor-id="mapa-estimado">Mapa estimado</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> reg2<span class="sc">$</span>fitted.values</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Insumo.utm) <span class="sc">+</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> fit)) <span class="sc">+</span></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Valores ajustados mediante el modelo SEM para las captaciones del banco agrario en Colombia, cuarto trimestre 2020"</span>) <span class="sc">+</span></span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="regresion_espacial_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="do">###Test de moran residuales modelo SEM</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="fu">moran.test</span>(reg4<span class="sc">$</span>residuals, Insumo.lw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  reg4$residuals  
+weights: Insumo.lw  
+n reduced by no-neighbour observations  
+
+Moran I statistic standard deviate = 0.81038, p-value = 0.2089
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+       0.05128789       -0.03333333        0.01090389 </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
